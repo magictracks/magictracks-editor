@@ -1,0 +1,34 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "secret": "367518950d013af6cc7a075a6a6b8acf1035f6da4c45b00c8db0e9063ba3550e6bc930f32101e75f8bb9cb9f0b7233fe222f6706184cd1ef46d5cf665bc01d2dfe6f1c2793b2750466f797d9047ce33e55a26b21624e4a3f91dbd8e1134f174d03872449aa5dae5d72924bdf93fdc651a8239374fdca7fddfc679e3f901b29ac3cf08cfb0f42ae023d4fbf9af28fe875bfdb1d6514bbb4f22069653b2cb5736667b8bfe6e4790563c6d2e8ee340a1953072f3299513518a8a7222436a2a2a0321ccf94423fb2625476889dc8d816d5770e986e096dffd1ea2a4f9f48a2068588e94f8b31b43ea7636635132abeedd6fba16aef370848e54e655cb4b53ae931ca",
+    "strategies": [
+      "jwt",
+      "local"
+    ],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  },
+  "mongodb": "mongodb://localhost:27017/magictracks_editor"
+}
