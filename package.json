@@ -22,6 +22,7 @@
     "npm": ">= 3.0.0"
   },
   "scripts": {
+    "setup": "npm install | npm --prefix ./client install",
     "test": "npm run eslint && NODE_ENV= npm run jest",
     "eslint": "eslint src/. test/. --config .eslintrc.json",
     "dev": "nodemon src/ | nodemon client/server.js",
