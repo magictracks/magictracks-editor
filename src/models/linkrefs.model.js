@@ -45,6 +45,17 @@ module.exports = function (app) {
       default: [],
       required: false
     }],
+    owner:{
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref:'users'
+    },
+    collaborators: [{
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: 'users',
+      default:[]
+    }],
     source:{
       type: Schema.Types.ObjectId,
       ref: 'links',

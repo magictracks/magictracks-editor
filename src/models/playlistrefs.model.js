@@ -1,23 +1,11 @@
-// playlists-model.js - A mongoose model
+// playlistrefs-model.js - A mongoose model
 // 
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
-
-  const parentSchema = new Schema({
-    id: {
-      type: String,
-      required: false
-    },
-    featureType:{
-      type: String,
-      required: false
-    } // should be "playlists" or "projects"
-  })
-  
-  const playlists = new Schema({
+  const playlistrefs = new Schema({
     title: {
       type: String,
       required: false
@@ -64,16 +52,15 @@ module.exports = function (app) {
       default: [],
       required: false
     }],
-    references:[{
+    source:[{
       type: Schema.Types.ObjectId,
-      ref: 'playlistrefs',
+      ref: 'playlists',
       default: [],
       required: false
-    }],
-    parent: parentSchema
+    }]
   }, {
     timestamps: true
   });
 
-  return mongooseClient.model('playlists', playlists);
+  return mongooseClient.model('playlistrefs', playlistrefs);
 };
