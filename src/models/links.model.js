@@ -45,6 +45,40 @@ module.exports = function (app) {
     }
   })
 
+  const branchSchema = new Schema({
+    branchName:{
+      type: String,
+      required: false
+    },
+    branchOwner:{
+      type: String,
+      required: false
+    },
+    title: {
+      type: String,
+      required: false
+    },
+    description: {
+      type: String,
+      required: false
+    },
+    images: [{
+      type: String,
+      default: [],
+      required: false
+    }],
+    selectedColor:{
+      type: Number,
+      default: Math.round(Math.random()*5) // on create, choose a random number 
+    },
+    colors:[{
+      type: String,
+      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
+      required: false
+    }]
+    // TODO: include link to parent?
+  });
+
   const links = new Schema({
     title: {
       type: String,
@@ -86,12 +120,11 @@ module.exports = function (app) {
       type: String,
       required: false
     },
-    references: [{
-      type: Schema.Types.ObjectId,
-      ref: 'linkrefs',
-      default: [],
+    creator:{
+      type: String,
       required: false
-    }]
+    },
+    branches:[branchSchema]
   }, {
     timestamps: true
   });

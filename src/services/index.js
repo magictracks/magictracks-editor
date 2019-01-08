@@ -11,7 +11,4 @@ module.exports = function (app) {
   app.configure(playlists);
   app.configure(links);
   app.configure(projects);
-  app.configure(linkrefs);
-  app.configure(playlistrefs);
-  app.configure(projectrefs);
 };

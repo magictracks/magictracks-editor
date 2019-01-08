@@ -16,6 +16,40 @@ module.exports = function (app) {
       required: false
     } // should be "playlists" or "projects"
   })
+
+  const branchSchema = new Schema({
+    branchName:{
+      type: String,
+      required: false
+    },
+    branchOwner:{
+      type: String,
+      required: false
+    },
+    title: {
+      type: String,
+      required: false
+    },
+    description: {
+      type: String,
+      required: false
+    },
+    images: [{
+      type: String,
+      default: [],
+      required: false
+    }],
+    selectedColor:{
+      type: Number,
+      default: Math.round(Math.random()*5) // on create, choose a random number 
+    },
+    colors:[{
+      type: String,
+      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
+      required: false
+    }]
+    // TODO: include link to parent?
+  });
   
   const playlists = new Schema({
     title: {
@@ -58,18 +92,31 @@ module.exports = function (app) {
       default: [],
       required: false
     }],
-    links: [{
-      type: Schema.Types.ObjectId,
-      ref: 'links',
-      default: [],
-      required: false
+    links:[{
+      branchName: {
+        type: String,
+        default: 'master'
+      },
+      link: {
+        type: Schema.Types.ObjectId,
+        ref: 'links',
+        default: [],
+        required: false
+      }
     }],
-    references:[{
-      type: Schema.Types.ObjectId,
-      ref: 'playlistrefs',
-      default: [],
-      required: false
-    }],
+    branches:[branchSchema]
+    // links: [{
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'links',
+    //   default: [],
+    //   required: false
+    // }],
+    // references:[{
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'playlistrefs',
+    //   default: [],
+    //   required: false
+    // }],
     parent: parentSchema
   }, {
     timestamps: true
