@@ -18,9 +18,9 @@ module.exports = function (app) {
       default: [],
       required: false
     }],
-    terms:[{
+    terms: [{
       type: String,
-      default:[],
+      default: [],
       required: false
     }],
     image: {
@@ -46,11 +46,11 @@ module.exports = function (app) {
   })
 
   const branchSchema = new Schema({
-    branchName:{
+    branchName: {
       type: String,
       required: false
     },
-    branchOwner:{
+    branchOwner: {
       type: String,
       required: false
     },
@@ -67,11 +67,11 @@ module.exports = function (app) {
       default: [],
       required: false
     }],
-    selectedColor:{
+    selectedColor: {
       type: Number,
-      default: Math.round(Math.random()*5) // on create, choose a random number 
+      default: Math.round(Math.random() * 5) // on create, choose a random number 
     },
-    colors:[{
+    colors: [{
       type: String,
       default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
       required: false
@@ -80,6 +80,7 @@ module.exports = function (app) {
   });
 
   const links = new Schema({
+    branches: [branchSchema],
     title: {
       type: String,
       required: false
@@ -120,11 +121,15 @@ module.exports = function (app) {
       type: String,
       required: false
     },
-    creator:{
+    creator: {
       type: String,
       required: false
     },
-    branches:[branchSchema]
+    // TODO: should this be urls to the JSON endpoint for the link/project/playlist?? 
+    suggested: [{
+      type: String,
+      default: [],
+    }]
   }, {
     timestamps: true
   });

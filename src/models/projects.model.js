@@ -8,39 +8,59 @@ module.exports = function (app) {
     Schema
   } = mongooseClient;
 
-  const projectSchema = new Schema({
-    title: {
+  const playlistRef = new Schema({
+    branchName: {
       type: String,
-      default: 'New Project Title',
       required: false,
+    },
+    playlist: {
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: 'playlists'
+    }
+  })
+
+  const branchSchema = new Schema({
+    branchName: {
+      type: String,
+      required: false,
+      unique: false // TODO: change to unique true?
+    },
+    branchOwner: {
+      type: String,
+      required: true,
     },
     description: {
       type: String,
-      default: 'New project description',
-      required: false,
+      default: 'an informative description of this project otherwise the root description will be used'
+    },
+    playlists: [playlistRef] // playlistReference
+  })
+
+  const projects = new Schema({
+    branches: [branchSchema],
+    title: {
+      type: String,
+      default: 'New Project'
+    },
+    description: {
+      type: String,
+      default: 'New Project description'
+    },
+    owner: {
+      type: String,
+      required: false
     },
     collaborators: [{
       type: String,
       default: [],
-      required: false,
+      required: false
     }],
-    playlists: [{
-      type: Schema.Types.ObjectId,
-      required: false,
-      ref: 'playlists',
-      default: []
-    }]
-  })
-
-  const projects = new Schema({
-    branches: [{
-      branchName: {
-        type: String,
-        required: true,
-        default: 'master'
-      },
-      data: projectSchema
-    }]
+    // TODO: should this be urls to the JSON endpoint for the link/project/playlist?? 
+    suggested: [{
+      type: String,
+      default: [],
+    }],
   }, {
     timestamps: true
   });
