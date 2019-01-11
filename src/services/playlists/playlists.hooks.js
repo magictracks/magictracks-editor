@@ -2,6 +2,9 @@ const {
   authenticate
 } = require('@feathersjs/authentication').hooks;
 const addOwner = require('../../hooks/add-owner.js');
+const addDefaultBranch = require('../../hooks/add-default-branch.js');
+const addUniqueName = require('../../hooks/add-unique-name.js');
+const setRandomColor = require('../../hooks/set-random-color.js');
 
 const populateLinks = function (requestType) {
   return async (context) => {
@@ -37,7 +40,7 @@ module.exports = {
     all: [],
     find: [populateLinks('FIND')],
     get: [populateLinks('GET')],
-    create: [authenticate('jwt'), addOwner()],
+    create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(),setRandomColor()],
     update: [],
     patch: [],
     remove: []

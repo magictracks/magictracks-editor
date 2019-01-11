@@ -66,15 +66,6 @@ module.exports = function (app) {
       type: String,
       default: [],
       required: false
-    }],
-    selectedColor: {
-      type: Number,
-      default: Math.round(Math.random() * 5) // on create, choose a random number 
-    },
-    colors: [{
-      type: String,
-      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
-      required: false
     }]
     // TODO: include link to parent?
   });
@@ -89,6 +80,10 @@ module.exports = function (app) {
       type: String,
       required: true,
       unique: true // TODO: change to TRUE
+    },
+    uniqueName: {
+      type:String,
+      default: ""
     },
     featureType: {
       type: String,
@@ -129,7 +124,16 @@ module.exports = function (app) {
     suggested: [{
       type: String,
       default: [],
-    }]
+    }],
+    selectedColor: {
+      type: Number,
+      default: 0
+    },
+    colors: {
+      type: Array,
+      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
+      required: true
+    }
   }, {
     timestamps: true
   });

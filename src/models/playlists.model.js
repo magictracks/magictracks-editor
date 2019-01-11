@@ -36,6 +36,10 @@ module.exports = function (app) {
       type: String,
       default: 'an informative description of this playlist otherwise the root description will be used'
     },
+    images:[{
+      type:String,
+      default:[]
+    }],
     links: [linkRef]
   })
 
@@ -48,6 +52,15 @@ module.exports = function (app) {
     description: {
       type: String,
       default: 'New Playlist description'
+    },
+    featureType: {
+      type: String,
+      required: false,
+      default: "playlists"
+    },
+    uniqueName: {
+      type: String,
+      default: ""
     },
     owner: {
       type: String,
@@ -63,6 +76,15 @@ module.exports = function (app) {
       type: String,
       default: [],
     }],
+    selectedColor: {
+      type: Number,
+      default: 0
+    },
+    colors: {
+      type: Array,
+      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
+      required: true
+    }
   }, {
     timestamps: true
   });

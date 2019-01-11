@@ -2,6 +2,8 @@
 // 
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
+const generate = require('project-name-generator');
+
 module.exports = function (app) {
   const mongooseClient = app.get('mongooseClient');
   const {
@@ -34,6 +36,10 @@ module.exports = function (app) {
       type: String,
       default: 'an informative description of this project otherwise the root description will be used'
     },
+    images:[{
+      type:String,
+      default:[]
+    }],
     playlists: [playlistRef] // playlistReference
   })
 
@@ -43,6 +49,10 @@ module.exports = function (app) {
       type: String,
       default: 'New Project'
     },
+    uniqueName: {
+      type:String,
+      default: generate({ words: 2, alliterative: true }).dashed
+    },
     description: {
       type: String,
       default: 'New Project description'
@@ -50,6 +60,11 @@ module.exports = function (app) {
     owner: {
       type: String,
       required: false
+    },
+    featureType: {
+      type: String,
+      required: false,
+      default: "projects"
     },
     collaborators: [{
       type: String,
@@ -61,6 +76,15 @@ module.exports = function (app) {
       type: String,
       default: [],
     }],
+    selectedColor: {
+      type: Number,
+      default: 0
+    },
+    colors: {
+      type: Array,
+      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
+      required: true
+    }
   }, {
     timestamps: true
   });

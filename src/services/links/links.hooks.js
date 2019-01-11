@@ -11,6 +11,13 @@ const metascraper = require('metascraper')([
 const got = require('got');
 var analyze = require('schenkerian')
 
+const {
+  authenticate
+} = require('@feathersjs/authentication').hooks;
+const addOwner = require('../../hooks/add-owner.js');
+const addDefaultBranch = require('../../hooks/add-default-branch.js');
+const addUniqueName = require('../../hooks/add-unique-name.js');
+const setRandomColor = require('../../hooks/set-random-color.js');
 
 const getMetaDetails = function(){
   return async (context) => {
@@ -86,7 +93,12 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [getMetaDetails()],
+    create: [authenticate('jwt'),
+      getMetaDetails(), 
+      addOwner(), 
+      addDefaultBranch(), 
+      addUniqueName(), 
+      setRandomColor()],
     update: [],
     patch: [],
     remove: []
