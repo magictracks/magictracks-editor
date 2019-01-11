@@ -99,9 +99,9 @@ module.exports = {
       addDefaultBranch(), 
       addUniqueName(), 
       setRandomColor()],
-    update: [],
-    patch: [],
-    remove: []
+    update: [authenticate('jwt')],
+    patch: [authenticate('jwt')],
+    remove: [authenticate('jwt')]
   },
 
   after: {

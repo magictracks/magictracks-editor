@@ -96,9 +96,9 @@ module.exports = {
     find: [populateLinks("FIND")],
     get: [populateLinks("GET")],
     create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(), setRandomColor()],
-    update: [],
+    update: [authenticate('jwt')],
     patch: [authenticate('jwt'), checkBranchOwner()],
-    remove: []
+    remove: [authenticate('jwt')]
   },
 
   after: {
