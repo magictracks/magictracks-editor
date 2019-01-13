@@ -80,6 +80,10 @@ module.exports = function (app) {
       type: Number,
       default: 0
     },
+    origin:{
+      type: String,
+      default: "" // TODO: add origin on create - if copied/forked, set ObjectId of project origin
+    },
     colors: {
       type: Array,
       default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],

@@ -5,40 +5,9 @@ const addOwner = require('../../hooks/add-owner.js');
 const addDefaultBranch = require('../../hooks/add-default-branch.js');
 const addUniqueName = require('../../hooks/add-unique-name.js');
 const setRandomColor = require('../../hooks/set-random-color.js');
+const populateProject = require('../../hooks/populate-project.js');
 
-const populateLinks = function (requestType) {
-  return async (context) => {
-    const {
-      params
-    } = context;
 
-    const {
-      Model
-    } = context.app.service(context.path);
-
-    const result = await Model.find(params.query)
-      .populate({
-        path: 'branches.playlists.playlist',
-        model: 'playlists',
-        populate:{
-          path: 'branches.links.link',
-          model: 'links'
-        }
-      })
-      .exec();
-
-    // if FIND is called, assign the result to the data array []
-    // if GET is called, assign it directly to result
-    if (requestType === "FIND"){
-      context.result = Object.assign({'data': []}, context.result)
-      context.result.data = result;
-    } else if (requestType === "GET"){
-      context.result = result
-    }
-    
-    return context;
-  }
-}
 
 const checkBranchOwner = function (options = {}) {
   return async context => {
@@ -93,9 +62,13 @@ const checkBranchOwner = function (options = {}) {
 module.exports = {
   before: {
     all: [],
-    find: [populateLinks("FIND")],
-    get: [populateLinks("GET")],
-    create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(), setRandomColor()],
+    find: [populateProject("FIND")],
+    get: [populateProject("GET")],
+    create: [authenticate('jwt'), 
+    addOwner(), 
+    addDefaultBranch(), 
+    addUniqueName(), 
+    setRandomColor()],
     update: [authenticate('jwt')],
     patch: [authenticate('jwt'), checkBranchOwner()],
     remove: [authenticate('jwt')]
