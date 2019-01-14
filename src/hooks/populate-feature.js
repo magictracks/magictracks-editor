@@ -12,10 +12,14 @@ module.exports = function (requestType, options = {}) {
       Model
     } = context.app.service(context.path);
 
+    console.log("🌈🌈", params)
+    
+    
+
     let result;
 
     if(context.path == "recipe"){
-      result = await Model.find(params.query)
+      result = await Model.find(params)
       .populate({
         path: 'branches.steps.step',
         model: 'step',
@@ -26,12 +30,16 @@ module.exports = function (requestType, options = {}) {
       })
       .exec();
     } else if (context.path == "step"){
-      result = await Model.find(params.query)
+
+      result = await Model.find(params)
       .populate({
         path: 'branches.ingredients.ingredient',
         model: 'ingredient'})
       .exec();
     }
+
+    console.log(result);
+
 
     // if FIND is called, assign the result to the data array []
     // if GET is called, assign it directly to result

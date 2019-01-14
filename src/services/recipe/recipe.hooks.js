@@ -16,10 +16,10 @@ module.exports = {
   before: {
     all: [],
     find: [
-      populateFeature("FIND")
+      // populateFeature("FIND")
     ],
     get: [
-      populateFeature("GET")
+      // populateFeature("GET")
     ],
     create: [
       authenticate('jwt'), 
