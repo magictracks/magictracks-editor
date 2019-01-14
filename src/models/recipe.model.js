@@ -94,5 +94,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('recipes', projects);
+  return mongooseClient.model('recipe', recipe);
 };

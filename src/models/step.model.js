@@ -43,7 +43,7 @@ module.exports = function (app) {
     ingredients: [ingredientRef]
   })
 
-  const steps = new Schema({
+  const step = new Schema({
     branches: [branchSchema],
     title: {
       type: String,
@@ -94,5 +94,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('step', playlists);
+  return mongooseClient.model('step', step);
 };

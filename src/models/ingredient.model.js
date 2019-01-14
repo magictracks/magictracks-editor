@@ -70,7 +70,7 @@ module.exports = function (app) {
     // TODO: include link to parent?
   });
 
-  const links = new Schema({
+  const ingredient = new Schema({
     branches: [branchSchema],
     title: {
       type: String,
@@ -143,5 +143,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('ingredient', links);
+  return mongooseClient.model('ingredient', ingredient);
 };
