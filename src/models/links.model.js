@@ -129,6 +129,11 @@ module.exports = function (app) {
       type: Number,
       default: 0
     },
+    origin:{
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: 'links'
+    },
     colors: {
       type: Array,
       default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],

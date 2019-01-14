@@ -81,8 +81,9 @@ module.exports = function (app) {
       default: 0
     },
     origin:{
-      type: String,
-      default: "" // TODO: add origin on create - if copied/forked, set ObjectId of project origin
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: 'projects' // TODO: add origin on create - if copied/forked, set ObjectId of project origin
     },
     colors: {
       type: Array,

@@ -7,6 +7,7 @@ const addUniqueName = require('../../hooks/add-unique-name.js');
 const setRandomColor = require('../../hooks/set-random-color.js');
 const checkPermissions = require('../../hooks/check-permissions.js');
 const populatePlaylist = require('../../hooks/populate-playlist.js');
+const checkBranchOwner = require('../../hooks/check-branch-owner.js');
 
 module.exports = {
   before: {
@@ -15,7 +16,7 @@ module.exports = {
     get: [populatePlaylist('GET')],
     create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(),setRandomColor()],
     update: [authenticate('jwt'), checkPermissions()],
-    patch: [authenticate('jwt'), checkPermissions()],
+    patch: [authenticate('jwt'), checkPermissions(), checkBranchOwner()],
     remove: [authenticate('jwt'), checkPermissions()]
   },
 
