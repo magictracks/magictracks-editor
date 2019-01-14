@@ -1,7 +1,7 @@
-// Initializes the `links` service on path `/links`
+// Initializes the `playlists` service on path `/playlists`
 const createService = require('feathers-mongoose');
-const createModel = require('../../models/links.model');
-const hooks = require('./links.hooks');
+const createModel = require('../../models/step.model');
+const hooks = require('./step.hooks');
 
 module.exports = function (app) {
   const Model = createModel(app);
@@ -13,10 +13,10 @@ module.exports = function (app) {
   };
 
   // Initialize our service with any options it requires
-  app.use('/links', createService(options));
+  app.use('/step', createService(options));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('links');
+  const service = app.service('step');
 
   service.hooks(hooks);
 };

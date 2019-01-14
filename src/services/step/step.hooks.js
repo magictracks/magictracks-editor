@@ -6,14 +6,14 @@ const addDefaultBranch = require('../../hooks/add-default-branch.js');
 const addUniqueName = require('../../hooks/add-unique-name.js');
 const setRandomColor = require('../../hooks/set-random-color.js');
 const checkPermissions = require('../../hooks/check-permissions.js');
-const populatePlaylist = require('../../hooks/populate-playlist.js');
+const populateStep = require('../../hooks/populate-step.js');
 const checkBranchOwner = require('../../hooks/check-branch-owner.js');
 
 module.exports = {
   before: {
     all: [],
-    find: [populatePlaylist('FIND')],
-    get: [populatePlaylist('GET')],
+    find: [populateStep('FIND')],
+    get: [populateStep('GET')],
     create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(),setRandomColor()],
     update: [authenticate('jwt'), checkPermissions()],
     patch: [authenticate('jwt'), checkPermissions(), checkBranchOwner()],

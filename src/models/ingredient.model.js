@@ -88,7 +88,7 @@ module.exports = function (app) {
     featureType: {
       type: String,
       required: false,
-      default: "links"
+      default: "ingredient"
     },
     description: {
       type: String,
@@ -132,7 +132,7 @@ module.exports = function (app) {
     origin:{
       type: Schema.Types.ObjectId,
       required: false,
-      ref: 'links'
+      ref: 'ingredient'
     },
     colors: {
       type: Array,
@@ -143,5 +143,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('links', links);
+  return mongooseClient.model('ingredient', links);
 };

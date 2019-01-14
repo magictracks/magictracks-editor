@@ -5,7 +5,7 @@ const addOwner = require('../../hooks/add-owner.js');
 const addDefaultBranch = require('../../hooks/add-default-branch.js');
 const addUniqueName = require('../../hooks/add-unique-name.js');
 const setRandomColor = require('../../hooks/set-random-color.js');
-const populateProject = require('../../hooks/populate-project.js');
+const populateRecipe = require('../../hooks/populate-recipe.js');
 const addOrigin = require('../../hooks/add-origin.js');
 const checkBranchOwner = require('../../hooks/check-branch-owner.js');
 
@@ -16,10 +16,10 @@ module.exports = {
   before: {
     all: [],
     find: [
-      populateProject("FIND")
+      populateRecipe("FIND")
     ],
     get: [
-      populateProject("GET")
+      populateRecipe("GET")
     ],
     create: [
       authenticate('jwt'), 

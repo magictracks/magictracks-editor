@@ -10,15 +10,15 @@ module.exports = function (app) {
     Schema
   } = mongooseClient;
 
-  const linkRef = new Schema({
+  const ingredientRef = new Schema({
     branchName: {
       type: String,
       required: false,
     },
-    link: {
+    ingredient: {
       type: Schema.Types.ObjectId,
       required: false,
-      ref: 'links'
+      ref: 'ingredient'
     }
   })
 
@@ -40,23 +40,23 @@ module.exports = function (app) {
       type:String,
       default:[]
     }],
-    links: [linkRef]
+    ingredients: [ingredientRef]
   })
 
-  const playlists = new Schema({
+  const steps = new Schema({
     branches: [branchSchema],
     title: {
       type: String,
-      default: 'New Playlist'
+      default: 'New Step'
     },
     description: {
       type: String,
-      default: 'New Playlist description'
+      default: 'New step description'
     },
     featureType: {
       type: String,
       required: false,
-      default: "playlists"
+      default: "step"
     },
     uniqueName: {
       type: String,
@@ -83,7 +83,7 @@ module.exports = function (app) {
     origin:{
       type: Schema.Types.ObjectId,
       required: false,
-      ref: 'playlists' // TODO: add origin on create - if copied/forked, set ObjectId of project origin
+      ref: 'step' // TODO: add origin on create - if copied/forked, set ObjectId of project origin
     },
     colors: {
       type: Array,
@@ -94,5 +94,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('playlists', playlists);
+  return mongooseClient.model('step', playlists);
 };

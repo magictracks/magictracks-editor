@@ -12,23 +12,27 @@ module.exports = function (requestType, options = {}) {
       Model
     } = context.app.service(context.path);
 
-    const result = await Model.find(params.query)
-      .populate({
-        path: 'branches.playlists.playlist',
-        model: 'playlists',
-        populate:{
-          path: 'branches.links.link',
-          model: 'links'
-        }
-      })
-      .exec();
+    let result;
+    
 
     // if FIND is called, assign the result to the data array []
     // if GET is called, assign it directly to result
     if (requestType === "FIND"){
+      result = await Model.find(params.query)
+      .populate({
+        path: 'branches.ingredients.ingredient',
+        model: 'ingredient'})
+      .exec();
+
       context.result = Object.assign({'data': []}, context.result)
       context.result.data = result;
     } else if (requestType === "GET"){
+      result = await Model.findOne(params.query)
+      .populate({
+        path: 'branches.ingredients.ingredient',
+        model: 'ingredient'})
+      .exec();
+
       context.result = result
     }
     
