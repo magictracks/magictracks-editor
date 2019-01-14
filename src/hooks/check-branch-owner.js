@@ -28,7 +28,7 @@ module.exports = function (options = {}) {
             model: 'ingredient'
           }
         }).exec();
-      } else if (context.path == "playlist"){
+      } else if (context.path == "step"){
         result = await Model.findOne(params.query).populate({
           path: 'branches.ingredients.ingredient',
           model: 'ingredient',

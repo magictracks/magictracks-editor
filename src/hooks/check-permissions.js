@@ -5,7 +5,7 @@
 module.exports = function (options = {}) {
   return async context => {
       const{params} = context;
-
+      const {Model} = context.app.service(context.path)
       // if the user is the Owner or a collaborator allow write, 
       // otherwise throw an error thats suggests the user to:
       // a: copy -- for projects and playlists
@@ -13,9 +13,7 @@ module.exports = function (options = {}) {
 
       const user = context.params.user;
 
-      const feature = await context.app.service(context.path).get(params.query);
-
-      console.log("✨✨✨", feature);
+      const feature = await Model.findOne(params.query);
 
       if(user.username == feature.owner || feature.collaborators.includes(user.username) ){
         console.log("you're allowed to make edits!")
