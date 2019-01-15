@@ -10,16 +10,43 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(require('choo-service-worker')())
 }
 
+
 // Stores
-app.use(require('./stores/clicks'))
+// app.use(require('./stores/clicks'))
+app.use(require('./stores/recipes'))
+app.use(require('./stores/steps'))
+app.use(require('./stores/ingredients'))
+app.use(require('./stores/user'))
 
 // Views
 app.route('/', require('./views/main'))
+app.route('/:user', require('./views/main'))
+app.route('/:user/:db', require('./views/main'))
+app.route('/:user/:db/:id', require('./views/main'))
+app.route('/:user/:db/:id/:branch', require('./views/main'))
+// app.route('/:username/steps', require('./views/main'))
+// app.route('/:username/ingredients', require('./views/main'))
+// app.route('/recipes', require('./views/main'))
 // app.route('/:username', require('./views/...'))
 // app.route('/:username/projects/:id', require('./views/...'))
 // app.route('/:username/projects/:id/branches/:projectBranchName', require('./views/...'))
 
 // app.route('/dev-ref', require('./views/dev-ref'))
-app.route('/*', require('./views/404'))
+// app.route('/*', require('./views/404'))
+
+app.use((state, emitter) => {                  // 1.
+  emitter.on('navigate', () => {               // 2.
+    console.log(`Navigated to ${state.route}`) // 3.
+
+    // // TEMP: route the edit to default on playlists
+    // if(state.route == "edit"){
+    //   emitter.emit("replaceState", "/edit/playlists")
+    // }
+    // // TEMP: route the browse to default on playlists
+    // if(state.route == "browse"){
+    //   emitter.emit("replaceState", "/browse/playlists")
+    // }
+  })
+})
 
 module.exports = app.mount('body')
