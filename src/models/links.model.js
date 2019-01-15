@@ -70,7 +70,7 @@ module.exports = function (app) {
     // TODO: include link to parent?
   });
 
-  const ingredient = new Schema({
+  const links = new Schema({
     branches: [branchSchema],
     title: {
       type: String,
@@ -88,7 +88,7 @@ module.exports = function (app) {
     featureType: {
       type: String,
       required: false,
-      default: "ingredient"
+      default: "links"
     },
     description: {
       type: String,
@@ -132,7 +132,7 @@ module.exports = function (app) {
     origin:{
       type: Schema.Types.ObjectId,
       required: false,
-      ref: 'ingredient'
+      ref: 'links'
     },
     colors: {
       type: Array,
@@ -143,5 +143,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('ingredient', ingredient);
+  return mongooseClient.model('links', links);
 };

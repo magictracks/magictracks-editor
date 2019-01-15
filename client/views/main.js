@@ -10,17 +10,17 @@ module.exports = view
 function view (state, emit) {
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE)
 
-  function renderRecipes(){
-    if(state.recipes.length > 0){
-      console.log(state.recipes)
-      return state.recipes.map( recipe => {
+  function renderProjects(){
+    if(state.projects.length > 0){
+
+      return state.projects.map( project => {
         return html`
           <div class="w5 h5 bg-near-white shadow-1 flex flex-column grow ml4 mr4 mt2 mb2">
-            <div class="w-100 h-50" style="background-color:${recipe.colors[recipe.selectedColor]}"></div>
+            <div class="w-100 h-50" style="background-color:${project.colors[project.selectedColor]}"></div>
             <div class="w-100 f7">
               <ul class="pl0 pt1 pb1 pl2 pr2 list">
-                <li>${recipe.title}</li>
-                <li>by @${recipe.owner}</li>
+                <li>${project.title}</li>
+                <li>by @${project.owner}</li>
               </ul>
             </div>
           </div>
@@ -28,7 +28,7 @@ function view (state, emit) {
       })
     } else {
       return html`
-        <div>no recipes yet</div>
+        <div>no projects yet</div>
       `
     }
   }
@@ -40,7 +40,7 @@ function view (state, emit) {
         <!-- MAIN -->
         <main class="w-100 h-100 flex flex-column items-center mw8">
           <section class="pl4 pr4 pt4 pb4 flex flex-row w-100 h-100 flex-wrap justify-between">
-            ${renderRecipes()}
+            ${renderProjects()}
           </section>
           ${state.cache(Pagination, "Pagination", state, emit).render()}
         </main>

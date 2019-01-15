@@ -13,9 +13,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Stores
 // app.use(require('./stores/clicks'))
+app.use(require('./stores/projects'))
 app.use(require('./stores/recipes'))
-app.use(require('./stores/steps'))
-app.use(require('./stores/ingredients'))
+app.use(require('./stores/links'))
 app.use(require('./stores/user'))
 
 // Views

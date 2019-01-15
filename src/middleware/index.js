@@ -17,8 +17,8 @@ module.exports = function (app) {
   /** 
    * See helpers for express routes
    */
-  ingredientHelpers(app);
-  recipeHelpers(app);
-  stepHelpers(app);
+  // ingredientHelpers(app);
+  // recipeHelpers(app);
+  // stepHelpers(app);
 
 };

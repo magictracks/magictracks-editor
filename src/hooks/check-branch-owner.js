@@ -25,21 +25,21 @@ module.exports = function (options = {}) {
         } = context.app.service(context.path);
         let result;
 
-        if (context.path == "recipe") {
+        if (context.path == "projects") {
           result = await Model.findOne(params.query).populate({
-            path: 'branches.steps.step',
-            model: 'step',
+            path: 'branches.recipes.recipe',
+            model: 'recipes',
             populate: {
-              path: 'branches.ingredients.ingredient',
-              model: 'ingredient'
+              path: 'branches.links.link',
+              model: 'links'
             }
           }).exec();
-        } else if (context.path == "step") {
+        } else if (context.path == "recipes") {
           result = await Model.findOne(params.query).populate({
-            path: 'branches.ingredients.ingredient',
-            model: 'ingredient',
+            path: 'branches.links.link',
+            model: 'links',
           }).exec();
-        } else if (context.path == "ingredient") {
+        } else if (context.path == "links") {
           result = await Model.findOne(params.query)
         }
 

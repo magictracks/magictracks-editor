@@ -1,4 +1,4 @@
-// playlists-model.js - A mongoose model
+// projects-model.js - A mongoose model
 // 
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
@@ -10,15 +10,15 @@ module.exports = function (app) {
     Schema
   } = mongooseClient;
 
-  const ingredientRef = new Schema({
+  const recipeRef = new Schema({
     branchName: {
       type: String,
       required: false,
     },
-    ingredient: {
+    recipe: {
       type: Schema.Types.ObjectId,
       required: false,
-      ref: 'ingredient'
+      ref: 'recipes'
     }
   })
 
@@ -30,41 +30,41 @@ module.exports = function (app) {
     },
     branchOwner: {
       type: String,
-      required: false
+      required: true,
     },
     description: {
       type: String,
-      default: 'an informative description of this playlist otherwise the root description will be used'
+      default: 'an informative description of this project otherwise the root description will be used'
     },
     images:[{
       type:String,
       default:[]
     }],
-    ingredients: [ingredientRef]
+    recipes: [recipeRef] // stepReference
   })
 
-  const step = new Schema({
+  const projects = new Schema({
     branches: [branchSchema],
     title: {
       type: String,
-      default: 'New Step'
+      default: 'New Project'
+    },
+    uniqueName: {
+      type:String,
+      default: generate({ words: 2, alliterative: true }).dashed
     },
     description: {
       type: String,
-      default: 'New step description'
-    },
-    featureType: {
-      type: String,
-      required: false,
-      default: "step"
-    },
-    uniqueName: {
-      type: String,
-      default: ""
+      default: 'New project description'
     },
     owner: {
       type: String,
       required: false
+    },
+    featureType: {
+      type: String,
+      required: false,
+      default: "projects"
     },
     collaborators: [{
       type: String,
@@ -83,7 +83,7 @@ module.exports = function (app) {
     origin:{
       type: Schema.Types.ObjectId,
       required: false,
-      ref: 'step' // TODO: add origin on create - if copied/forked, set ObjectId of project origin
+      ref: 'projects' // TODO: add origin on create - if copied/forked, set ObjectId of project origin
     },
     colors: {
       type: Array,
@@ -94,5 +94,5 @@ module.exports = function (app) {
     timestamps: true
   });
 
-  return mongooseClient.model('step', step);
+  return mongooseClient.model('projects', projects);
 };
