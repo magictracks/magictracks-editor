@@ -4,7 +4,22 @@ var html = require('choo/html')
 class Navbar extends Component {
   constructor (id, state, emit) {
     super(id)
+    this.state = state;
+    this.emit = emit;
     this.local = state.components[id] = {}
+    this.checkAuthStatus = this.checkAuthStatus.bind(this);
+  }
+
+  checkAuthStatus(){
+    if(this.state.user.authenticated == true){
+      return html`
+        <a class="link black" href="/${this.state.user.username}/projects">${this.state.user.username}</a>
+      `
+    } else{
+      return html`
+        <a class="link black" href="/login">Login</a>
+      `
+    }
   }
 
   createElement () {
@@ -25,7 +40,7 @@ class Navbar extends Component {
           </div>
         </ul>
         <ul class="w-30 list flex flex-row pl0 justify-end items-center">
-          <li class="f6 pr2"> <a class="link black" href="/">@username</a></li>
+          <li class="f6 pr2">${this.checkAuthStatus()}</li>
           <li class="f6 pr2"> <a class="link black" href="/">About</a></li>
           <li class="f6 pr2"> <a class="link black" href="/">Settings</a></li>
         </ul>

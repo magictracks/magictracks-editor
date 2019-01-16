@@ -8,13 +8,15 @@ function store (state, emitter) {
 
   state.user = {
     username: "",
-    id: "",
     authenticated:""
   }
 
   state.events.user_signup = 'user:signup';
   state.events.user_login = 'user:login';
   state.events.user_logout = 'user:logout';
+
+  // initialize the app by trying to login
+  auth.login();
 
 
   // LISTENERS
@@ -53,7 +55,7 @@ function store (state, emitter) {
           state.user.username = authResponse.username;
           state.user.id = authResponse._id;
           state.user.authenticated = true;
-          emitter.emit("pushState", "/edit")
+          emitter.emit("pushState", `/${state.user.username}/projects`)
         }).catch(err => {
           console.log("not auth'd friend!")
           state.user.authenticated = false;
@@ -75,12 +77,12 @@ function store (state, emitter) {
           state.user.authenticated = true;
           state.user.username = authResponse.username;
           state.user.id = authResponse._id;
-          emitter.emit("pushState", "/edit")
+          emitter.emit("pushState", `/${state.user.username}/projects`)
         }).catch(err => {
           // Show login page (potentially with `e.message`)
           console.log('Authentication error', err);
           state.user.authenticated = false;
-          emitter.emit("pushState", "/")
+          emitter.emit("pushState", "/login")
         });
       }
     };

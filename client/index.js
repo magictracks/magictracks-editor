@@ -20,6 +20,8 @@ app.use(require('./stores/user'))
 
 // Views
 app.route('/', require('./views/main'))
+app.route('/login', require('./views/login'));
+app.route('/signup', require('./views/signup'));
 app.route('/:user', require('./views/main'))
 app.route('/:user/:db', require('./views/main'))
 app.route('/:user/:db/:id', require('./views/main'))

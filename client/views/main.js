@@ -15,7 +15,7 @@ function view (state, emit) {
 
       return state.projects.map( project => {
         return html`
-          <div class="w5 h5 bg-near-white shadow-1 flex flex-column grow ml4 mr4 mt2 mb2">
+          <div class="w5 h5 bg-near-white shadow-5 flex flex-column ml4 mr4 mt2 mb2">
             <div class="w-100 h-50" style="background-color:${project.colors[project.selectedColor]}"></div>
             <div class="w-100 f7">
               <ul class="pl0 pt1 pb1 pl2 pr2 list">
