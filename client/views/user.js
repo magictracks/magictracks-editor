@@ -27,11 +27,13 @@ function view (state, emit) {
     }
   }
 
-  function showUserPage(){
     // TODO: allow edits if authenticated, otherwise, remove buttons for editing
     // if(state.user.authenticated){
     // } else{
     // }
+
+  // show the selected feature(s) 
+  function showUserNav(){
 
     function checkPath(_path){
       if(_path == state.params.collection){
@@ -39,7 +41,6 @@ function view (state, emit) {
       } else{
         return ''
       }
-      
     }
 
     return html`
@@ -56,6 +57,28 @@ function view (state, emit) {
     </section>
     `
 
+  }
+
+  // show the selected feature(s) 
+  function showUserSelection(){
+    let {collection, user} = state.params;
+
+    if(state.params.hasOwnProperty("id")){
+      // if an id property exists in params, just show me that one item
+      return html`
+        <div>specific feature</div>
+      `
+    } else {
+      // otherwise if no id property exists in params, show me the list
+      return state[collection].map( item => {
+        return html`
+          <div class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+            <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
+            <p class="f5">${item.title}</p>
+          </div>
+        `
+      })
+    }
 
   }
 
@@ -65,7 +88,12 @@ function view (state, emit) {
     ${state.cache(NavBar, "NavBar", state, emit).render()}
     <!-- MAIN -->
     <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
-      ${showUserPage()}
+      ${showUserNav()}
+
+      <section class="mt2 w-100 flex flex-column items-start">
+      ${showUserSelection()}
+      </section>
+      
     </main>
   </body>   
   `
