@@ -89,24 +89,54 @@ function view (state, emit) {
         
         <section class="mb4">
           <!-- header -->
-          <p><small class="f7">project</small></p>
+          <p class="w-100 flex flex-row justify-start items-center"><small class="f7">project</small> · <small>edit</small></p>
           <h2>${feature.title}</h2>
           <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
           <p>${feature.description}</p>
           <ul class="list pl0"></ul>
         </section>
   
-        <!-- recipes list --> 
+        
         <section>
+          <!-- recipes list --> 
           ${selectedBranch.recipes.map( (recipe,idx) => {
-            let d = recipe.recipe;
+            let selectedRecipe = recipe.recipe;
+
+            let recipeBranch = selectedRecipe.branches.find( item => {
+              return item.branchName == 'default'
+            })
+
             return html`
               <fieldset class="w-100 ba br2 mb4">
                 <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
-                <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${d.colors[d.selectedColor]}">edit</div>
+                <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
                 <section>
-                  <h3>${d.title}</h3>
-                  <p>${d.description}</p>
+                  <h3>${selectedRecipe.title}</h3>
+                  <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
+                  <p>${selectedRecipe.description}</p>
+                </section>
+                <section>
+                  <!-- links list --> 
+                  ${
+                    recipeBranch.links.map( (link) => {
+                      let selectedLink = link.link;
+
+                      return html`
+                        <div class="w-100 flex flex-column br2 ba">
+                          <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
+                          <div class="w-100 flex flex-row pa2 items-center f7">
+                            <div class="w2 h2 mr4" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}"></div>
+                            <div class="w-40 flex flex-column">
+                              <small>${selectedLink.url}</small>
+                              <p>${selectedLink.title}</p>
+                            </div>
+                            <div class="w-40"><p>${selectedLink.description}</p></div>
+                            <div class="w2 h2">more</div>
+                          </div>
+                        </div>
+                      `
+                    })
+                  }
                 </section>
               </fieldset>
             `
