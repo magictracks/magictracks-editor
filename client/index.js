@@ -40,6 +40,7 @@ app.route('/:user/:db/:id/:branch', require('./views/main'))
 app.use((state, emitter) => {                  // 1.
   emitter.on('navigate', () => {               // 2.
     console.log(`Navigated to ${state.route}`) // 3.
+    console.log(`URL Params to ${JSON.stringify(state.params)}`) // 3.
 
     // // TEMP: route the edit to default on playlists
     // if(state.route == "edit"){

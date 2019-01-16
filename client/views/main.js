@@ -15,7 +15,7 @@ function view (state, emit) {
 
       return state.projects.map( project => {
         return html`
-          <div class="w5 h5 bg-near-white shadow-5 flex flex-column ml4 mr4 mt2 mb2">
+          <div class="w5 h5 bg-near-white shadow-5 flex flex-column mr2 mt2 mb2">
             <div class="w-100 h-50" style="background-color:${project.colors[project.selectedColor]}"></div>
             <div class="w-100 f7">
               <ul class="pl0 pt1 pb1 pl2 pr2 list">
@@ -33,13 +33,44 @@ function view (state, emit) {
     }
   }
 
+  function renderCurrentProfile(){
+    if(state.params.user){
+      return html`
+      <section class="mt2 w-100 flex flex-column items-start">
+      <div>
+        <h2>@${state.params.user}</h2>
+      </div>
+      <ul class="list pl0 flex flex-row">
+        <li class="mr4"><a class="link black underline" href="/${state.params.user}/projects">Projects</a></li>
+        <li class="mr4"><a class="link black underline" href="/${state.params.user}/recipes">Recipes</a></li>
+        <li class="mr4"><a class="link black underline" href="/${state.params.user}/links">Contributed Links</a></li>
+      </ul>
+    </section>
+      `
+    } else{
+      return html`
+      <section class="mt2 w-100 flex flex-column items-start">
+        <div>
+          <h2>Browse</h2>
+        </div>
+        <ul class="list pl0 flex flex-row">
+          <li class="mr4"><a class="link black underline" href="/projects">Projects</a></li>
+          <li class="mr4"><a class="link black underline" href="/recipes">Recipes</a></li>
+          <li class="mr4"><a class="link black underline" href="/links">Links</a></li>
+        </ul>
+      </section>
+      `
+    }
+  }
+
   return html`
     <body class="w-100 h-100 code lh-copy bg-white ma0 flex flex-column items-center">
         <!-- NavBar Top -->
         ${state.cache(NavBar, "NavBar", state, emit).render()}
         <!-- MAIN -->
-        <main class="w-100 h-100 flex flex-column items-center mw8">
-          <section class="pl4 pr4 pt4 pb4 flex flex-row w-100 h-100 flex-wrap justify-between">
+        <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
+          ${renderCurrentProfile()}
+          <section class="pt4 pb4 flex flex-row w-100 h-100 flex-wrap justify-start">
             ${renderProjects()}
           </section>
           ${state.cache(Pagination, "Pagination", state, emit).render()}

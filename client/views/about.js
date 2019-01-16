@@ -20,7 +20,7 @@ function view (state, emit) {
           <!-- right -->
           <section class="pa0 flex flex-row bg-white w-100-l w-100-m w-100-ns justify-center pt4 flex-wrap">
             <div class="w-50-l w-100-m w-100-ns pr4">
-              <p>The Magic Tracks project is a community and webspace of creatives and curious makers dedicated to curating playlists for learning.</p>
+              <p>Magic Tracks is a web platform to turn project ideas into instant, pick-and-mix tutorials. Magic Tracks aims to help students and educators collaboratively build modular "recipes" that, when strung together, can guide learners "from A to B" through the process of ideation to creation.</p>
               <p>This open educational experiment aims to help people understand what it means to turn an idea into reality and to uncover the magic behind those ideas.</p>
               <p>Whether you're new to a topic or an expert, sometimes it's hard to know how to puzzle together all of the pieces that make up an idea. It's also hard to know what you need to know when approaching a new idea.</p>
               <p>The Magic Tracks project is a web application and methodology for you and your collaborators to reuse and organize existing web references - e.g. tutorials, videos, etc - into playlists that help you to learn all the things you need to make your unique idea come true.</p>
@@ -48,10 +48,11 @@ function view (state, emit) {
                 <p>Here's a little video about how to use the Magic Tracks.</p>
                 <p>
                   <ol>
-                    <li>Create a new playlist for your idea</li>
-                    <li>Search for sections that speak to your idea or create new ones</li>
-                    <li>Add collaborators to your playlist for help</li>
-                    <li>Fill in your sections with resources found within Magic Tracks and across the web</li>
+                    <li>Create a new project for your idea</li>
+                    <li>Search for recipes that speak to your idea or create new ones</li>
+                    <li>Add links to your recipes and add helpful descriptions</li>
+                    <li>Add collaborators to your project for help, allowing them to add recipes and links</li>
+                    <li>Copy other recipes and remix them for your own projects</li>
                     <li>Update and edit titles, descriptions, tags, to tie your references together.</li>
                     <li>Make all the things!</li>
                   </ol>
