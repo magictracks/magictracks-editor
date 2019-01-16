@@ -33,47 +33,13 @@ function view (state, emit) {
     }
   }
 
-  function renderCurrentProfile(){
-    if(state.params.user){
-      return html`
-      <section class="mt2 w-100 flex flex-column items-start">
-      <div>
-        <h2>@${state.params.user}</h2>
-      </div>
-      <ul class="list pl0 flex flex-row">
-        <li class="mr4"><a class="link black underline" href="/${state.params.user}/projects">Projects</a></li>
-        <li class="mr4"><a class="link black underline" href="/${state.params.user}/recipes">Recipes</a></li>
-        <li class="mr4"><a class="link black underline" href="/${state.params.user}/links">Contributed Links</a></li>
-      </ul>
-    </section>
-      `
-    } else{
-      return html`
-      <section class="mt2 w-100 flex flex-column items-start">
-        <div>
-          <h2>Browse</h2>
-        </div>
-        <ul class="list pl0 flex flex-row">
-          <li class="mr4"><a class="link black underline" href="/projects">Projects</a></li>
-          <li class="mr4"><a class="link black underline" href="/recipes">Recipes</a></li>
-          <li class="mr4"><a class="link black underline" href="/links">Links</a></li>
-        </ul>
-      </section>
-      `
-    }
-  }
-
   return html`
     <body class="w-100 h-100 code lh-copy bg-white ma0 flex flex-column items-center">
         <!-- NavBar Top -->
         ${state.cache(NavBar, "NavBar", state, emit).render()}
         <!-- MAIN -->
         <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
-          ${renderCurrentProfile()}
-          <section class="pt4 pb4 flex flex-row w-100 h-100 flex-wrap justify-start">
-            ${renderProjects()}
-          </section>
-          ${state.cache(Pagination, "Pagination", state, emit).render()}
+          
         </main>
     </body>   
   `
@@ -82,6 +48,11 @@ function view (state, emit) {
 
 /**
 
+${renderCurrentProfile()}
+<section class="pt4 pb4 flex flex-row w-100 h-100 flex-wrap justify-start">
+  ${renderProjects()}
+</section>
+${state.cache(Pagination, "Pagination", state, emit).render()}
 
 <body class="code lh-copy">
       <main class="pa3 cf center">

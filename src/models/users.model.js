@@ -20,6 +20,23 @@ module.exports = function (app) {
     },
     description: {
       type: String
+    },
+    followers:{
+      type: Array,
+      default: []
+    },
+    following:{
+      type: Array,
+      default: []
+    },
+    twitterHandle:{
+      type:String,
+    },
+    githubHandle:{
+      type:String,
+    },
+    mastodonHandle:{
+      type:String,
     }
   }, {
     timestamps: true

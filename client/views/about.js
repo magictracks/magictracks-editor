@@ -13,10 +13,12 @@ function view (state, emit) {
       <main class="w-100 h-100 flex flex-column items-center mw8">
       <!-- row1 -->
       <section class="flex-m flex-l flex-ns flex-column items-start justify-center flex-wrap-l flex-wrap-m pt4 pl4">
-          <!-- left -->
+          
+
           <section class="pb2 pt2 flex flex-column bg-white w-50-l w-100-m w-100-ns justify-center">
             <h1 class="pa0 ma0 f1 lh-solid">What makes your idea magical?</h1>
           </section>
+
           <!-- right -->
           <section class="pa0 flex flex-row bg-white w-100-l w-100-m w-100-ns justify-center pt4 flex-wrap">
             <div class="w-50-l w-100-m w-100-ns pr4">

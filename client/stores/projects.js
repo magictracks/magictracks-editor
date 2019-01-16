@@ -16,7 +16,6 @@ function store (state, emitter) {
   emitter.on('DOMContentLoaded', function () {
     
   })
-
   
   // emitter.on('fetch-recipes', (username) => {   // 1.
   //   console.log(username);

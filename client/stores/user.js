@@ -16,7 +16,7 @@ function store (state, emitter) {
   state.events.user_logout = 'user:logout';
 
   // initialize the app by trying to login
-  auth.login();
+  auth.checkLogin();
 
 
   // LISTENERS
@@ -47,6 +47,20 @@ function store (state, emitter) {
       });
     };
 
+    this.checkLogin = function(_formData){
+      feathersClient.authenticate().then( authResponse => {
+        // try to auth using JWT from local Storage
+        state.user.username = authResponse.username;
+        state.user.id = authResponse._id;
+        state.user.authenticated = true;
+        emitter.emit(state.events.RENDER);
+      }).catch(err => {
+        console.log("not auth'd friend!")
+        state.user.authenticated = false;
+        emitter.emit("pushState", "/login")
+      });
+    };
+
     // LOGIN
     this.login = function(_formData){
       if (!_formData) {
@@ -55,7 +69,7 @@ function store (state, emitter) {
           state.user.username = authResponse.username;
           state.user.id = authResponse._id;
           state.user.authenticated = true;
-          emitter.emit("pushState", `/${state.user.username}/projects`)
+          emitter.emit("pushState", `/${state.user.username}/projects`) //${state.user.username}
         }).catch(err => {
           console.log("not auth'd friend!")
           state.user.authenticated = false;
@@ -77,7 +91,7 @@ function store (state, emitter) {
           state.user.authenticated = true;
           state.user.username = authResponse.username;
           state.user.id = authResponse._id;
-          emitter.emit("pushState", `/${state.user.username}/projects`)
+          emitter.emit("pushState", `/${state.user.username}/projects`) //${state.user.username}
         }).catch(err => {
           // Show login page (potentially with `e.message`)
           console.log('Authentication error', err);
