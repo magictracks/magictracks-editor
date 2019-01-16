@@ -32,16 +32,16 @@ class Navbar extends Component {
           </div>
           <div class="bg-moon-gray w4 h-100 br1 br--right">
             <select class="h-100 w-100" name="filterSearch">
-              <option value="recipe">Recipes</option>
-              <option value="step">Steps</option>
-              <option value="ingredient">Ingredients</option>
+              <option value="projects">Projects</option>
+              <option value="recipes">Recipes</option>
+              <option value="links">Links</option>
               <option value="user">Users</option>
             </select>
           </div>
         </ul>
         <ul class="w-30 list flex flex-row pl0 justify-end items-center">
-          <li class="f6 pr2">${this.checkAuthStatus()}</li>
-          <li class="f6 pr2"> <a class="link black" href="/">About</a></li>
+          <li class="f6 mr4">${this.checkAuthStatus()}</li>
+          <li class="f6 mr4"> <a class="link black" href="/about">About</a></li>
           <li class="f6 pr2"> <a class="link black" href="/">Settings</a></li>
         </ul>
       </nav>
