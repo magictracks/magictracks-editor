@@ -30,20 +30,7 @@ app.route('/search/:collection', require('./views/search'))
 
 app.route('/:user', require('./views/user'))
 app.route('/:user/:collection', require('./views/user'))
-
-// app.route('/projects', require('./views/main'))
-// app.route('/recipes', require('./views/main'))
-// app.route('/links', require('./views/main'))
-// app.route('/:user', require('./views/main'))
-// app.route('/:user/:db', require('./views/main'))
-// app.route('/:user/:db/:id', require('./views/main'))
-// app.route('/:user/:db/:id/:branch', require('./views/main'))
-// app.route('/:username/steps', require('./views/main'))
-// app.route('/:username/ingredients', require('./views/main'))
-// app.route('/recipes', require('./views/main'))
-// app.route('/:username', require('./views/...'))
-// app.route('/:username/projects/:id', require('./views/...'))
-// app.route('/:username/projects/:id/branches/:projectBranchName', require('./views/...'))
+app.route('/:user/:collection/:id', require('./views/user'))
 
 // app.route('/dev-ref', require('./views/dev-ref'))
 // app.route('/*', require('./views/404'))
@@ -63,9 +50,7 @@ app.use((state, emitter) => {                  // 1.
         ]
         }
       }
-      console.log(query);
       feathersClient.service(state.params.collection).find(query).then(features => {
-        console.log(features)
         state[state.params.collection] = features.data;
         emitter.emit(state.events.RENDER);
       })

@@ -5,6 +5,9 @@ module.exports = store
 store.storeName = 'projects'
 function store (state, emitter) {
   state.projects = [];
+
+  state.events.find_projects = "projects:find";
+  state.events.get_project = "projects:get";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -16,6 +19,24 @@ function store (state, emitter) {
   emitter.on('DOMContentLoaded', function () {
     
   })
+
+  // find projects
+  emitter.on(state.events.find_projects, function(_query){
+    feathersClient.service("projects").find(_query).then(features => {
+      console.log(features);
+      state.projects = features.data;
+      emitter.emit(state.events.RENDER);
+    });
+  });
+
+
+  // emitter.on(state.events.get_project, function(_query){
+
+  //   feathersClient.service("projects").get(_query).then(feature => {
+
+
+  //   })
+  // })
   
   // emitter.on('fetch-recipes', (username) => {   // 1.
   //   console.log(username);

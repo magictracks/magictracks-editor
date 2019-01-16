@@ -6,26 +6,26 @@ module.exports = view
 
 function view (state, emit) {
 
-  function renderCurrentProfile(){
-    if(state.params.user){
-      return html`
+  // function renderCurrentProfile(){
+  //   if(state.params.user){
+  //     return html`
       
-      `
-    } else{
-      return html`
-      <section class="mt2 w-100 flex flex-column items-start">
-        <div>
-          <h2>Browse</h2>
-        </div>
-        <ul class="list pl0 flex flex-row">
-          <li class="mr4"><a class="link black underline" href="/projects">Projects</a></li>
-          <li class="mr4"><a class="link black underline" href="/recipes">Recipes</a></li>
-          <li class="mr4"><a class="link black underline" href="/links">Links</a></li>
-        </ul>
-      </section>
-      `
-    }
-  }
+  //     `
+  //   } else{
+  //     return html`
+  //     <section class="mt2 w-100 flex flex-column items-start">
+  //       <div>
+  //         <h2>Browse</h2>
+  //       </div>
+  //       <ul class="list pl0 flex flex-row">
+  //         <li class="mr4"><a class="link black underline" href="/projects">Projects</a></li>
+  //         <li class="mr4"><a class="link black underline" href="/recipes">Recipes</a></li>
+  //         <li class="mr4"><a class="link black underline" href="/links">Links</a></li>
+  //       </ul>
+  //     </section>
+  //     `
+  //   }
+  // }
 
     // TODO: allow edits if authenticated, otherwise, remove buttons for editing
     // if(state.user.authenticated){
@@ -43,7 +43,9 @@ function view (state, emit) {
       }
     }
 
-    return html`
+    if(!state.params.hasOwnProperty("id")){
+      // if an id property exists in params, just show me that one item
+      return html`
     <section class="mt2 w-100 flex flex-column items-start">
       <div>
         <h2>@${state.params.user}</h2>
@@ -56,23 +58,103 @@ function view (state, emit) {
       </ul>
     </section>
     `
+    }
 
+  }
+
+  function renderProject(){
+    let {collection, user, id} = state.params;
+    let feature = state[collection].find(item => {
+      return item._id === id;
+    });
+
+    if(feature === undefined){
+      let query = {"query": {"$or": [
+        {"owner": user},
+        {"collaborators":[user]}
+      ]}}
+      console.log(query);
+      emit(state.events.find_projects, query)
+      return html`<div>fetching data</div>`
+    } else{
+      console.log(feature);
+      let selectedBranch = feature.branches.find(item => {
+        return item.branchName == 'default'
+      })
+
+
+
+      return html`
+      <div class="w-100 h-100">
+        
+        <section class="mb4">
+          <!-- header -->
+          <p><small class="f7">project</small></p>
+          <h2>${feature.title}</h2>
+          <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
+          <p>${feature.description}</p>
+          <ul class="list pl0"></ul>
+        </section>
+  
+        <!-- recipes list --> 
+        <section>
+          ${selectedBranch.recipes.map( (recipe,idx) => {
+            let d = recipe.recipe;
+            return html`
+              <fieldset class="w-100 ba br2 mb4">
+                <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
+                <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${d.colors[d.selectedColor]}">edit</div>
+                <section>
+                  <h3>${d.title}</h3>
+                  <p>${d.description}</p>
+                </section>
+              </fieldset>
+            `
+          })}
+        </section>
+      </div>
+      `
+    }
+
+    
+  }
+
+  function renderRecipe(){
+    return html`
+    <div>specific recipe</div>
+    `
+  }
+
+  function renderLink(){
+    return html`
+    <div>specific link</div>
+    `
   }
 
   // show the selected feature(s) 
   function showUserSelection(){
     let {collection, user} = state.params;
 
+    function selectItem(e){
+      let itemId = e.currentTarget.dataset.id;
+      emit("pushState", `/${user}/${collection}/${itemId}`)
+    }
+
     if(state.params.hasOwnProperty("id")){
       // if an id property exists in params, just show me that one item
-      return html`
-        <div>specific feature</div>
-      `
+      if(collection === "projects"){
+        return renderProject();
+      } else if (collection === "recipes"){
+        return renderRecipe();
+      } else if (collection === "links"){
+        return renderLink();
+      }
+
     } else {
       // otherwise if no id property exists in params, show me the list
       return state[collection].map( item => {
         return html`
-          <div class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+          <div onclick=${selectItem} data-id=${item._id} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
             <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
             <p class="f5">${item.title}</p>
           </div>
