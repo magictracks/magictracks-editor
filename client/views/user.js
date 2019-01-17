@@ -110,6 +110,7 @@ function view (state, emit) {
   
         
         <section>
+        ${selectedBranch.recipes.length == 0 ? addSectionButton() : ""}
           <!-- recipes list --> 
           ${selectedBranch.recipes.map( (recipe,idx) => {
             let selectedRecipe = recipe.recipe;
@@ -128,6 +129,7 @@ function view (state, emit) {
                   <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
                   <p>${selectedRecipe.description}</p>
                 </section>
+                ${recipeBranch.links.length == 0 ? addLinkButton() : ""}
                 <section>
                   <!-- links list --> 
                   ${
