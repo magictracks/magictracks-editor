@@ -6,31 +6,10 @@ module.exports = view
 
 function view (state, emit) {
 
-  // function renderCurrentProfile(){
-  //   if(state.params.user){
-  //     return html`
-      
-  //     `
-  //   } else{
-  //     return html`
-  //     <section class="mt2 w-100 flex flex-column items-start">
-  //       <div>
-  //         <h2>Browse</h2>
-  //       </div>
-  //       <ul class="list pl0 flex flex-row">
-  //         <li class="mr4"><a class="link black underline" href="/projects">Projects</a></li>
-  //         <li class="mr4"><a class="link black underline" href="/recipes">Recipes</a></li>
-  //         <li class="mr4"><a class="link black underline" href="/links">Links</a></li>
-  //       </ul>
-  //     </section>
-  //     `
-  //   }
+  // TODO: allow edits if authenticated, otherwise, remove buttons for editing
+  // if(state.user.authenticated){
+  // } else{
   // }
-
-    // TODO: allow edits if authenticated, otherwise, remove buttons for editing
-    // if(state.user.authenticated){
-    // } else{
-    // }
 
   // show the selected feature(s) 
   function showUserNav(){
@@ -68,9 +47,48 @@ function view (state, emit) {
     `
   }
 
+  function toggleAddLinkModal(e){
+    console.log("add link button")
+    document.querySelector("#addLinkModal").classList.toggle("dn");
+  }
+
   function addLinkButton(){
+
     return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver" onclick=${()=> console.log('add link')}>add link</button>
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver" onclick=${toggleAddLinkModal}>add link</button>
+    `
+  }
+
+
+  function addLinkModal(){
+    return html`
+      <div id="addLinkModal" class="w-100 h-100 fixed dn" style="background-color:rgba(0, 27, 68, 0.5)">
+        <div class="w-100 h-100 flex flex-column justify-center items-center">
+          <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
+            <div class="w-100 flex flex-row justify-between" onclick=${toggleAddLinkModal}>
+              <h2>New Link Modal</h2>
+              <button class="bn f2 bg-light-gray">✕</button>
+            </div>
+            <section>
+              <form name="addLinkForm" id="addLinkForm">
+              <fieldset class="w-100 mb2">
+                <legend class="br-pill ba pl1 pr1">URL</legend>
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
+              </fieldset>
+              <fieldset class="w-100 mb2">
+                <legend class="br-pill ba pl1 pr1">title</legend>
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
+              </fieldset>
+              <fieldset class="w-100 mb2">
+                <legend class="br-pill ba pl1 pr1">description</legend>
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
+              </fieldset>
+              <input type="submit" value="save">
+              </form>
+            </section>
+          </div>
+        </div>
+      </div>
     `
   }
 
@@ -225,8 +243,10 @@ function view (state, emit) {
       <section class="mt2 w-100 flex flex-column items-start">
       ${showUserSelection()}
       </section>
+    
       
     </main>
+    ${addLinkModal()}
   </body>   
   `
 }

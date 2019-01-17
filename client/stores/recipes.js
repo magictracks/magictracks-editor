@@ -11,6 +11,8 @@ function store (state, emitter) {
       state.recipes = feature.data;
       emitter.emit(state.events.RENDER);
     });
+  
   emitter.on('DOMContentLoaded', function () {
+
   })
 }
