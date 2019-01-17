@@ -6,6 +6,11 @@ module.exports = view
 
 function view (state, emit) {
 
+  let projectId,
+      projectBranchName,
+      recipeId,
+      recipeBranchName;
+
   // TODO: allow edits if authenticated, otherwise, remove buttons for editing
   // if(state.user.authenticated){
   // } else{
@@ -41,38 +46,107 @@ function view (state, emit) {
 
   }
 
-  function addRecipeButton(){
+
+  function toggleAddRecipeModal(e){
+    console.log('add recipe button');
+    projectId = e.currentTarget.dataset.projectid;
+    projectBranchName = e.currentTarget.dataset.projectbranch;
+    // console.log(e.currentTarget)
+    console.log(projectId, projectBranchName)
+
+    document.querySelector("#addRecipeModal").classList.toggle("dn");
+  }
+
+
+  function addRecipeModal(){
+    
+    function submitForm(e){
+      e.preventDefault();
+      let formData = new FormData(e.currentTarget);
+
+      let payload ={
+        recipeData:{
+          title: formData.get("title"),
+          description: formData.get("description")
+        },
+        projectId,
+        projectBranchName
+      }
+
+      emit(state.events.recipes_createAndPush, payload);
+    }
+
     return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2" onclick=${()=> console.log('add recipe')}>add recipe</button>
+      <div id="addRecipeModal" class="w-100 h-100 fixed dn" style="background-color:rgba(0, 27, 68, 0.5)">
+        <div class="w-100 h-100 flex flex-column justify-center items-center">
+          <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
+            <div class="w-100 flex flex-row justify-between" onclick=${toggleAddLinkModal}>
+              <h2>Add Recipe Modal</h2>
+              <button class="bn f2 bg-light-gray">✕</button>
+            </div>
+            <section>
+              <form name="addRecipeForm" id="addRecipeForm" onsubmit=${submitForm}>
+              <fieldset class="w-100 mb2">
+                <legend class="br-pill ba pl1 pr1">title</legend>
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="title">
+              </fieldset>
+              <fieldset class="w-100 mb2">
+                <legend class="br-pill ba pl1 pr1">description</legend>
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="description">
+              </fieldset>
+              <input type="submit" value="save">
+              </form>
+            </section>
+          </div>
+        </div>
+      </div>
+    `
+  }
+
+  function addRecipeButton(parentId, branchName){
+    return html`
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2"
+      data-projectid="${parentId}"
+      data-projectbranch="${branchName}"
+      onclick=${toggleAddRecipeModal}>add recipe</button>
     `
   }
 
   function toggleAddLinkModal(e){
     console.log("add link button")
+    recipeId = e.currentTarget.dataset.recipeid;
+    recipeBranchName = e.currentTarget.dataset.recipebranch;
+    // console.log(e.currentTarget)
+    console.log(recipeId, recipeBranchName)
+
     document.querySelector("#addLinkModal").classList.toggle("dn");
   }
 
-  function addLinkButton(){
-
+  function addLinkButton(parentId, branchName){
     return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver" onclick=${toggleAddLinkModal}>add link</button>
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver"
+      data-recipeid="${parentId}"
+      data-recipebranch="${branchName}"
+      onclick=${toggleAddLinkModal}>add link</button>
     `
   }
 
 
   function addLinkModal(){
-
+    
     function submitForm(e){
       e.preventDefault();
-      console.log(e.currentTarget);
       let formData = new FormData(e.currentTarget);
 
       let payload ={
-        url: formData.get("url"),
-        title: formData.get("title")
+        linkData:{
+          url: formData.get("url")
+        },
+        recipeId,
+        recipeBranchName
       }
 
-      emit(state.events.links_create, payload);
+      emit(state.events.links_createAndPush, payload);
     }
 
     return html`
@@ -108,6 +182,7 @@ function view (state, emit) {
 
   function renderProject(){
     let {collection, user, id} = state.params;
+    
     let feature = state[collection].find(item => {
       return item._id === id;
     });
@@ -117,14 +192,18 @@ function view (state, emit) {
         {"owner": user},
         {"collaborators":[user]}
       ]}}
-      console.log(query);
+      // console.log(query);
       emit(state.events.find_projects, query)
       return html`<div>fetching data</div>`
     } else{
-      console.log(feature);
+      // console.log(feature);
       let selectedBranch = feature.branches.find(item => {
         return item.branchName == 'default'
       })
+
+      // NOTE Global Variable Set
+      projectId = feature._id;
+      projectBranchName = selectedBranch.branchName;
 
 
 
@@ -142,57 +221,67 @@ function view (state, emit) {
   
         
         <section>
-        ${selectedBranch.recipes.length == 0 ? addRecipeButton() : ""}
-          <!-- recipes list --> 
-          ${selectedBranch.recipes.map( (recipe,idx) => {
-            let selectedRecipe = recipe.recipe;
+          ${selectedBranch.recipes.length == 0 ? addRecipeButton(feature._id, projectBranchName) : ""}
+            <!-- recipes list --> 
+            ${selectedBranch.recipes.map( (recipe,idx) => {
+              
+              let selectedRecipe = recipe.recipe;
 
-            let recipeBranch = selectedRecipe.branches.find( item => {
-              return item.branchName == 'default'
-            })
+              let recipeBranch = selectedRecipe.branches.find( item => {
+                return item.branchName == 'default'
+              })
 
-            return html`
-              <section class="mb2 mt2">
-              <fieldset class="w-100 ba br2">
-                <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
-                <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
-                <section>
-                  <h3>${selectedRecipe.title}</h3>
-                  <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
-                  <p>${selectedRecipe.description}</p>
-                </section>
-                ${recipeBranch.links.length == 0 ? addLinkButton() : ""}
-                <section>
-                  <!-- links list --> 
-                  ${
-                    recipeBranch.links.map( (link) => {
-                      let selectedLink = link.link;
 
-                      return html`
-                        <section class="mb2 mt2">
-                        <div class="w-100 flex flex-column br2 ba">
-                          <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
-                          <div class="w-100 flex flex-row pa2 items-center f7">
-                            <div class="w2 h2 mr4" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}"></div>
-                            <div class="w-40 flex flex-column">
-                              <small>${selectedLink.url}</small>
-                              <p>${selectedLink.title}</p>
+              // NOTE Global Variable Set
+              recipeId = selectedRecipe._id;
+              recipeBranchName = recipeBranch.branchName;
+
+              console.log(selectedRecipe);
+
+              
+
+              return html`
+                <section class="mb2 mt2">
+                <fieldset class="w-100 ba br2" dataset-id="${selectedRecipe._id}" dataset-db="${selectedRecipe.featureType}">
+                  <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
+                  <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
+                  <section>
+                    <h3>${selectedRecipe.title}</h3>
+                    <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
+                    <p>${selectedRecipe.description}</p>
+                  </section>
+                  ${recipeBranch.links.length == 0 ? addLinkButton(selectedRecipe._id, recipeBranch.branchName) : ""}
+                  <section>
+                    <!-- links list --> 
+                    ${
+                      recipeBranch.links.map( (link) => {
+                        let selectedLink = link.link;
+                        
+                        return html`
+                          <section class="mb2 mt2">
+                            <div class="w-100 flex flex-column br2 ba">
+                              <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
+                              <div class="w-100 flex flex-row pa2 items-center f7">
+                                <div class="w2 h2 mr4" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}"></div>
+                                <div class="w-40 flex flex-column">
+                                  <small>${selectedLink.url}</small>
+                                  <p>${selectedLink.title}</p>
+                                </div>
+                                <div class="w-40"><p>${selectedLink.description}</p></div>
+                                <div class="w2 h2">more</div>
+                              </div>
                             </div>
-                            <div class="w-40"><p>${selectedLink.description}</p></div>
-                            <div class="w2 h2">more</div>
-                          </div>
-                        </div>
-                        ${addLinkButton()}
-                        </section>
-                      `
-                    })
-                  }
+                            ${addLinkButton(selectedRecipe._id, recipeBranch.branchName)}
+                          </section>
+                        `
+                      })
+                    }
+                  </section>
+                </fieldset>
+                    ${addRecipeButton(feature._id, projectBranchName)}
                 </section>
-              </fieldset>
-                  ${addRecipeButton()}
-              </section>
-            `
-          })}
+              `
+            })}
         </section>
       </div>
       `
@@ -261,6 +350,7 @@ function view (state, emit) {
       
     </main>
     ${addLinkModal()}
+    ${addRecipeModal()}
   </body>   
   `
 }

@@ -87,7 +87,7 @@ module.exports = function (app) {
     },
     colors: {
       type: Array,
-      default: ["#FF725C", "#FFD700", "#FF80CC", "9EEBCF", "#CDECFF", "#A463F2"],
+      default: ["#FF725C", "#FFD700", "#FF80CC", "#9EEBCF", "#CDECFF", "#A463F2"],
       required: true
     }
   }, {
