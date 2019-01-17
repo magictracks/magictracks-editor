@@ -62,6 +62,18 @@ function view (state, emit) {
 
   }
 
+  function addSectionButton(){
+    return html`
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2" onclick=${()=> console.log('add section')}>add section</button>
+    `
+  }
+
+  function addLinkButton(){
+    return html`
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver" onclick=${()=> console.log('add link')}>add link</button>
+    `
+  }
+
   function renderProject(){
     let {collection, user, id} = state.params;
     let feature = state[collection].find(item => {
@@ -107,7 +119,8 @@ function view (state, emit) {
             })
 
             return html`
-              <fieldset class="w-100 ba br2 mb4">
+              <section class="mb2 mt2">
+              <fieldset class="w-100 ba br2">
                 <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
                 <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
                 <section>
@@ -122,6 +135,7 @@ function view (state, emit) {
                       let selectedLink = link.link;
 
                       return html`
+                        <section class="mb2 mt2">
                         <div class="w-100 flex flex-column br2 ba">
                           <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
                           <div class="w-100 flex flex-row pa2 items-center f7">
@@ -134,11 +148,15 @@ function view (state, emit) {
                             <div class="w2 h2">more</div>
                           </div>
                         </div>
+                        ${addLinkButton()}
+                        </section>
                       `
                     })
                   }
                 </section>
               </fieldset>
+                  ${addSectionButton()}
+              </section>
             `
           })}
         </section>
