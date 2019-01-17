@@ -62,9 +62,9 @@ function view (state, emit) {
 
   }
 
-  function addSectionButton(){
+  function addRecipeButton(){
     return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2" onclick=${()=> console.log('add section')}>add section</button>
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2" onclick=${()=> console.log('add recipe')}>add recipe</button>
     `
   }
 
@@ -110,7 +110,7 @@ function view (state, emit) {
   
         
         <section>
-        ${selectedBranch.recipes.length == 0 ? addSectionButton() : ""}
+        ${selectedBranch.recipes.length == 0 ? addRecipeButton() : ""}
           <!-- recipes list --> 
           ${selectedBranch.recipes.map( (recipe,idx) => {
             let selectedRecipe = recipe.recipe;
@@ -157,7 +157,7 @@ function view (state, emit) {
                   }
                 </section>
               </fieldset>
-                  ${addSectionButton()}
+                  ${addRecipeButton()}
               </section>
             `
           })}
