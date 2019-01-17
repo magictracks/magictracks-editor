@@ -61,6 +61,20 @@ function view (state, emit) {
 
 
   function addLinkModal(){
+
+    function submitForm(e){
+      e.preventDefault();
+      console.log(e.currentTarget);
+      let formData = new FormData(e.currentTarget);
+
+      let payload ={
+        url: formData.get("url"),
+        title: formData.get("title")
+      }
+
+      emit(state.events.links_create, payload);
+    }
+
     return html`
       <div id="addLinkModal" class="w-100 h-100 fixed dn" style="background-color:rgba(0, 27, 68, 0.5)">
         <div class="w-100 h-100 flex flex-column justify-center items-center">
@@ -70,18 +84,18 @@ function view (state, emit) {
               <button class="bn f2 bg-light-gray">✕</button>
             </div>
             <section>
-              <form name="addLinkForm" id="addLinkForm">
+              <form name="addLinkForm" id="addLinkForm" onsubmit=${submitForm}>
               <fieldset class="w-100 mb2">
                 <legend class="br-pill ba pl1 pr1">URL</legend>
                   <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
               </fieldset>
               <fieldset class="w-100 mb2">
                 <legend class="br-pill ba pl1 pr1">title</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="title">
               </fieldset>
               <fieldset class="w-100 mb2">
                 <legend class="br-pill ba pl1 pr1">description</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
+                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="description">
               </fieldset>
               <input type="submit" value="save">
               </form>

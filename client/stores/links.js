@@ -19,7 +19,7 @@ function store (state, emitter) {
   
 
   emitter.on('DOMContentLoaded', function () {
-  });
+  }); 
 
   emitter.on(state.events.links_create, links.create);
   emitter.on(state.events.links_createAndPush, links.createAndPush);
@@ -29,7 +29,13 @@ function store (state, emitter) {
 
     this.create = function(_payload){
 
-      // feathersClient.service('links').create()
+      feathersClient.service('links').create(_payload).then(feature => {
+        state.links.push(feature);
+        emitter.emit(state.events.RENDER);
+      }).catch(err => {
+        console.log("ERROR: 🔥🔥🔥🔥", err);
+        emitter.emit(state.events.RENDER);
+      });
     }
 
     this.createAndPush = function(_payload){
@@ -37,5 +43,5 @@ function store (state, emitter) {
 
     }
 
-  }
+  } // end Links
 }
