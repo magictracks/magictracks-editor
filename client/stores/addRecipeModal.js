@@ -1,3 +1,5 @@
+const feathersClient = require("../feathersClient");
+
 module.exports = store
 
 store.storeName = 'addRecipeModal'
@@ -7,7 +9,7 @@ function store (state, emitter) {
   state.addRecipeModal = {
     display: false,
     selectRecipe: null,
-
+    selectRecipeBranches: []
   }
 
 
@@ -34,7 +36,17 @@ function store (state, emitter) {
     }
 
     this.selectRecipe = function(_recipeId){
-      state.addRecipeModal.selectRecipe = _recipeId;
+      state.addRecipeModal.selectRecipe = String(_recipeId);
+
+      feathersClient.service("recipes").get(String(_recipeId)).then(feature => {
+        console.log(feature);
+        state.addRecipeModal.selectRecipeBranches = feature.branches;
+        emitter.emit(state.events.RENDER)
+      }).catch(err => {
+        console.log(err);
+        return err
+      });
+      
     }
 
   } // add recipeModal

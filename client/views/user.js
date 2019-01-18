@@ -111,6 +111,31 @@ function view (state, emit) {
       }
     }
 
+    function selectItem(e){
+      e.preventDefault();
+      console.log("selectRecipe ID: ", e.currentTarget.dataset.id)
+      
+      emit(state.events.addRecipeModal_selectRecipe, e.currentTarget.dataset.id )
+    }
+
+    function showSelectBranches(){
+      if(state.addRecipeModal.selectRecipeBranches.length == 0){
+        return html`
+          <p>select playlist to specify branch</p>
+        `
+      } else {
+        return html`
+          <select>
+            ${state.addRecipeModal.selectRecipeBranches.map(branch => {
+              return html`
+                <option value="${branch.branchName}" data-id="${branch._id}">${branch.branchName}</option>
+              `
+            })}
+          </select>
+        `
+      }
+    }
+
     return html`
       <div id="addRecipeModal" class="w-100 h-100 fixed ${checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
         <div class="w-100 h-100 flex flex-column justify-center items-center">
@@ -126,7 +151,8 @@ function view (state, emit) {
                 <ul class="list pl0 overflow-y-scroll" style="max-height:250px;">
                   ${state.recipes.map( item => {
                     return html`
-                      <li class="w-100 flex flex-row items-center justify-start pa2"> 
+                      <li class="w-100 flex flex-row items-center justify-start pa2"
+                      onclick=${selectItem} data-id="${item._id}"> 
                         <div class="h2 w2 br2 mr2" 
                         style="background-color:${item.colors[item.selectedColor]}"></div> 
                         <p>${item.title}</p>
@@ -148,8 +174,7 @@ function view (state, emit) {
               <section class="mt2 flex flex-row justify-between items-center">
                   <div><button class="br2 bn">cancel</button></div>
                   <div>
-                    <select>
-                    </select>
+                    ${showSelectBranches()}
                   </div>
               </section>
             </section>
