@@ -80,10 +80,23 @@ function view (state, emit) {
       <div id="addRecipeModal" class="w-100 h-100 fixed dn" style="background-color:rgba(0, 27, 68, 0.5)">
         <div class="w-100 h-100 flex flex-column justify-center items-center">
           <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
-            <div class="w-100 flex flex-row justify-between" onclick=${toggleAddLinkModal}>
+            <div class="w-100 flex flex-row justify-between" onclick=${toggleAddRecipeModal}>
               <h2>Add Recipe Modal</h2>
               <button class="bn f2 bg-light-gray">✕</button>
             </div>
+            <section>
+              <ul class="list pl0 overflow-y-scroll" style="max-height:250px;">
+                ${state.recipes.map( item => {
+                  return html`
+                    <li class="w-100 flex flex-row items-center justify-start pa2"> 
+                      <div class="h2 w2 br2 mr2" 
+                      style="background-color:${item.colors[item.selectedColor]}"></div> 
+                      <p>${item.title}</p>
+                    </li>
+                  `
+                })}
+              </ul>
+            </section>
             <section>
               <form name="addRecipeForm" id="addRecipeForm" onsubmit=${submitForm}>
               <fieldset class="w-100 mb2">
@@ -244,7 +257,7 @@ function view (state, emit) {
                 <section class="mb2 mt2">
                 <fieldset class="w-100 ba br2" dataset-id="${selectedRecipe._id}" dataset-db="${selectedRecipe.featureType}">
                   <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
-                  <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
+                  <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
                   <section>
                     <h3>${selectedRecipe.title}</h3>
                     <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
@@ -260,7 +273,7 @@ function view (state, emit) {
                         return html`
                           <section class="mb2 mt2">
                             <div class="w-100 flex flex-column br2 ba">
-                              <div class="w-100 br1 br--top flex flex-row justify-end pa1" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
+                              <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
                               <div class="w-100 flex flex-row pa2 items-center f7">
                                 <div class="w2 h2 mr4" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}"></div>
                                 <div class="w-40 flex flex-column">
