@@ -36,6 +36,7 @@ function store (state, emitter) {
 
     this.selectLink = function(_linkId){
       state.addLinkModal.selectLink = _linkId;
+      emitter.emit(state.events.RENDER)
     }
 
   } // add recipeModal

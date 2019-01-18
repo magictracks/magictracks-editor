@@ -10,6 +10,7 @@ function store (state, emitter) {
 
   state.events.projects_find = "projects:find";
   state.events.projects_get = "projects:get";
+  state.events.projects_pushRecipe = "projects:pushRecipe";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -19,6 +20,7 @@ function store (state, emitter) {
 
   // find projects
   emitter.on(state.events.projects_find, projects.find);
+  emitter.on(state.events.projects_pushRecipe, projects.pushRecipe);
 
 
   function Projects(){
@@ -31,7 +33,7 @@ function store (state, emitter) {
     }
 
     this.pushRecipe = function(_payload){
-
+      console.log(_payload);
     }
   } // end projects
 

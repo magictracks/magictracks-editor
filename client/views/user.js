@@ -128,6 +128,12 @@ function view (state, emit) {
       console.log("adding auto named new branch and adding to selected project")
     }
 
+    function selectBranchName(e){
+      e.preventDefault();
+      console.log(e.currentTarget.value)
+      emit(state.events.addRecipeModal_selectRecipeBranch, e.currentTarget.value)
+    }
+
     function showSelectBranches(){
       if(state.addRecipeModal.selectRecipeBranches.length == 0){
         return html`
@@ -136,7 +142,7 @@ function view (state, emit) {
       } else {
         return html`
         <div class="w-100 flex flex-row items-center">
-          <select class="h3 f7 bn bg-white pa2 br2 br--left">
+          <select class="h3 f7 bn bg-white pa2 br2 br--left" onchange=${selectBranchName}>
             ${state.addRecipeModal.selectRecipeBranches.map(branch => {
               return html`
                 <option value="${branch.branchName}" data-id="${branch._id}">${branch.branchName}</option>

@@ -9,18 +9,21 @@ function store (state, emitter) {
   state.addRecipeModal = {
     display: false,
     selectRecipe: null,
-    selectRecipeBranches: []
+    selectRecipeBranches: [],
+    selectRecipeBranchName: 'default'
   }
 
 
   state.events.addRecipeModal_open = "addRecipeModal:open";
   state.events.addRecipeModal_close = "addRecipeModal:close";
   state.events.addRecipeModal_selectRecipe = "addRecipeModal:selectRecipe";
+  state.events.addRecipeModal_selectRecipeBranch = "addRecipeModal:selectRecipeBranch";
 
 
   emitter.on(state.events.addRecipeModal_open, addRecipeModal.open);
   emitter.on(state.events.addRecipeModal_close, addRecipeModal.close);
   emitter.on(state.events.addRecipeModal_selectRecipe, addRecipeModal.selectRecipe);
+  emitter.on(state.events.addRecipeModal_selectRecipeBranch, addRecipeModal.selectRecipeBranch);
 
 
   function AddRecipeModal(){
@@ -47,6 +50,10 @@ function store (state, emitter) {
         return err
       });
       
+    }
+
+    this.selectRecipeBranch = function(_branchName){
+      state.addRecipeModal.selectRecipeBranch = _branchName;
     }
 
   } // add recipeModal
