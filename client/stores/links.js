@@ -67,7 +67,7 @@ function store (state, emitter) {
       }).then(patchedFeature => {
         // 
         console.log(patchedFeature);
-        emitter.emit(state.events.find_projects, {});
+        emitter.emit(state.events.projects_find, {});
         // emitter.emit(state.events.recipes_find);
       })
       .catch(err => {
@@ -79,7 +79,7 @@ function store (state, emitter) {
 
             return feathersClient.service("recipes").patch(null, recipePatch, idQuery)
           }).then(patchedFeature => {
-            emitter.emit(state.events.find_projects, {});
+            emitter.emit(state.events.projects_find, {});
           })
         } else{
           console.log("ERROR: 🔥🔥🔥🔥", err);

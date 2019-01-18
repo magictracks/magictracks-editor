@@ -83,7 +83,7 @@ function store (state, emitter) {
       }).then(patchedFeature => {
         // 
         console.log(patchedFeature);
-        emitter.emit(state.events.find_projects, {});
+        emitter.emit(state.events.projects_find, {});
         // emitter.emit(state.events.recipes_find);
       })
       .catch(err => {

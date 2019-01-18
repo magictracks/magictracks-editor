@@ -118,20 +118,35 @@ function view (state, emit) {
       emit(state.events.addRecipeModal_selectRecipe, e.currentTarget.dataset.id )
     }
 
+    function addSelectedBranchAndPush(e){
+      e.preventDefault();
+      console.log("adding auto named new branch and adding to selected project")
+    }
+
+    function addNewBranchAndPush(e){
+      e.preventDefault();
+      console.log("adding auto named new branch and adding to selected project")
+    }
+
     function showSelectBranches(){
       if(state.addRecipeModal.selectRecipeBranches.length == 0){
         return html`
-          <p>select playlist to specify branch</p>
+          <p class="ma0">select playlist to specify branch</p>
         `
       } else {
         return html`
-          <select>
+        <div class="w-100 flex flex-row items-center">
+          <select class="h3 f7 bn bg-white pa2 br2 br--left">
             ${state.addRecipeModal.selectRecipeBranches.map(branch => {
               return html`
                 <option value="${branch.branchName}" data-id="${branch._id}">${branch.branchName}</option>
               `
             })}
           </select>
+          <button class="bn bg-light-purple br2 br--right pa2 h3" onclick=${addSelectedBranchAndPush}>use this branch</button>
+          <div class="ml2 mr2"> - or - </div>
+          <button class="bn bg-light-pink br2 pa2 h3" onclick=${addNewBranchAndPush}> add new branch </button>
+        </div>
         `
       }
     }
@@ -166,14 +181,14 @@ function view (state, emit) {
                   <form name="addRecipeForm" id="addRecipeForm" onsubmit=${addRecipe}>
                       <div class="flex flex-row">
                       <input class="w-100 bg-near-white bn br2 pa2 mr2" placeholder="e.g. new recipe name" type="text" name="title">
-                      <input class="br2 bn bg-light-green " type="submit" value="add recipe">
+                      <input class="br2 bn bg-light-green pa2" type="submit" value="add recipe">
                       </div>
                   </form>
                 </section>
               </fieldset>
               <section class="mt2 flex flex-row justify-between items-center">
-                  <div><button class="br2 bn">cancel</button></div>
-                  <div>
+                  <button class="br2 bn bg-light-red h3" onclick=${closeAddRecipeModal}>cancel</button>
+                  <div class="h3 flex flex-column justify-center">
                     ${showSelectBranches()}
                   </div>
               </section>
@@ -278,7 +293,7 @@ function view (state, emit) {
         {"collaborators":[user]}
       ]}}
       // console.log(query);
-      emit(state.events.find_projects, query)
+      emit(state.events.projects_find, query)
       return html`<div>fetching data</div>`
     } else{
       // console.log(feature);

@@ -8,8 +8,8 @@ function store (state, emitter) {
 
   state.projects = [];
 
-  state.events.find_projects = "projects:find";
-  state.events.get_project = "projects:get";
+  state.events.projects_find = "projects:find";
+  state.events.projects_get = "projects:get";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -17,12 +17,8 @@ function store (state, emitter) {
       emitter.emit(state.events.RENDER);
     });
 
-  emitter.on('DOMContentLoaded', function () {
-    
-  })
-
   // find projects
-  emitter.on(state.events.find_projects, projects.find);
+  emitter.on(state.events.projects_find, projects.find);
 
 
   function Projects(){
@@ -33,7 +29,12 @@ function store (state, emitter) {
         emitter.emit(state.events.RENDER);
       });
     }
-  }
 
+    this.pushRecipe = function(_payload){
+
+    }
+  } // end projects
+
+  // emitter.on('DOMContentLoaded', function () {})
 
 }
