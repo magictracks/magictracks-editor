@@ -47,16 +47,30 @@ function view (state, emit) {
   }
 
 
-  function toggleAddRecipeModal(e){
-    console.log('add recipe button');
+  function openAddRecipeModal(e){
+    console.log('open recipe modal');
     projectId = e.currentTarget.dataset.projectid;
     projectBranchName = e.currentTarget.dataset.projectbranch;
     // console.log(e.currentTarget)
     console.log(projectId, projectBranchName)
 
-    document.querySelector("#addRecipeModal").classList.toggle("dn");
+    // document.querySelector("#addRecipeModal").classList.toggle("dn");
+    emit(state.events.addRecipeModal_open)
   }
 
+  function closeAddRecipeModal(e){
+    console.log('close recipe modal');
+    emit(state.events.addRecipeModal_close)
+  }
+
+  function addRecipeButton(parentId, branchName){
+    return html`
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2"
+      data-projectid="${parentId}"
+      data-projectbranch="${branchName}"
+      onclick=${openAddRecipeModal}>add recipe</button>
+    `
+  }
 
   function addRecipeModal(){
     
@@ -76,39 +90,68 @@ function view (state, emit) {
       emit(state.events.recipes_createAndPush, payload);
     }
 
+    function addRecipe(e){
+      e.preventDefault();
+      let formData = new FormData(e.currentTarget);
+
+      let payload ={
+        recipeData:{
+          title: formData.get("title"),
+        }
+      }
+
+      emit(state.events.recipes_create, payload);
+    }
+
+    function checkDisplay(){
+      if(state.addRecipeModal.display == true){
+        return ""
+      } else{
+        return "dn"
+      }
+    }
+
     return html`
-      <div id="addRecipeModal" class="w-100 h-100 fixed dn" style="background-color:rgba(0, 27, 68, 0.5)">
+      <div id="addRecipeModal" class="w-100 h-100 fixed ${checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
         <div class="w-100 h-100 flex flex-column justify-center items-center">
           <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
-            <div class="w-100 flex flex-row justify-between" onclick=${toggleAddRecipeModal}>
+            <div class="w-100 flex flex-row justify-between">
               <h2>Add Recipe Modal</h2>
-              <button class="bn f2 bg-light-gray">✕</button>
+              <button class="bn f2 bg-light-gray" onclick=${closeAddRecipeModal}>✕</button>
             </div>
             <section>
-              <ul class="list pl0 overflow-y-scroll" style="max-height:250px;">
-                ${state.recipes.map( item => {
-                  return html`
-                    <li class="w-100 flex flex-row items-center justify-start pa2"> 
-                      <div class="h2 w2 br2 mr2" 
-                      style="background-color:${item.colors[item.selectedColor]}"></div> 
-                      <p>${item.title}</p>
-                    </li>
-                  `
-                })}
-              </ul>
-            </section>
-            <section>
-              <form name="addRecipeForm" id="addRecipeForm" onsubmit=${submitForm}>
-              <fieldset class="w-100 mb2">
-                <legend class="br-pill ba pl1 pr1">title</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="title">
+              <fieldset>
+              <legend>Select Recipe</legend>
+                <section>
+                <ul class="list pl0 overflow-y-scroll" style="max-height:250px;">
+                  ${state.recipes.map( item => {
+                    return html`
+                      <li class="w-100 flex flex-row items-center justify-start pa2"> 
+                        <div class="h2 w2 br2 mr2" 
+                        style="background-color:${item.colors[item.selectedColor]}"></div> 
+                        <p>${item.title}</p>
+                      </li>
+                    `
+                  })}
+                </ul>
+                </section>
+                <section>
+                  <!-- add new playlist form --> 
+                  <form name="addRecipeForm" id="addRecipeForm" onsubmit=${addRecipe}>
+                      <div class="flex flex-row">
+                      <input class="w-100 bg-near-white bn br2 pa2 mr2" placeholder="e.g. new recipe name" type="text" name="title">
+                      <input class="br2 bn bg-light-green " type="submit" value="add recipe">
+                      </div>
+                  </form>
+                </section>
               </fieldset>
-              <fieldset class="w-100 mb2">
-                <legend class="br-pill ba pl1 pr1">description</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="description">
-              </fieldset>
-              <input type="submit" value="save">
-              </form>
+              <section class="mt2 flex flex-row justify-between items-center">
+                  <div><button class="br2 bn">cancel</button></div>
+                  <div>
+                    <select>
+                    </select>
+                  </div>
+              </section>
             </section>
           </div>
         </div>
@@ -116,23 +159,19 @@ function view (state, emit) {
     `
   }
 
-  function addRecipeButton(parentId, branchName){
-    return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2"
-      data-projectid="${parentId}"
-      data-projectbranch="${branchName}"
-      onclick=${toggleAddRecipeModal}>add recipe</button>
-    `
-  }
-
-  function toggleAddLinkModal(e){
-    console.log("add link button")
+  function openAddLinkModal(e){
+    console.log("open link modal")
     recipeId = e.currentTarget.dataset.recipeid;
     recipeBranchName = e.currentTarget.dataset.recipebranch;
     // console.log(e.currentTarget)
     console.log(recipeId, recipeBranchName)
-
-    document.querySelector("#addLinkModal").classList.toggle("dn");
+    // document.querySelector("#addLinkModal").classList.toggle("dn");
+    emit(state.events.addLinkModal_open)
+  }
+  function closeLinkModal(e){
+    console.log("close link modal")
+    // document.querySelector("#addLinkModal").classList.toggle("dn");
+    emit(state.events.addLinkModal_close)
   }
 
   function addLinkButton(parentId, branchName){
@@ -140,7 +179,7 @@ function view (state, emit) {
       <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver"
       data-recipeid="${parentId}"
       data-recipebranch="${branchName}"
-      onclick=${toggleAddLinkModal}>add link</button>
+      onclick=${openAddLinkModal}>add link</button>
     `
   }
 
@@ -162,13 +201,21 @@ function view (state, emit) {
       emit(state.events.links_createAndPush, payload);
     }
 
+    function checkDisplay(){
+      if(state.addLinkModal.display == true){
+        return ""
+      } else{
+        return "dn"
+      }
+    }
+
     return html`
-      <div id="addLinkModal" class="w-100 h-100 fixed dn" style="background-color:rgba(0, 27, 68, 0.5)">
+      <div id="addLinkModal" class="w-100 h-100 fixed ${checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
         <div class="w-100 h-100 flex flex-column justify-center items-center">
           <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
-            <div class="w-100 flex flex-row justify-between" onclick=${toggleAddLinkModal}>
+            <div class="w-100 flex flex-row justify-between">
               <h2>New Link Modal</h2>
-              <button class="bn f2 bg-light-gray">✕</button>
+              <button class="bn f2 bg-light-gray" onclick=${closeLinkModal}>✕</button>
             </div>
             <section>
               <form name="addLinkForm" id="addLinkForm" onsubmit=${submitForm}>

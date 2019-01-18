@@ -7,7 +7,6 @@ function store (state, emitter) {
   const links = new Links();
   state.links = [];
 
-
   state.events.links_create = "links:create";
   state.events.links_createAndPush = "links:createAndPush";
 

@@ -15,6 +15,8 @@ if (process.env.NODE_ENV !== 'production') {
 // Stores
 app.use(require('./stores/projects'))
 app.use(require('./stores/recipes'))
+app.use(require('./stores/addLinkModal'))
+app.use(require('./stores/addRecipeModal'))
 app.use(require('./stores/links'))
 app.use(require('./stores/search'))
 app.use(require('./stores/user'))

@@ -5,11 +5,12 @@ module.exports = store
 store.storeName = 'recipes'
 function store (state, emitter) {
   let recipes = new Recipes();
-
-  state.recipes = [];
+  
+  state.recipes = [];  
 
   state.events.recipes_find = "recipes:find";
   state.events.recipes_createAndPush = "recipes:createAndPush";
+  state.events.recipes_create = "recipes:create";
   
   feathersClient.service("recipes").find()
     .then(feature => {
@@ -23,6 +24,7 @@ function store (state, emitter) {
 
   emitter.on(state.events.recipes_find, recipes.find);
   emitter.on(state.events.recipes_createAndPush, recipes.createAndPush);
+  emitter.on(state.events.recipes_create, recipes.create);
 
 
   function Recipes(){
@@ -31,6 +33,23 @@ function store (state, emitter) {
       .then(feature => {
         state.recipes = feature.data;
         emitter.emit(state.events.RENDER);
+      });
+    }
+
+    this.create = function(_payload){
+
+      const {recipeData} = _payload;
+
+      feathersClient.service("recipes").create(recipeData)
+      .then(feature => {
+        // state.recipes = feature.data;
+        console.log(feature);
+        state.recipes.push(feature);
+        // emitter.emit(state.events.RENDER);
+        emitter.emit(state.events.recipes_find, {});
+      }).catch(err => {
+        console.log(err);
+        return err
       });
     }
 
@@ -73,5 +92,6 @@ function store (state, emitter) {
       });
 
     } // end createAndPush
-  }
+  } // end Recipe
+
 }
