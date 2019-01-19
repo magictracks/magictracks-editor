@@ -1,22 +1,31 @@
 var Component = require('choo/component')
 var html = require('choo/html')
 
-class AddRecipeModal extends Component {
-  constructor (id, state, emit) {
-    super(id)
-    this.local = state.components[id] = {}
-  }
+// class AddRecipeModal extends Component {
+//   constructor (id, state, emit) {
+//     super(id)
+//     this.local = state.components[id] = {}
+//   }
 
-  createElement () {
-    return html`
-      <div>
-      </div>
-    `
-  }
+//   createElement () {
+//     return html`
+//       <div>
+//       </div>
+//     `
+//   }
 
-  update () {
-    return true
-  }
+//   update () {
+//     return true
+//   }
+// }
+
+
+function AddRecipeModal(id, state, emit){
+
+
+  
+
 }
+
 
 module.exports = AddRecipeModal

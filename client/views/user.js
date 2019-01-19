@@ -18,16 +18,12 @@ function view (state, emit) {
       recipeId,
       recipeBranchName;
 
-
-
   function openAddRecipeModal(e){
     console.log('open recipe modal');
-    projectId = e.currentTarget.dataset.projectid;
-    projectBranchName = e.currentTarget.dataset.projectbranch;
-    // console.log(e.currentTarget)
-    console.log(projectId, projectBranchName)
+    const {projectid, projectbranch} = e.currentTarget.dataset
 
-    // document.querySelector("#addRecipeModal").classList.toggle("dn");
+    emit(state.events.addRecipeModal_selectProjectId, projectid)
+    emit(state.events.addRecipeModal_selectProjectBranchName, projectbranch)
     emit(state.events.addRecipeModal_open)
   }
 
@@ -47,21 +43,21 @@ function view (state, emit) {
 
   function addRecipeModal(){
     
-    function submitForm(e){
-      e.preventDefault();
-      let formData = new FormData(e.currentTarget);
+    // function submitForm(e){
+    //   e.preventDefault();
+    //   let formData = new FormData(e.currentTarget);
 
-      let payload ={
-        recipeData:{
-          title: formData.get("title"),
-          description: formData.get("description")
-        },
-        projectId,
-        projectBranchName
-      }
+    //   let payload ={
+    //     recipeData:{
+    //       title: formData.get("title"),
+    //       description: formData.get("description")
+    //     },
+    //     projectId,
+    //     projectBranchName
+    //   }
 
-      emit(state.events.recipes_createAndPush, payload);
-    }
+    //   emit(state.events.recipes_createAndPush, payload);
+    // }
 
     function addRecipe(e){
       e.preventDefault();
@@ -96,8 +92,8 @@ function view (state, emit) {
       console.log("push selected Recipe branch to selected project");
     
       let payload = {
-        projectId,
-        projectBranchName, 
+        projectId: state.addRecipeModal.selectProjectId, 
+        projectBranchName: state.addRecipeModal.selectProjectBranchName, 
         recipeId: state.addRecipeModal.selectRecipe,
         recipeBranchName: state.addRecipeModal.selectRecipeBranch,
       }
@@ -109,9 +105,10 @@ function view (state, emit) {
     function pushNewBranch(e){
       e.preventDefault();
       console.log("adding auto named new branch and adding to selected project")
+      
       let payload = {
-        projectId,
-        projectBranchName, 
+        projectId: state.addRecipeModal.selectProjectId,
+        projectBranchName: state.addRecipeModal.selectProjectBranchName,
         recipeId: state.addRecipeModal.selectRecipe
       }
 
@@ -198,16 +195,14 @@ function view (state, emit) {
 
   function openAddLinkModal(e){
     console.log("open link modal")
-    recipeId = e.currentTarget.dataset.recipeid;
-    recipeBranchName = e.currentTarget.dataset.recipebranch;
-    // console.log(e.currentTarget)
-    console.log(recipeId, recipeBranchName)
-    // document.querySelector("#addLinkModal").classList.toggle("dn");
+    const{recipeid, recipebranch} = e.currentTarget.dataset
+
+    emit(state.events.addLinkModal.selectRecipeId, recipeid)
+    emit(state.events.addLinkModal.selectRecipeBranchName, recipebranch)
     emit(state.events.addLinkModal_open)
   }
   function closeLinkModal(e){
     console.log("close link modal")
-    // document.querySelector("#addLinkModal").classList.toggle("dn");
     emit(state.events.addLinkModal_close)
   }
 
@@ -231,8 +226,8 @@ function view (state, emit) {
         linkData:{
           url: formData.get("url")
         },
-        recipeId,
-        recipeBranchName
+        recipeId: state.addLinkModal.selectRecipeId,
+        recipeBranchName: state.addLinkModal.selectRecipeBranchName
       }
 
       emit(state.events.links_createAndPush, payload);
@@ -298,11 +293,10 @@ function view (state, emit) {
         return item.branchName == 'default'
       })
 
-      // NOTE Global Variable Set
-      projectId = feature._id;
-      projectBranchName = selectedBranch.branchName;
-
-
+      //!!! TODO: get branchName from query params!!!
+      emit(state.events.addRecipeModal_selectProjectId, feature._id);
+      emit(state.events.addRecipeModal_selectProjectBranchName, selectedBranch.branchName);
+      
 
       return html`
       <div class="w-100 h-100">
@@ -318,24 +312,21 @@ function view (state, emit) {
   
         
         <section>
-          ${selectedBranch.recipes.length == 0 ? addRecipeButton(feature._id, projectBranchName) : ""}
+          ${selectedBranch.recipes.length == 0 ? addRecipeButton(feature._id, selectedBranch.branchName) : ""}
             <!-- recipes list --> 
             ${selectedBranch.recipes.map( (recipe,idx) => {
               
               let selectedRecipe = recipe.recipe;
 
               let recipeBranch = selectedRecipe.branches.find( item => {
-                return item.branchName == recipe.branchName
+                return item.branchName == recipe.branchName || "default";
               })
 
 
-              // NOTE Global Variable Set
-              recipeId = selectedRecipe._id;
-              recipeBranchName = recipeBranch.branchName;
-
-              console.log(selectedRecipe);
-
-              
+              // !!! TODO: fix the redundancy !!!
+              // emit(state.events.addLinkModal_selectRecipeId, selectedRecipe._id)
+              // emit(state.events.addLinkModal_selectRecipeBranchName, recipeBranch.branchName)
+              // emit(state.events.addRecipeModal_selectRecipe, selectedRecipe._id)         
 
               return html`
                 <section class="mb2 mt2">
@@ -375,7 +366,7 @@ function view (state, emit) {
                     }
                   </section>
                 </fieldset>
-                    ${addRecipeButton(feature._id, projectBranchName)}
+                    ${addRecipeButton(feature._id, selectedBranch.branchName)}
                 </section>
               `
             })}

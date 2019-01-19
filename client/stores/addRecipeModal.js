@@ -8,6 +8,8 @@ function store (state, emitter) {
   
   state.addRecipeModal = {
     display: false,
+    selectProjectId:null,
+    selectProjectBranchName: null,
     selectRecipe: null,
     selectRecipeBranches: [],
     selectRecipeBranchName: 'default'
@@ -18,12 +20,17 @@ function store (state, emitter) {
   state.events.addRecipeModal_close = "addRecipeModal:close";
   state.events.addRecipeModal_selectRecipe = "addRecipeModal:selectRecipe";
   state.events.addRecipeModal_selectRecipeBranch = "addRecipeModal:selectRecipeBranch";
+  state.events.addRecipeModal_selectProjectId = "addRecipeModal:selectProjectId";
+  state.events.addRecipeModal_selectProjectBranchName = "addRecipeModal:selectProjectBranchName";
 
 
   emitter.on(state.events.addRecipeModal_open, addRecipeModal.open);
   emitter.on(state.events.addRecipeModal_close, addRecipeModal.close);
   emitter.on(state.events.addRecipeModal_selectRecipe, addRecipeModal.selectRecipe);
   emitter.on(state.events.addRecipeModal_selectRecipeBranch, addRecipeModal.selectRecipeBranch);
+
+  emitter.on(state.events.addRecipeModal_selectProjectId, addRecipeModal.selectProjectId);
+  emitter.on(state.events.addRecipeModal_selectProjectBranchName, addRecipeModal.selectProjectBranchName);
 
 
   function AddRecipeModal(){
@@ -54,6 +61,14 @@ function store (state, emitter) {
 
     this.selectRecipeBranch = function(_branchName){
       state.addRecipeModal.selectRecipeBranch = _branchName;
+    }
+
+    this.selectProjectId = function(_projectId){
+      state.addRecipeModal.selectProjectId = _projectId;
+    }
+
+    this.selectProjectBranchName = function(_projectBranchName){
+      state.addRecipeModal.selectProjectBranchName = _projectBranchName;
     }
 
   } // add recipeModal

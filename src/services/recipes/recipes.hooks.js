@@ -17,7 +17,7 @@ module.exports = {
     get: [],
     create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(),setRandomColor()],
     update: [authenticate('jwt'), checkPermissions()],
-    patch: [authenticate('jwt'), checkPermissions(), checkBranchOwner(),addUniqueBranchName()],
+    patch: [authenticate('jwt'), checkPermissions(), checkBranchOwner(), addUniqueBranchName()],
     remove: [authenticate('jwt'), checkPermissions()]
   },
 
