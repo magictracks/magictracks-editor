@@ -319,7 +319,11 @@ function view (state, emit) {
               let selectedRecipe = recipe.recipe;
 
               let recipeBranch = selectedRecipe.branches.find( item => {
-                return item.branchName == recipe.branchName || "default";
+                if(item.hasOwnProperty("branchName")){
+                  return item.branchName == recipe.branchName
+                } else {
+                  return item.branchName == "default";
+                }
               })
 
 
