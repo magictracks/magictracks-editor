@@ -2,6 +2,13 @@ var html = require('choo/html')
 const NavBar = require('../components/navbar');
 const Pagination = require('../components/pagination');
 
+const UserNav = require('../components/userNav');
+
+// TODO: allow edits if authenticated, otherwise, remove buttons for editing
+// if(state.user.authenticated){
+// } else{
+// }
+
 module.exports = view
 
 function view (state, emit) {
@@ -11,40 +18,6 @@ function view (state, emit) {
       recipeId,
       recipeBranchName;
 
-  // TODO: allow edits if authenticated, otherwise, remove buttons for editing
-  // if(state.user.authenticated){
-  // } else{
-  // }
-
-  // show the selected feature(s) 
-  function showUserNav(){
-
-    function checkPath(_path){
-      if(_path == state.params.collection){
-        return 'underline'
-      } else{
-        return ''
-      }
-    }
-
-    if(!state.params.hasOwnProperty("id")){
-      // if an id property exists in params, just show me that one item
-      return html`
-    <section class="mt2 w-100 flex flex-column items-start">
-      <div>
-        <h2>@${state.params.user}</h2>
-        <p class="f7">${'#'} <a href="#">Followers</a> · ${'#'} <a href="#">Following</a></p>
-      </div>
-      <ul class="list pl0 flex flex-row">
-        <li class="mr4"><a class="link black ${checkPath('projects')}" href="/${state.params.user}/projects">Projects</a></li>
-        <li class="mr4"><a class="link black ${checkPath('recipes')}" href="/${state.params.user}/recipes">Recipes</a></li>
-        <li class="mr4"><a class="link black ${checkPath('links')}" href="/${state.params.user}/links">Contributed Links</a></li>
-      </ul>
-    </section>
-    `
-    }
-
-  }
 
 
   function openAddRecipeModal(e){
@@ -370,7 +343,7 @@ function view (state, emit) {
                   <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
                   <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
                   <section>
-                    <h3>${selectedRecipe.title}</h3>
+                    <h3>${selectedRecipe.title} <small class="f7">(${recipeBranch.branchName})</small></h3>
                     <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
                     <p>${selectedRecipe.description}</p>
                   </section>
@@ -465,7 +438,7 @@ function view (state, emit) {
     ${state.cache(NavBar, "NavBar", state, emit).render()}
     <!-- MAIN -->
     <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
-      ${showUserNav()}
+      ${UserNav("UserNav", state, emit)}
 
       <section class="mt2 w-100 flex flex-column items-start">
       ${showUserSelection()}
