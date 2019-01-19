@@ -118,14 +118,32 @@ function view (state, emit) {
       emit(state.events.addRecipeModal_selectRecipe, e.currentTarget.dataset.id )
     }
 
-    function addSelectedBranchAndPush(e){
+    function pushSelectedRecipe(e){
       e.preventDefault();
-      console.log("adding auto named new branch and adding to selected project")
+      console.log("push selected Recipe branch to selected project");
+    
+      let payload = {
+        projectId,
+        projectBranchName, 
+        recipeId: state.addRecipeModal.selectRecipe,
+        recipeBranchName: state.addRecipeModal.selectRecipeBranch,
+      }
+      
+      emit(state.events.projects_pushRecipe, payload)
+      emit(state.events.addRecipeModal_close);
     }
 
-    function addNewBranchAndPush(e){
+    function pushNewBranch(e){
       e.preventDefault();
       console.log("adding auto named new branch and adding to selected project")
+      let payload = {
+        projectId,
+        projectBranchName, 
+        recipeId: state.addRecipeModal.selectRecipe
+      }
+
+      emit(state.events.recipes_addBranchAndPush, payload)
+      emit(state.events.addRecipeModal_close);
     }
 
     function selectBranchName(e){
@@ -149,9 +167,9 @@ function view (state, emit) {
               `
             })}
           </select>
-          <button class="bn bg-light-purple br2 br--right pa2 h3" onclick=${addSelectedBranchAndPush}>use this branch</button>
+          <button class="bn bg-light-purple br2 br--right pa2 h3" onclick=${pushSelectedRecipe}>use this branch</button>
           <div class="ml2 mr2"> - or - </div>
-          <button class="bn bg-light-pink br2 pa2 h3" onclick=${addNewBranchAndPush}> add new branch </button>
+          <button class="bn bg-light-pink br2 pa2 h3" onclick=${pushNewBranch}> add new branch </button>
         </div>
         `
       }
@@ -334,7 +352,7 @@ function view (state, emit) {
               let selectedRecipe = recipe.recipe;
 
               let recipeBranch = selectedRecipe.branches.find( item => {
-                return item.branchName == 'default'
+                return item.branchName == recipe.branchName
               })
 
 

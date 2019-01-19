@@ -8,6 +8,7 @@ const setRandomColor = require('../../hooks/set-random-color.js');
 const checkPermissions = require('../../hooks/check-permissions.js');
 const populateFeature = require('../../hooks/populate-feature.js');
 const checkBranchOwner = require('../../hooks/check-branch-owner.js');
+const addUniqueBranchName = require('../../hooks/add-unique-branch-name.js');
 
 module.exports = {
   before: {
@@ -16,7 +17,7 @@ module.exports = {
     get: [],
     create: [authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(),setRandomColor()],
     update: [authenticate('jwt'), checkPermissions()],
-    patch: [authenticate('jwt'), checkPermissions(), checkBranchOwner()],
+    patch: [authenticate('jwt'), checkPermissions(), checkBranchOwner(),addUniqueBranchName()],
     remove: [authenticate('jwt'), checkPermissions()]
   },
 

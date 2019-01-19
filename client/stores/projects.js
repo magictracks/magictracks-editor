@@ -34,6 +34,29 @@ function store (state, emitter) {
 
     this.pushRecipe = function(_payload){
       console.log(_payload);
+
+      const {projectId, projectBranchName, recipeId, recipeBranchName} = _payload;
+      
+      let idQuery = {
+        "query":{
+          "_id": projectId,
+          "branches.branchName": projectBranchName
+        }
+      }
+
+      let projectPatch = {
+        "$push":{
+        "branches.$.recipes":{
+          "branchName":recipeBranchName,
+          "recipe": recipeId
+          }
+        }
+      }
+
+      feathersClient.service("projects").patch(null, projectPatch, idQuery).then(feature => {
+        emitter.emit(state.events.projects_find);
+      });
+
     }
   } // end projects
 

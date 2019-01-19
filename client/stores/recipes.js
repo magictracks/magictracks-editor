@@ -11,6 +11,7 @@ function store (state, emitter) {
   state.events.recipes_find = "recipes:find";
   state.events.recipes_createAndPush = "recipes:createAndPush";
   state.events.recipes_create = "recipes:create";
+  state.events.recipes_addBranchAndPush = "recipes:addBranchAndPush";
   
   feathersClient.service("recipes").find()
     .then(feature => {
@@ -18,13 +19,12 @@ function store (state, emitter) {
       emitter.emit(state.events.RENDER);
     });
   
-  emitter.on('DOMContentLoaded', function () {
-
-  })
+  // emitter.on('DOMContentLoaded', function () {})
 
   emitter.on(state.events.recipes_find, recipes.find);
   emitter.on(state.events.recipes_createAndPush, recipes.createAndPush);
   emitter.on(state.events.recipes_create, recipes.create);
+  emitter.on(state.events.recipes_addBranchAndPush, recipes.addBranchAndPush);
 
 
   function Recipes(){
@@ -92,6 +92,34 @@ function store (state, emitter) {
       });
 
     } // end createAndPush
+
+    this.addBranchAndPush = function(_payload){
+      console.log("adding new branch and push");
+      const {recipeId, projectId, projectBranchName} = _payload;
+
+      // TODO: handle name generation on server
+      let recipePatch = {
+        "$push":{
+        "branches":{
+          "description":`new branch created ${new Date()}`
+          }
+        }
+      }
+
+
+      feathersClient.service("recipes").patch(recipeId,recipePatch,null).then(feature => {
+
+        // const {projectId, projectBranchName, recipeId, recipeBranchName} = _payload;
+        // TODO: get the latest made branch
+        _payload.recipeBranchName = feature.branches[feature.branches.length - 1]
+        console.log(feature);
+        emit(state.events.projects_pushRecipe, _payload);
+      }).catch(err => {
+        return err;
+      })
+
+    } // end addBranch
+
   } // end Recipe
 
 }
