@@ -37,7 +37,10 @@ function AddLinkModal(id, state, emit){
       recipeBranchName: state.addLinkModal.selectRecipeBranchName
     }
 
+    console.log("im the payload in addlinkmodal",payload)
+
     emit(state.events.links_createAndPush, payload);
+    emit(state.events.addLinkModal_close);
   }
 
   function checkDisplay(){

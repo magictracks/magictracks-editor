@@ -47,7 +47,7 @@ function store (state, emitter) {
       let projectPatch = {
         "$push":{
         "branches.$.recipes":{
-          "branchName":recipeBranchName,
+          "selectedBranch":recipeBranchName,
           "recipe": recipeId
           }
         }
@@ -55,6 +55,9 @@ function store (state, emitter) {
 
       feathersClient.service("projects").patch(null, projectPatch, idQuery).then(feature => {
         emitter.emit(state.events.projects_find);
+      }).catch(err => {
+        console.log("🔥🔥🔥🔥", err)
+        return err
       });
 
     }

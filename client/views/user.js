@@ -8,6 +8,8 @@ const addLinkButton = require('../components/addLinkButton');
 const addRecipeModal = require('../components/addRecipeModal');
 const addLinkModal = require('../components/addLinkModal');
 
+const Project = require('../components/Project');
+
 
 // TODO: allow edits if authenticated, otherwise, remove buttons for editing
 // if(state.user.authenticated){
@@ -19,29 +21,37 @@ module.exports = view
 function view (state, emit) {
 
   function renderProject(){
-    let {collection, user, id} = state.params;
+    let {collection, user, id, branch} = state.params;
     
-    let feature = state[collection].find(item => {
+    let project,
+        projectBranch;
+
+    project = state[collection].find(item => {
       return item._id === id;
     });
 
-    if(feature === undefined){
+    if(project === undefined){
+      
       let query = {"query": {"$or": [
         {"owner": user},
         {"collaborators":[user]}
       ]}}
-      // console.log(query);
-      emit(state.events.projects_find, query)
+
+      emit(state.events.projects_find, query);
+
       return html`<div>fetching data</div>`
+
     } else{
-      // console.log(feature);
-      let selectedBranch = feature.branches.find(item => {
-        return item.branchName == 'default'
+
+      console.log(branch)
+
+      projectBranch = project.branches.find(item => {
+        return item.branchName == branch
       })
 
-      //!!! TODO: get branchName from query params!!!
-      emit(state.events.addRecipeModal_selectProjectId, feature._id);
-      emit(state.events.addRecipeModal_selectProjectBranchName, selectedBranch.branchName);
+
+      emit(state.events.addRecipeModal_selectProjectId, project._id);
+      emit(state.events.addRecipeModal_selectProjectBranchName, branch);
       
 
       return html`
@@ -50,23 +60,22 @@ function view (state, emit) {
         <section class="mb4">
           <!-- header -->
           <p class="w-100 flex flex-row justify-start items-center"><small class="f7">project</small> · <small>edit</small></p>
-          <h2>${feature.title}</h2>
+          <h2>${project.title}</h2>
           <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
-          <p>${feature.description}</p>
+          <p>${project.description}</p>
           <ul class="list pl0"></ul>
         </section>
   
         
         <section>
-          ${selectedBranch.recipes.length == 0 ? addRecipeButton(state, emit, feature._id, selectedBranch.branchName) : ""}
+          ${projectBranch.recipes.length == 0 ? addRecipeButton(state, emit, id, branch) : ""}
             <!-- recipes list --> 
-            ${selectedBranch.recipes.map( (recipe,idx) => {
-              
+            ${projectBranch.recipes.map( (recipe,idx) => {
               let selectedRecipe = recipe.recipe;
 
               let recipeBranch = selectedRecipe.branches.find( item => {
-                if(item.hasOwnProperty("branchName")){
-                  return item.branchName == recipe.branchName
+                if(item.hasOwnProperty("selectedBranch")){
+                  return item.branchName == recipe.selectedBranch
                 } else {
                   return item.branchName == "default";
                 }
@@ -116,7 +125,7 @@ function view (state, emit) {
                     }
                   </section>
                 </fieldset>
-                    ${addRecipeButton(state, emit, feature._id, selectedBranch.branchName)}
+                    ${addRecipeButton(state, emit, id, branch)}
                 </section>
               `
             })}
@@ -145,14 +154,16 @@ function view (state, emit) {
     let {collection, user} = state.params;
 
     function selectItem(e){
-      let itemId = e.currentTarget.dataset.id;
-      emit("pushState", `/${user}/${collection}/${itemId}`)
+      const {id, branch} = e.currentTarget.dataset;
+      emit("pushState", `/${user}/${collection}/${id}/${branch}`)
     }
 
     if(state.params.hasOwnProperty("id")){
       // if an id property exists in params, just show me that one item
       if(collection === "projects"){
-        return renderProject();
+        // return renderProject();
+        let p = new Project("Project", state, emit)
+        return p.render();
       } else if (collection === "recipes"){
         return renderRecipe();
       } else if (collection === "links"){
@@ -163,7 +174,7 @@ function view (state, emit) {
       // otherwise if no id property exists in params, show me the list
       return state[collection].map( item => {
         return html`
-          <div onclick=${selectItem} data-id=${item._id} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+          <div onclick=${selectItem} data-id=${item._id} data-branch=${item.selectedBranch} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
             <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
             <p class="f5">${item.title}</p>
           </div>

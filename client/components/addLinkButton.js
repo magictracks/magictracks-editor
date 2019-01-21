@@ -6,9 +6,10 @@ function AddLinkButton(state, emit, parentId, branchName){
     function openAddLinkModal(e){
       console.log("open link modal")
       const{recipeid, recipebranch} = e.currentTarget.dataset
+      console.log(recipeid, recipebranch)
 
-      emit(state.events.addLinkModal.selectRecipeId, recipeid)
-      emit(state.events.addLinkModal.selectRecipeBranchName, recipebranch)
+      emit(state.events.addLinkModal_selectRecipeId, recipeid)
+      emit(state.events.addLinkModal_selectRecipeBranchName, recipebranch)
       emit(state.events.addLinkModal_open)
     }
 

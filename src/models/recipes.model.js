@@ -11,7 +11,7 @@ module.exports = function (app) {
   } = mongooseClient;
 
   const linkRef = new Schema({
-    branchName: {
+    selectedBranch: {
       type: String,
       required: false,
     },

@@ -2,6 +2,7 @@ var Component = require('choo/component')
 var html = require('choo/html')
 
 const addLinkButton = require('./addLinkButton');
+const addRecipeButton = require('./addRecipeButton');
 
 class Project extends Component {
   constructor (id, state, emit) {
@@ -14,10 +15,13 @@ class Project extends Component {
     this.collection = state.params.collection;
     this.user = state.params.user;
     this.id = state.params.id;
+    this.branch = state.params.branch;
 
-    this.feature = state[this.collection].find(item => {
+    this.project = state[this.collection].find(item => {
       return item._id === this.id;
     });
+
+    this.projectBranch = {};
 
     this.projectHeader = this.projectHeader.bind(this);
     this.recipeItem = this.recipeItem.bind(this);
@@ -31,7 +35,9 @@ class Project extends Component {
     return html`
     <section class="mb4">
       <p class="w-100 flex flex-row justify-start items-center"><small class="f7">project</small> · <small>edit</small></p>
-      <h2>${feature.title}</h2>
+      <h2>${feature.title}
+      <small class="f7"> (${feature.selectedBranch})</small>
+      </h2>
       <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
       <p>${feature.description}</p>
       <ul class="list pl0"></ul>
@@ -39,13 +45,13 @@ class Project extends Component {
     `
   }
 
-  recipeItem(selectedRecipe){
+  recipeItem(selectedRecipe, recipeBranch, recipeIndex){
     return html`
     <section class="mb2 mt2">
       <fieldset class="w-100 ba br2" dataset-id="${selectedRecipe._id}" dataset-db="${selectedRecipe.featureType}">
       
-        <!-- Recipe order -->
-        <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
+        <!-- Recipe legend -->
+        <legend class="ba br-pill pl1 pr1">Recipe #${recipeIndex}</legend>
         <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
 
         <!--Recipe header -->
@@ -57,15 +63,36 @@ class Project extends Component {
           <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
           <p>${selectedRecipe.description}</p>
         </section>
-        
+
+        <!-- Link list -->
+        ${this.linkList(selectedRecipe, recipeBranch)}
+
       </fieldset>
+      ${addRecipeButton(this.state, this.emit, this.id, this.branch)}
     </section>
     `
   }
 
-  recipeList(){
+  recipeList(projectBranch){
+
     return html`
-    
+      <section>
+        ${projectBranch.recipes.length == 0 ? addRecipeButton(this.state, this.emit, this.project._id, projectBranch.branchName) : ""}
+        
+        ${projectBranch.recipes.map( (recipe, recipeIndex) =>  {
+          
+          let selectedRecipe = recipe.recipe;
+          let recipeBranch = selectedRecipe.branches.find( item => {
+            if(item.hasOwnProperty("branchName")){
+              return item.branchName == recipe.selectedBranch
+            } else {
+              return item.branchName == "default";
+            }
+          });
+
+          return this.recipeItem(selectedRecipe, recipeBranch, recipeIndex);
+        })}
+      </section>
     `
   }
 
@@ -110,34 +137,33 @@ class Project extends Component {
   }
 
   createElement () {
-    if(this.feature === undefined){
-      let query = {"query": {"$or": [
-        {"owner": user},
+
+    if(this.project === undefined){
+      const query  = {"query": {"$or": [
+        {"owner": this.user},
         {"collaborators":[this.user]}
       ]}}
-      // console.log(query);
-      this.emit(this.state.events.projects_find, query)
+
+      this.emit(this.state.events.projects_find, query);
       return html`<div>fetching data</div>`
-    } else{
-      // console.log(feature);
-      let selectedBranch = this.feature.branches.find(item => {
-        return item.branchName == 'default'
+
+    } else {
+
+      this.projectBranch = this.project.branches.find(item => {
+        return item.branchName == this.branch
       })
 
-      //!!! TODO: get branchName from query params!!!
-      this.emit(this.state.events.addRecipeModal_selectProjectId, this.feature._id);
-      this.emit(this.state.events.addRecipeModal_selectProjectBranchName, selectedBranch.branchName);
+      this.emit(this.state.events.addRecipeModal_selectProjectId, this.project._id);
+      this.emit(this.state.events.addRecipeModal_selectProjectBranchName, this.branch);
       
-
-
       return html`
         <div class="w-100 h-100">
 
           <!-- Project header -->
-          ${projectHeader(this.feature)}
+          ${this.projectHeader(this.project)}
 
           <!-- Recipe list -->
-
+          ${this.recipeList(this.projectBranch)}
         </div>
       `
     }

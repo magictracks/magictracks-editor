@@ -106,14 +106,15 @@ function store (state, emitter) {
         }
       }
 
+      console.log("recipeId from addBranchAndPush", recipeId)
 
-      feathersClient.service("recipes").patch(recipeId,recipePatch,null).then(feature => {
+      feathersClient.service("recipes").patch(recipeId, recipePatch,null).then(feature => {
 
         // const {projectId, projectBranchName, recipeId, recipeBranchName} = _payload;
-        // TODO: get the latest made branch
-        _payload.recipeBranchName = feature.branches[feature.branches.length - 1]
-        console.log(feature);
-        emit(state.events.projects_pushRecipe, _payload);
+        // TODO: get the latest made branch in a better way
+        _payload.recipeBranchName = feature.branches[feature.branches.length - 1].branchName
+        
+        emitter.emit(state.events.projects_pushRecipe, _payload);
       }).catch(err => {
         return err;
       })

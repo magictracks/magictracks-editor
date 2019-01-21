@@ -8,7 +8,7 @@ function store (state, emitter) {
   state.addLinkModal = {
     display: false,
     selectRecipeId:null,
-    selectRecipeBanchName: null,
+    selectRecipeBranchName: null,
     selectLink: null,
     selectLinkBranches: [],
     selectLinkBranchName: 'default'
@@ -49,11 +49,11 @@ function store (state, emitter) {
     }
 
     this.selectRecipeId = function(_recipeId){
-      state.addRecipeModal.selectProjectId = _recipeId;
+      state.addLinkModal.selectRecipeId = _recipeId;
     }
 
     this.selectRecipeBranchName = function(_recipeBranchName){
-      state.addRecipeModal.selectRecipeBranchName = _recipeBranchName;
+      state.addLinkModal.selectRecipeBranchName = _recipeBranchName;
     }
 
   } // add recipeModal

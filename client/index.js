@@ -33,6 +33,7 @@ app.route('/search/:collection', require('./views/search'))
 app.route('/:user', require('./views/user'))
 app.route('/:user/:collection', require('./views/user'))
 app.route('/:user/:collection/:id', require('./views/user'))
+app.route('/:user/:collection/:id/:branch', require('./views/user'))
 
 // app.route('/dev-ref', require('./views/dev-ref'))
 // app.route('/*', require('./views/404'))

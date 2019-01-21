@@ -39,47 +39,58 @@ function store (state, emitter) {
 
     this.createAndPush = function(_payload){
 
-      console.log(_payload)
       const {linkData, recipeId, recipeBranchName} = _payload;
+
+      let idQuery = {
+        "query":{
+          "_id": recipeId,
+          "branches.branchName": recipeBranchName
+        }
+      }
+
+      let recipePatch = {
+        "$push":{
+        "branches.$.links":{
+          "branchName":"default",
+          "link": null
+          }
+        }
+      }
 
       feathersClient.service('links').create(linkData).then(feature => {
         state.links.push(feature);
-
-        console.log("new link!", feature);
         
-        let idQuery = {
-          "query":{
-            "_id": recipeId,
-            "branches.branchName": recipeBranchName
-          }
-        }
-
-        let recipePatch = {
-          "$push":{
-          "branches.$.links":{
-            "branchName":"default",
-            "link": feature._id
-            }
-          }
-        }
+        recipePatch.$push["branches.$.links"].link = feature._id
 
         return feathersClient.service("recipes").patch(null, recipePatch, idQuery)
       }).then(patchedFeature => {
-        // 
-        console.log(patchedFeature);
+
         emitter.emit(state.events.projects_find, {});
-        // emitter.emit(state.events.recipes_find);
+
       })
       .catch(err => {
         
         if(err.code === 409){
           console.log("FEATURE ALREADY EXISTS", err);
-          feathersClient.service('links').get({"url": err.errors.url}).then(feature => {
-            recipePatch.$push.branches.$.links.link = feature._id;
+          
+          let getQuery = {
+            "query":{
+              "url": err.errors.url
+            }
+          };
+
+          feathersClient.service('links').find(getQuery).then(features => {
+
+            recipePatch.$push['branches.$.links'].link = features.data[0]._id;
 
             return feathersClient.service("recipes").patch(null, recipePatch, idQuery)
           }).then(patchedFeature => {
+            
+            console.log("🐞🐞🐞🐞I'm the patched feature!", patchedFeature)
             emitter.emit(state.events.projects_find, {});
+
+          }).catch(innerErr => {
+            return innerErr
           })
         } else{
           console.log("ERROR: 🔥🔥🔥🔥", err);
