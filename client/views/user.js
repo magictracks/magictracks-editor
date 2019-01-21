@@ -3,6 +3,11 @@ const NavBar = require('../components/navbar');
 const Pagination = require('../components/pagination');
 
 const UserNav = require('../components/userNav');
+const addRecipeButton = require('../components/addRecipeButton');
+const addLinkButton = require('../components/addLinkButton');
+const addRecipeModal = require('../components/addRecipeModal');
+const addLinkModal = require('../components/addLinkModal');
+
 
 // TODO: allow edits if authenticated, otherwise, remove buttons for editing
 // if(state.user.authenticated){
@@ -12,265 +17,6 @@ const UserNav = require('../components/userNav');
 module.exports = view
 
 function view (state, emit) {
-
-  let projectId,
-      projectBranchName,
-      recipeId,
-      recipeBranchName;
-
-  function openAddRecipeModal(e){
-    console.log('open recipe modal');
-    const {projectid, projectbranch} = e.currentTarget.dataset
-
-    emit(state.events.addRecipeModal_selectProjectId, projectid)
-    emit(state.events.addRecipeModal_selectProjectBranchName, projectbranch)
-    emit(state.events.addRecipeModal_open)
-  }
-
-  function closeAddRecipeModal(e){
-    console.log('close recipe modal');
-    emit(state.events.addRecipeModal_close)
-  }
-
-  function addRecipeButton(parentId, branchName){
-    return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver mt2 mb2"
-      data-projectid="${parentId}"
-      data-projectbranch="${branchName}"
-      onclick=${openAddRecipeModal}>add recipe</button>
-    `
-  }
-
-  function addRecipeModal(){
-    
-    // function submitForm(e){
-    //   e.preventDefault();
-    //   let formData = new FormData(e.currentTarget);
-
-    //   let payload ={
-    //     recipeData:{
-    //       title: formData.get("title"),
-    //       description: formData.get("description")
-    //     },
-    //     projectId,
-    //     projectBranchName
-    //   }
-
-    //   emit(state.events.recipes_createAndPush, payload);
-    // }
-
-    function addRecipe(e){
-      e.preventDefault();
-      let formData = new FormData(e.currentTarget);
-
-      let payload ={
-        recipeData:{
-          title: formData.get("title"),
-        }
-      }
-
-      emit(state.events.recipes_create, payload);
-    }
-
-    function checkDisplay(){
-      if(state.addRecipeModal.display == true){
-        return ""
-      } else{
-        return "dn"
-      }
-    }
-
-    function selectItem(e){
-      e.preventDefault();
-      console.log("selectRecipe ID: ", e.currentTarget.dataset.id)
-      
-      emit(state.events.addRecipeModal_selectRecipe, e.currentTarget.dataset.id )
-    }
-
-    function pushSelectedRecipe(e){
-      e.preventDefault();
-      console.log("push selected Recipe branch to selected project");
-    
-      let payload = {
-        projectId: state.addRecipeModal.selectProjectId, 
-        projectBranchName: state.addRecipeModal.selectProjectBranchName, 
-        recipeId: state.addRecipeModal.selectRecipe,
-        recipeBranchName: state.addRecipeModal.selectRecipeBranch,
-      }
-      
-      emit(state.events.projects_pushRecipe, payload)
-      emit(state.events.addRecipeModal_close);
-    }
-
-    function pushNewBranch(e){
-      e.preventDefault();
-      console.log("adding auto named new branch and adding to selected project")
-      
-      let payload = {
-        projectId: state.addRecipeModal.selectProjectId,
-        projectBranchName: state.addRecipeModal.selectProjectBranchName,
-        recipeId: state.addRecipeModal.selectRecipe
-      }
-
-      emit(state.events.recipes_addBranchAndPush, payload)
-      emit(state.events.addRecipeModal_close);
-    }
-
-    function selectBranchName(e){
-      e.preventDefault();
-      console.log(e.currentTarget.value)
-      emit(state.events.addRecipeModal_selectRecipeBranch, e.currentTarget.value)
-    }
-
-    function showSelectBranches(){
-      if(state.addRecipeModal.selectRecipeBranches.length == 0){
-        return html`
-          <p class="ma0">select playlist to specify branch</p>
-        `
-      } else {
-        return html`
-        <div class="w-100 flex flex-row items-center">
-          <select class="h3 f7 bn bg-white pa2 br2 br--left" onchange=${selectBranchName}>
-            ${state.addRecipeModal.selectRecipeBranches.map(branch => {
-              return html`
-                <option value="${branch.branchName}" data-id="${branch._id}">${branch.branchName}</option>
-              `
-            })}
-          </select>
-          <button class="bn bg-light-purple br2 br--right pa2 h3" onclick=${pushSelectedRecipe}>use this branch</button>
-          <div class="ml2 mr2"> - or - </div>
-          <button class="bn bg-light-pink br2 pa2 h3" onclick=${pushNewBranch}> add new branch </button>
-        </div>
-        `
-      }
-    }
-
-    return html`
-      <div id="addRecipeModal" class="w-100 h-100 fixed ${checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
-        <div class="w-100 h-100 flex flex-column justify-center items-center">
-          <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
-            <div class="w-100 flex flex-row justify-between">
-              <h2>Add Recipe Modal</h2>
-              <button class="bn f2 bg-light-gray" onclick=${closeAddRecipeModal}>✕</button>
-            </div>
-            <section>
-              <fieldset>
-              <legend>Select Recipe</legend>
-                <section>
-                <ul class="list pl0 overflow-y-scroll" style="max-height:250px;">
-                  ${state.recipes.map( item => {
-                    return html`
-                      <li class="w-100 flex flex-row items-center justify-start pa2"
-                      onclick=${selectItem} data-id="${item._id}"> 
-                        <div class="h2 w2 br2 mr2" 
-                        style="background-color:${item.colors[item.selectedColor]}"></div> 
-                        <p>${item.title}</p>
-                      </li>
-                    `
-                  })}
-                </ul>
-                </section>
-                <section>
-                  <!-- add new playlist form --> 
-                  <form name="addRecipeForm" id="addRecipeForm" onsubmit=${addRecipe}>
-                      <div class="flex flex-row">
-                      <input class="w-100 bg-near-white bn br2 pa2 mr2" placeholder="e.g. new recipe name" type="text" name="title">
-                      <input class="br2 bn bg-light-green pa2" type="submit" value="add recipe">
-                      </div>
-                  </form>
-                </section>
-              </fieldset>
-              <section class="mt2 flex flex-row justify-between items-center">
-                  <button class="br2 bn bg-light-red h3" onclick=${closeAddRecipeModal}>cancel</button>
-                  <div class="h3 flex flex-column justify-center">
-                    ${showSelectBranches()}
-                  </div>
-              </section>
-            </section>
-          </div>
-        </div>
-      </div>
-    `
-  }
-
-  function openAddLinkModal(e){
-    console.log("open link modal")
-    const{recipeid, recipebranch} = e.currentTarget.dataset
-
-    emit(state.events.addLinkModal.selectRecipeId, recipeid)
-    emit(state.events.addLinkModal.selectRecipeBranchName, recipebranch)
-    emit(state.events.addLinkModal_open)
-  }
-  function closeLinkModal(e){
-    console.log("close link modal")
-    emit(state.events.addLinkModal_close)
-  }
-
-  function addLinkButton(parentId, branchName){
-    return html`
-      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver"
-      data-recipeid="${parentId}"
-      data-recipebranch="${branchName}"
-      onclick=${openAddLinkModal}>add link</button>
-    `
-  }
-
-
-  function addLinkModal(){
-    
-    function submitForm(e){
-      e.preventDefault();
-      let formData = new FormData(e.currentTarget);
-
-      let payload ={
-        linkData:{
-          url: formData.get("url")
-        },
-        recipeId: state.addLinkModal.selectRecipeId,
-        recipeBranchName: state.addLinkModal.selectRecipeBranchName
-      }
-
-      emit(state.events.links_createAndPush, payload);
-    }
-
-    function checkDisplay(){
-      if(state.addLinkModal.display == true){
-        return ""
-      } else{
-        return "dn"
-      }
-    }
-
-    return html`
-      <div id="addLinkModal" class="w-100 h-100 fixed ${checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
-        <div class="w-100 h-100 flex flex-column justify-center items-center">
-          <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
-            <div class="w-100 flex flex-row justify-between">
-              <h2>New Link Modal</h2>
-              <button class="bn f2 bg-light-gray" onclick=${closeLinkModal}>✕</button>
-            </div>
-            <section>
-              <form name="addLinkForm" id="addLinkForm" onsubmit=${submitForm}>
-              <fieldset class="w-100 mb2">
-                <legend class="br-pill ba pl1 pr1">URL</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="url">
-              </fieldset>
-              <fieldset class="w-100 mb2">
-                <legend class="br-pill ba pl1 pr1">title</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="title">
-              </fieldset>
-              <fieldset class="w-100 mb2">
-                <legend class="br-pill ba pl1 pr1">description</legend>
-                  <input class="w-100 bg-near-white bn br2 pa2" type="text" name="description">
-              </fieldset>
-              <input type="submit" value="save">
-              </form>
-            </section>
-          </div>
-        </div>
-      </div>
-    `
-  }
 
   function renderProject(){
     let {collection, user, id} = state.params;
@@ -312,7 +58,7 @@ function view (state, emit) {
   
         
         <section>
-          ${selectedBranch.recipes.length == 0 ? addRecipeButton(feature._id, selectedBranch.branchName) : ""}
+          ${selectedBranch.recipes.length == 0 ? addRecipeButton(state, emit, feature._id, selectedBranch.branchName) : ""}
             <!-- recipes list --> 
             ${selectedBranch.recipes.map( (recipe,idx) => {
               
@@ -342,7 +88,7 @@ function view (state, emit) {
                     <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
                     <p>${selectedRecipe.description}</p>
                   </section>
-                  ${recipeBranch.links.length == 0 ? addLinkButton(selectedRecipe._id, recipeBranch.branchName) : ""}
+                  ${recipeBranch.links.length == 0 ? addLinkButton(state, emit, selectedRecipe._id, recipeBranch.branchName) : ""}
                   <section>
                     <!-- links list --> 
                     ${
@@ -363,14 +109,14 @@ function view (state, emit) {
                                 <div class="w2 h2">more</div>
                               </div>
                             </div>
-                            ${addLinkButton(selectedRecipe._id, recipeBranch.branchName)}
+                            ${addLinkButton(state, emit, selectedRecipe._id, recipeBranch.branchName)}
                           </section>
                         `
                       })
                     }
                   </section>
                 </fieldset>
-                    ${addRecipeButton(feature._id, selectedBranch.branchName)}
+                    ${addRecipeButton(state, emit, feature._id, selectedBranch.branchName)}
                 </section>
               `
             })}
@@ -441,8 +187,8 @@ function view (state, emit) {
     
       
     </main>
-    ${addLinkModal()}
-    ${addRecipeModal()}
+    ${addLinkModal("AddLinkModal", state, emit)}
+    ${addRecipeModal("AddRecipeModal", state, emit)}
   </body>   
   `
 }

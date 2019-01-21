@@ -1,22 +1,23 @@
 var Component = require('choo/component')
 var html = require('choo/html')
 
-class AddLinkButton extends Component {
-  constructor (id, state, emit) {
-    super(id)
-    this.local = state.components[id] = {}
-  }
 
-  createElement () {
+function AddLinkButton(state, emit, parentId, branchName){
+    function openAddLinkModal(e){
+      console.log("open link modal")
+      const{recipeid, recipebranch} = e.currentTarget.dataset
+
+      emit(state.events.addLinkModal.selectRecipeId, recipeid)
+      emit(state.events.addLinkModal.selectRecipeBranchName, recipebranch)
+      emit(state.events.addLinkModal_open)
+    }
+
     return html`
-      <div>
-      </div>
+      <button class="w-100 h1 bg-near-white br2 pointer f7 bn light-silver"
+      data-recipeid="${parentId}"
+      data-recipebranch="${branchName}"
+      onclick=${openAddLinkModal}>add link</button>
     `
-  }
-
-  update () {
-    return true
-  }
 }
 
 module.exports = AddLinkButton
