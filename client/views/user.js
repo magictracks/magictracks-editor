@@ -9,6 +9,7 @@ const addRecipeModal = require('../components/addRecipeModal');
 const addLinkModal = require('../components/addLinkModal');
 
 const Project = require('../components/Project');
+const Recipe = require('../components/Recipe');
 
 
 // TODO: allow edits if authenticated, otherwise, remove buttons for editing
@@ -19,123 +20,6 @@ const Project = require('../components/Project');
 module.exports = view
 
 function view (state, emit) {
-
-  function renderProject(){
-    let {collection, user, id, branch} = state.params;
-    
-    let project,
-        projectBranch;
-
-    project = state[collection].find(item => {
-      return item._id === id;
-    });
-
-    if(project === undefined){
-      
-      let query = {"query": {"$or": [
-        {"owner": user},
-        {"collaborators":[user]}
-      ]}}
-
-      emit(state.events.projects_find, query);
-
-      return html`<div>fetching data</div>`
-
-    } else{
-
-      console.log(branch)
-
-      projectBranch = project.branches.find(item => {
-        return item.branchName == branch
-      })
-
-
-      emit(state.events.addRecipeModal_selectProjectId, project._id);
-      emit(state.events.addRecipeModal_selectProjectBranchName, branch);
-      
-
-      return html`
-      <div class="w-100 h-100">
-        
-        <section class="mb4">
-          <!-- header -->
-          <p class="w-100 flex flex-row justify-start items-center"><small class="f7">project</small> · <small>edit</small></p>
-          <h2>${project.title}</h2>
-          <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
-          <p>${project.description}</p>
-          <ul class="list pl0"></ul>
-        </section>
-  
-        
-        <section>
-          ${projectBranch.recipes.length == 0 ? addRecipeButton(state, emit, id, branch) : ""}
-            <!-- recipes list --> 
-            ${projectBranch.recipes.map( (recipe,idx) => {
-              let selectedRecipe = recipe.recipe;
-
-              let recipeBranch = selectedRecipe.branches.find( item => {
-                if(item.hasOwnProperty("selectedBranch")){
-                  return item.branchName == recipe.selectedBranch
-                } else {
-                  return item.branchName == "default";
-                }
-              })
-
-
-              // !!! TODO: fix the redundancy !!!
-              // emit(state.events.addLinkModal_selectRecipeId, selectedRecipe._id)
-              // emit(state.events.addLinkModal_selectRecipeBranchName, recipeBranch.branchName)
-              // emit(state.events.addRecipeModal_selectRecipe, selectedRecipe._id)         
-
-              return html`
-                <section class="mb2 mt2">
-                <fieldset class="w-100 ba br2" dataset-id="${selectedRecipe._id}" dataset-db="${selectedRecipe.featureType}">
-                  <legend class="ba br-pill pl1 pr1">Recipe #${idx}</legend>
-                  <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedRecipe.colors[selectedRecipe.selectedColor]}">edit</div>
-                  <section>
-                    <h3>${selectedRecipe.title} <small class="f7">(${recipeBranch.branchName})</small></h3>
-                    <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · Download/Share </p>
-                    <p>${selectedRecipe.description}</p>
-                  </section>
-                  ${recipeBranch.links.length == 0 ? addLinkButton(state, emit, selectedRecipe._id, recipeBranch.branchName) : ""}
-                  <section>
-                    <!-- links list --> 
-                    ${
-                      recipeBranch.links.map( (link) => {
-                        let selectedLink = link.link;
-                        
-                        return html`
-                          <section class="mb2 mt2">
-                            <div class="w-100 flex flex-column br2 ba">
-                              <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
-                              <div class="w-100 flex flex-row pa2 items-center f7">
-                                <div class="w2 h2 mr4" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}"></div>
-                                <div class="w-40 flex flex-column">
-                                  <small>${selectedLink.url}</small>
-                                  <p>${selectedLink.title}</p>
-                                </div>
-                                <div class="w-40"><p>${selectedLink.description}</p></div>
-                                <div class="w2 h2">more</div>
-                              </div>
-                            </div>
-                            ${addLinkButton(state, emit, selectedRecipe._id, recipeBranch.branchName)}
-                          </section>
-                        `
-                      })
-                    }
-                  </section>
-                </fieldset>
-                    ${addRecipeButton(state, emit, id, branch)}
-                </section>
-              `
-            })}
-        </section>
-      </div>
-      `
-    }
-
-    
-  }
 
   function renderRecipe(){
     return html`
@@ -165,7 +49,9 @@ function view (state, emit) {
         let p = new Project("Project", state, emit)
         return p.render();
       } else if (collection === "recipes"){
-        return renderRecipe();
+        // return renderRecipe();
+        let r = new Recipe("Recipe", state, emit)
+        return r.render();
       } else if (collection === "links"){
         return renderLink();
       }

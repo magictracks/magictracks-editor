@@ -89,6 +89,10 @@ module.exports = function (app) {
       type: Array,
       default: ["#FF725C", "#FFD700", "#FF80CC", "#9EEBCF", "#CDECFF", "#A463F2"],
       required: true
+    },
+    selectedBranch:{
+      type: String,
+      default: 'default'
     }
   }, {
     timestamps: true
