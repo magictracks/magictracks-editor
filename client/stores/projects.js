@@ -10,7 +10,8 @@ function store (state, emitter) {
 
   state.events.projects_find = "projects:find";
   state.events.projects_createBranch = "projects:createBranch";
-  state.events.projects_setBranch = "projects:setBranch";
+  state.events.projects_changeBranchName = "projects:changeBranchName";
+  state.events.projects_setSelectedBranch = "projects:setSelectedBranch";
   state.events.projects_get = "projects:get";
   state.events.projects_pushRecipe = "projects:pushRecipe";
   
@@ -24,10 +25,66 @@ function store (state, emitter) {
   emitter.on(state.events.projects_find, projects.find);
   emitter.on(state.events.projects_pushRecipe, projects.pushRecipe);
   emitter.on(state.events.projects_createBranch, projects.createBranch);
-  emitter.on(state.events.projects_setBranch, projects.setBranch);
+  emitter.on(state.events.projects_changeBranchName, projects.changeBranchName);
+  emitter.on(state.events.projects_setSelectedBranch, projects.setSelectedBranch);
 
+  feathersClient.service("projects").on('patched', message => {
+    emitter.emit(state.events.projects_find, {})
+  });
 
   function Projects(){
+
+    this.changeBranchName = function(_payload){
+      const {id} = state.params
+
+      const {updatedBranchId, updatedBranchName} = _payload;
+      const idQuery = {
+        "query":{
+          "_id": id,
+          "branches._id":updatedBranchId
+        }
+      }
+      const patchData = {
+        "$set":{
+          "branches.$.branchName":updatedBranchName
+        }
+      }
+
+      feathersClient.service("projects").patch(null, patchData, idQuery).then(patchedFeature => {
+        console.log(patchedFeature);
+
+        emitter.emit(state.events.projects_setSelectedBranch, {updatedBranchName})
+        // emitter.emit(state.events.projects_find, {})
+      }).catch(err => {
+        return err;
+      })
+    }
+
+    this.setSelectedBranch = function(_payload){
+      const {id, user, collection} = state.params;
+      const {updatedBranchName} = _payload;
+      
+      let patchData = {
+        selectedBranch: updatedBranchName
+      }
+
+      feathersClient.service("projects").patch(id, patchData, null).then(patchedFeature => {
+        
+        console.log(patchedFeature);
+
+        // TODO: is there a better way to update?
+        state.projects.forEach(item => {
+          if(item._id == patchedFeature._id){
+            item.selectedBranch = patchedFeature.selectedBranch
+          }
+        });
+        
+        emitter.emit("pushState", `/${user}/${collection}/${id}/${patchedFeature.selectedBranch}`)
+
+      }).catch(err => {
+        return err;
+      })
+    }
 
     this.createBranch = function(_payload){
       const {id} = state.params;
@@ -45,9 +102,7 @@ function store (state, emitter) {
       })
     }
 
-    this.setBranch = function(_payload){
-      
-    }
+    
 
     this.find = function(_query){
       feathersClient.service("projects").find(_query).then(features => {
