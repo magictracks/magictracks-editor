@@ -25,7 +25,11 @@ class Recipe extends Component {
     this.local = state.components[id] = {}
 
     this.recipeHeader = this.recipeHeader.bind(this);
+    this.linkItem = this.linkItem.bind(this);
+    this.linkList = this.linkList.bind(this);
   }
+
+  
 
   recipeHeader(feature){
     return html`
@@ -40,6 +44,48 @@ class Recipe extends Component {
     </section>
     `
   }
+
+  linkItem(selectedLink, selectedRecipe, recipeBranch){
+    const {link, branchName} = selectedLink
+    return html`
+      <section class="mb2 mt2">
+        <div class="w-100 flex flex-column br2 ba">
+          <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}">edit</div>
+          <div class="w-100 flex flex-row pa2 items-center f7">
+            <div class="w2 h2 mr4" style="background-color:${selectedLink.colors[selectedLink.selectedColor]}"></div>
+            <div class="w-40 flex flex-column">
+              <small>${selectedLink.url}</small>
+              <p>${selectedLink.title}</p>
+            </div>
+            <div class="w-40"><p>${selectedLink.description}</p></div>
+            <div class="w2 h2">more</div>
+          </div>
+        </div>
+        ${addLinkButton(this.state, this.emit, selectedRecipe._id, recipeBranch.branchName)}
+      </section>
+    `
+  }
+
+  linkList(selectedRecipe, recipeBranch){
+    return html`
+      <section>
+
+        <!-- add link button if no links exist in the recipe -->
+        ${recipeBranch.links.length == 0 ? addLinkButton(this.state, this.emit, selectedRecipe._id, recipeBranch.branchName) : ""}
+
+        <!-- map links -->
+        ${
+          recipeBranch.links.map( (link) => {
+            let selectedLink = link.link;
+            return this.linkItem(selectedLink, selectedRecipe, recipeBranch);
+          })
+        }
+
+      </section>
+    `
+  }
+
+
 
   createElement () {
     if(this.recipe === undefined){
@@ -67,7 +113,7 @@ class Recipe extends Component {
           ${this.recipeHeader(this.recipe)}
 
           <!-- Link list -->
-
+          ${this.linkList(this.recipe, this.recipeBranch)}
         </div>
       `
     }

@@ -11,6 +11,8 @@ const addLinkModal = require('../components/addLinkModal');
 const Project = require('../components/Project');
 const Recipe = require('../components/Recipe');
 
+const EditProjectModal = require('../components/EditProjectModal');
+
 
 // TODO: allow edits if authenticated, otherwise, remove buttons for editing
 // if(state.user.authenticated){
@@ -21,11 +23,6 @@ module.exports = view
 
 function view (state, emit) {
 
-  function renderRecipe(){
-    return html`
-    <div>specific recipe</div>
-    `
-  }
 
   function renderLink(){
     return html`
@@ -86,6 +83,7 @@ function view (state, emit) {
     </main>
     ${addLinkModal("AddLinkModal", state, emit)}
     ${addRecipeModal("AddRecipeModal", state, emit)}
+    ${state.cache(EditProjectModal,"EditProjectModal", state, emit).render()}
   </body>   
   `
 }

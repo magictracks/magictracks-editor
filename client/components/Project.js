@@ -28,13 +28,21 @@ class Project extends Component {
     this.recipeList = this.recipeList.bind(this);
     this.linkItem = this.linkItem.bind(this);
     this.linkList = this.linkList.bind(this);
+
+    this.openEditProjectModal = this.openEditProjectModal.bind(this);
+  }
+
+  openEditProjectModal(e){
+    console.log("opening edit modal", e.currentTarget);
+    
+    this.emit(this.state.events.editProjectModal_open);
   }
 
 
   projectHeader(feature){
     return html`
     <section class="mb4">
-      <p class="w-100 flex flex-row justify-start items-center"><small class="f7">project</small> · <small>edit</small></p>
+      <p class="w-100 flex flex-row justify-start items-center"><small class="f7">project</small> · <small class="underline" onclick=${this.openEditProjectModal}>edit</small></p>
       <h2>${feature.title}
       <small class="f7"> (${feature.selectedBranch})</small>
       </h2>
@@ -155,6 +163,7 @@ class Project extends Component {
 
       this.emit(this.state.events.addRecipeModal_selectProjectId, this.project._id);
       this.emit(this.state.events.addRecipeModal_selectProjectBranchName, this.branch);
+      this.emit(this.state.events.editProjectModal_setProject);
       
       return html`
         <div class="w-100 h-100">

@@ -121,7 +121,7 @@ function AddRecipeModal(id, state, emit){
             <h2>Add Recipe Modal</h2>
             <button class="bn f2 bg-light-gray" onclick=${closeAddRecipeModal}>✕</button>
           </div>
-          <section>
+          <section> 
             <fieldset>
             <legend>Select Recipe</legend>
               <section>
