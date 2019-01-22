@@ -14,6 +14,8 @@ function store (state, emitter) {
   state.events.projects_setSelectedBranch = "projects:setSelectedBranch";
   state.events.projects_get = "projects:get";
   state.events.projects_pushRecipe = "projects:pushRecipe";
+
+  state.events.projects_updateDetails = "projects:updateDetails";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -27,12 +29,29 @@ function store (state, emitter) {
   emitter.on(state.events.projects_createBranch, projects.createBranch);
   emitter.on(state.events.projects_changeBranchName, projects.changeBranchName);
   emitter.on(state.events.projects_setSelectedBranch, projects.setSelectedBranch);
+  emitter.on(state.events.projects_updateDetails, projects.updateDetails);
 
   feathersClient.service("projects").on('patched', message => {
     emitter.emit(state.events.projects_find, {})
   });
 
   function Projects(){
+
+    this.updateDetails = function(_payload){
+      const {id} = state.params
+      const {title, description} = _payload
+
+      let patchData = {
+        title,
+        description
+      }
+      
+      feathersClient.service("projects").patch(id, patchData, null).then(patchedFeature => {
+        return patchedFeature
+      }).catch(err => {
+        return err;
+      })
+    }
 
     this.changeBranchName = function(_payload){
       const {id} = state.params

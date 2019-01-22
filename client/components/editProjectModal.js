@@ -26,8 +26,22 @@ class EditProjectModal extends Component {
     this.changeBranchName = this.changeBranchName.bind(this);
     this.setSelectedBranch = this.setSelectedBranch.bind(this);
     this.branchIsSelected = this.branchIsSelected.bind(this);
+    this.saveProjectDetails = this.saveProjectDetails.bind(this);
   }
 
+  saveProjectDetails(e){
+    e.preventDefault()
+    let form = new FormData(e.currentTarget);
+
+    let payload = {
+      title: form.get("title"),
+      description: form.get("description")
+    }
+
+    this.emit(this.state.events.projects_updateDetails, payload)
+    this.emit(this.state.events.editProjectModal_close)
+
+  }
 
   closeModal(e){
     console.log('close edit project modal');
@@ -91,10 +105,14 @@ class EditProjectModal extends Component {
         return branch.branchName == this.state.params.branch;
       });
 
+      function toggleDangerZone(e){
+        document.querySelector("#dangerZone").classList.toggle("dn");
+      }
+
       return html`
       <div id="editProjectModal" class="w-100 h-100 fixed ${this.checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
-        <div class="w-100 h-100 flex flex-column justify-center items-center">
-          <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
+        <div class="w-100 h-100 flex flex-column justify-center items-center pa2">
+          <div class="mw7 w-100 h-auto overflow-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
             <div class="w-100 flex flex-row justify-between">
               <h2>Edit Project</h2>
               <button class="bn f2 bg-light-gray" onclick=${this.closeModal}>✕</button>
@@ -126,11 +144,17 @@ class EditProjectModal extends Component {
                     <input class="bn br2 br--right ma0 h2 bg-silver" type="submit" value="change name">
                   </form>
                 </div>
+                <div>
+                  <p onclick=${toggleDangerZone}>⚠️ Danger Zone ▼ </p>
+                  <div id="dangerZone" class="dn">
+                  <button class="h2 bg-light-red pa2 bn br2">🗑 delete branch</button>
+                  </div>
+                </div>
             </fieldset>
             <hr>
 
               <!-- edit project details form --> 
-              <form class="w-100 mt2">
+              <form id="projectDetailsForm" class="w-100 mt2" onsubmit=${this.saveProjectDetails}>
                 <fieldset class="w-100 mb2 br2 ba">
                   <legend class="br-pill pl2 pr2 ba">title</legend>
                   <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="${currentProject.title}">
@@ -164,11 +188,12 @@ class EditProjectModal extends Component {
                 </fieldset>
               </form>
               <!-- cancel or save buttons -->
-              <section class="w-100 mt3 flex flex-row justify-between">
-                  <div><button class="bg-light-red bn br2 h3 pa2" onclick=${() => {console.log("delete")} }>🗑 delete</button></div>
+              <section class="w-100 mt3 flex flex-row justify-between mb4">
+                  <!-- TODO: add confirm() --> 
+                  <div><button class="bg-light-red bn br2 h3 pa2" onclick=${() => {console.log("delete")} }>🗑 delete entire project</button></div>
                   <div>
                     <button class="bg-light-silver bn br2 h3 mr2 pa2" onclick=${this.closeModal}>Cancel</button>
-                    <button class="bg-light-green bn br2 h3 pa2" onclick=${() => { console.log("save edits!")}}>Save</button>
+                    <input class="bg-light-green bn br2 h3 pa2" type="submit" form="projectDetailsForm" value="save" />
                   </div>
               </section>
             </section>
