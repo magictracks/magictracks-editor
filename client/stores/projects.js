@@ -9,6 +9,8 @@ function store (state, emitter) {
   state.projects = [];
 
   state.events.projects_find = "projects:find";
+  state.events.projects_createBranch = "projects:createBranch";
+  state.events.projects_setBranch = "projects:setBranch";
   state.events.projects_get = "projects:get";
   state.events.projects_pushRecipe = "projects:pushRecipe";
   
@@ -21,9 +23,31 @@ function store (state, emitter) {
   // find projects
   emitter.on(state.events.projects_find, projects.find);
   emitter.on(state.events.projects_pushRecipe, projects.pushRecipe);
+  emitter.on(state.events.projects_createBranch, projects.createBranch);
+  emitter.on(state.events.projects_setBranch, projects.setBranch);
 
 
   function Projects(){
+
+    this.createBranch = function(_payload){
+      const {id} = state.params;
+
+      const projectPatch = {
+        "$push":{
+          "branches":{
+            "description":"new project branch"
+          }
+        }
+      }
+      feathersClient.service("projects").patch(id,projectPatch, null).then(patchedFeature => {
+        console.log("added branch!", patchedFeature);
+        emitter.emit(state.events.projects_find, {});
+      })
+    }
+
+    this.setBranch = function(_payload){
+      
+    }
 
     this.find = function(_query){
       feathersClient.service("projects").find(_query).then(features => {

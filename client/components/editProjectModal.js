@@ -22,6 +22,8 @@ class EditProjectModal extends Component {
 
     this.checkDisplay = this.checkDisplay.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.createBranch = this.createBranch.bind(this);
+    this.changeBranchName = this.changeBranchName.bind(this);
   }
 
 
@@ -36,6 +38,20 @@ class EditProjectModal extends Component {
     } else{
       return "dn"
     }
+  }
+
+  createBranch(e){
+    console.log("create new branch!");
+    e.preventDefault();
+    this.emit(this.state.events.projects_createBranch, {})
+  }
+
+  changeBranchName(e){
+    console.log("changing branch name!");
+    e.preventDefault();
+    let formData = new FormData(e.currentTarget);
+    console.log(formData.get("branchName"));
+    // this.emit(this.state.events.projects_changeBranchName, {})
   }
 
 
@@ -57,20 +73,26 @@ class EditProjectModal extends Component {
             <section class="w-100">
             <fieldset class="w-100 ba br2 mb2">
               <legend class="br-pill pl2 pr2 ba">Selected Branch</legend>
-              <select class="w-100 mb2">
-                ${
-                  currentProject.branches.map( item => {
-                    return html`
-                      <option class="w-100 h2 bn br2" value="${item.branchName}">${item.branchName}</option
-                    `
-                  })
-                }
-              </select>
-              <!-- create new branch input -->
-              <div class="w-100">
-                <form class="flex flex-row h2 items-center" onsubmit=${(e) => {e.preventDefault(); console.log("create new branch!") }}>
-                  <input class="h2 w-80 mr2 bn br2 pa2" type="text" placeholder="new branch name">
-                  <input class="h2 w-20 bn br2 bg-moon-grey f7" type="submit" value="new branch">
+              <div class="mt2 mb2">
+                <p class="ma0 mr4">Current Branch:</p>
+                <form onsubmit=${this.changeBranchName}>
+                  <input class="bn br2 br--left bg-moon-grey pa2 h2" name="branchName" type="text" value="${currentProject.selectedBranch}">
+                  <input class="bn br2 br--right ma0 h2 bg-silver" type="submit" value="change name">
+                </form>
+              </div>
+              <div class="w-100 flex flex-row">
+                <select class="w-80 mb2 h2 ba br2 br--left bn ma0 pl2 pr2">
+                  ${
+                    currentProject.branches.map( item => {
+                      return html`
+                        <option class="w-100 h2 bn br2 ma0" value="${item.branchName}">${item.branchName}</option
+                      `
+                    })
+                  }
+                </select>
+                <!-- create new branch input -->
+                <form class="w-20 flex flex-row h2 items-center" onsubmit=${this.createBranch}>
+                    <input class="h2 w-100 bn br2 br--right bg-silver f7" type="submit" value="new branch">
                 </form>
               </div>
             </fieldset>
