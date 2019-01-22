@@ -68,7 +68,8 @@ class EditProjectModal extends Component {
   }
 
   branchIsSelected(item){
-    if(item.branchName == this.branch){
+
+    if(item.branchName == this.state.params.branch){
       return ' selected '
     } else {
       return ''
@@ -87,7 +88,7 @@ class EditProjectModal extends Component {
       
       
       selectedBranch = currentProject.branches.find(branch => {
-        return branch.branchName == currentProject.selectedBranch;
+        return branch.branchName == this.state.params.branch;
       });
 
       return html`
@@ -107,7 +108,7 @@ class EditProjectModal extends Component {
                   ${
                     currentProject.branches.map( item => {
                       return html`
-                        <option selected=${this.branchIsSelected(item)} class="w-100 h2 bn br2 ma0" value="${item.branchName}">${item.branchName}</option>
+                        <option selected="${this.branchIsSelected(item)}" class="w-100 h2 bn br2 ma0" value="${item.branchName}">${item.branchName}</option>
                       `
                     })
                   }
@@ -121,7 +122,7 @@ class EditProjectModal extends Component {
                 <div class="mt2 mb2">
                   <p class="ma0 mr4">Change Branch Name:</p>
                   <form data-branchid="${selectedBranch._id}" onsubmit=${this.changeBranchName}>
-                    <input class="bn br2 br--left bg-moon-grey pa2 h2" name="branchName" type="text" value="${currentProject.selectedBranch}">
+                    <input class="bn br2 br--left bg-moon-grey pa2 h2" name="branchName" type="text" value="${selectedBranch.branchName}">
                     <input class="bn br2 br--right ma0 h2 bg-silver" type="submit" value="change name">
                   </form>
                 </div>

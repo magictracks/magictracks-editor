@@ -80,7 +80,7 @@ function store (state, emitter) {
         });
         
         emitter.emit("pushState", `/${user}/${collection}/${id}/${patchedFeature.selectedBranch}`)
-
+        emitter.emit(state.events.RENDER);
       }).catch(err => {
         return err;
       })
