@@ -98,115 +98,115 @@ class EditProjectModal extends Component {
       let selectedBranch;
       
      
-      if(Object.keys(currentProject).length > 0){
+      if(this.state.params.id !== undefined &&  Object.keys(currentProject).length > 0){
       
       
-      selectedBranch = currentProject.branches.find(branch => {
-        return branch.branchName == this.state.params.branch;
-      });
+        selectedBranch = currentProject.branches.find(branch => {
+          return branch.branchName == this.state.params.branch;
+        });
 
-      function toggleDangerZone(e){
-        document.querySelector("#dangerZone").classList.toggle("dn");
-      }
+        function toggleDangerZone(e){
+          document.querySelector("#dangerZone").classList.toggle("dn");
+        }
 
-      return html`
-      <div id="editProjectModal" class="w-100 h-100 fixed ${this.checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
-        <div class="w-100 h-100 flex flex-column justify-center items-center pa2">
-          <div class="mw7 w-100 h-auto overflow-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
-            <div class="w-100 flex flex-row justify-between">
-              <h2>Edit Project</h2>
-              <button class="bn f2 bg-light-gray" onclick=${this.closeModal}>✕</button>
-            </div>
-            <section class="w-100">
-            <fieldset class="w-100 ba br2 mb2">
-              <legend class="br-pill pl2 pr2 ba">Selected Branch</legend>
-              
-              <div class="w-100 flex flex-row">
-                <select class="w-80 mb2 h2 ba br2 br--left bn ma0 pl2 pr2" onchange=${this.setSelectedBranch}>
-                  ${
-                    currentProject.branches.map( item => {
-                      return html`
-                        <option selected="${this.branchIsSelected(item)}" class="w-100 h2 bn br2 ma0" value="${item.branchName}">${item.branchName}</option>
-                      `
-                    })
-                  }
-                </select>
-                <!-- create new branch input -->
-                <form class="w-20 flex flex-row h2 items-center" onsubmit=${this.createBranch}>
-                    <input class="h2 w-100 bn br2 br--right bg-silver f7" type="submit" value="new branch">
-                </form>
+        return html`
+        <div id="editProjectModal" class="w-100 h-100 fixed ${this.checkDisplay()}" style="background-color:rgba(0, 27, 68, 0.5)">
+          <div class="w-100 h-100 flex flex-column justify-center items-center pa2">
+            <div class="mw7 w-100 h-auto overflow-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
+              <div class="w-100 flex flex-row justify-between">
+                <h2>Edit Project</h2>
+                <button class="bn f2 bg-light-gray" onclick=${this.closeModal}>✕</button>
               </div>
-              <!-- change name -->
-                <div class="mt2 mb2">
-                  <p class="ma0 mr4">Change Branch Name:</p>
-                  <form data-branchid="${selectedBranch._id}" onsubmit=${this.changeBranchName}>
-                    <input class="bn br2 br--left bg-moon-grey pa2 h2" name="branchName" type="text" value="${selectedBranch.branchName}">
-                    <input class="bn br2 br--right ma0 h2 bg-silver" type="submit" value="change name">
-                  </form>
-                </div>
-                <div>
-                  <p onclick=${toggleDangerZone}>⚠️ Danger Zone ▼ </p>
-                  <div id="dangerZone" class="dn">
-                  <button class="h2 bg-light-red pa2 bn br2">🗑 delete branch</button>
-                  </div>
-                </div>
-            </fieldset>
-            <hr>
-
-              <!-- edit project details form --> 
-              <form id="projectDetailsForm" class="w-100 mt2" onsubmit=${this.saveProjectDetails}>
-                <fieldset class="w-100 mb2 br2 ba">
-                  <legend class="br-pill pl2 pr2 ba">title</legend>
-                  <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="${currentProject.title}">
-                </fieldset>
-                <fieldset class="w-100 mb2 br2 ba">
-                  <legend class="br-pill pl2 pr2 ba">description</legend>
-                  <textarea class="h4 w-100 mr2 bn br2 pa2" type="text" name="description">${currentProject.description}</textarea>
-                </fieldset>
-                <fieldset class="w-100 mb2 br2 ba">
-                  <legend class="br-pill pl2 pr2 ba">collaborators</legend>
-                  <ul>
+              <section class="w-100">
+              <fieldset class="w-100 ba br2 mb2">
+                <legend class="br-pill pl2 pr2 ba">Selected Branch</legend>
+                
+                <div class="w-100 flex flex-row">
+                  <select class="w-80 mb2 h2 ba br2 br--left bn ma0 pl2 pr2" onchange=${this.setSelectedBranch}>
                     ${
-                      currentProject.collaborators.map(collaborator => {
+                      currentProject.branches.map( item => {
                         return html`
-                          <li class="flex flex-row justify-between">
-                            <p>${collaborator}</p>
-                            <button onclick=${() => {console.log("remove collaborator")}}>✕</button>
-                          </li>
+                          <option selected="${this.branchIsSelected(item)}" class="w-100 h2 bn br2 ma0" value="${item.branchName}">${item.branchName}</option>
                         `
                       })
                     }
-                  </ul>
-
+                  </select>
                   <!-- create new branch input -->
-                  <div class="w-100">
-                    <form class="flex flex-row h2 items-center" onsubmit=${(e) => {e.preventDefault(); console.log("add new collaborator!") }}>
-                      <input class="h2 w-80 mr2 bn br2 pa2" type="text" placeholder="e.g. @shiffman">
-                      <input class="h2 w-20 bn br2 bg-moon-grey f7" type="submit" value="add collaborator">
+                  <form class="w-20 flex flex-row h2 items-center" onsubmit=${this.createBranch}>
+                      <input class="h2 w-100 bn br2 br--right bg-silver f7" type="submit" value="new branch">
+                  </form>
+                </div>
+                <!-- change name -->
+                  <div class="mt2 mb2">
+                    <p class="ma0 mr4">Change Branch Name:</p>
+                    <form data-branchid="${selectedBranch._id}" onsubmit=${this.changeBranchName}>
+                      <input class="bn br2 br--left bg-moon-grey pa2 h2" name="branchName" type="text" value="${selectedBranch.branchName}">
+                      <input class="bn br2 br--right ma0 h2 bg-silver" type="submit" value="change name">
                     </form>
                   </div>
-                </fieldset>
-              </form>
-              <!-- cancel or save buttons -->
-              <section class="w-100 mt3 flex flex-row justify-between mb4">
-                  <!-- TODO: add confirm() --> 
-                  <div><button class="bg-light-red bn br2 h3 pa2" onclick=${() => {console.log("delete")} }>🗑 delete entire project</button></div>
                   <div>
-                    <button class="bg-light-silver bn br2 h3 mr2 pa2" onclick=${this.closeModal}>Cancel</button>
-                    <input class="bg-light-green bn br2 h3 pa2" type="submit" form="projectDetailsForm" value="save" />
+                    <p onclick=${toggleDangerZone}>⚠️ Danger Zone ▼ </p>
+                    <div id="dangerZone" class="dn">
+                    <button class="h2 bg-light-red pa2 bn br2">🗑 delete branch</button>
+                    </div>
                   </div>
+              </fieldset>
+              <hr>
+
+                <!-- edit project details form --> 
+                <form id="projectDetailsForm" class="w-100 mt2" onsubmit=${this.saveProjectDetails}>
+                  <fieldset class="w-100 mb2 br2 ba">
+                    <legend class="br-pill pl2 pr2 ba">title</legend>
+                    <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="${currentProject.title}">
+                  </fieldset>
+                  <fieldset class="w-100 mb2 br2 ba">
+                    <legend class="br-pill pl2 pr2 ba">description</legend>
+                    <textarea class="h4 w-100 mr2 bn br2 pa2" type="text" name="description">${currentProject.description}</textarea>
+                  </fieldset>
+                  <fieldset class="w-100 mb2 br2 ba">
+                    <legend class="br-pill pl2 pr2 ba">collaborators</legend>
+                    <ul>
+                      ${
+                        currentProject.collaborators.map(collaborator => {
+                          return html`
+                            <li class="flex flex-row justify-between">
+                              <p>${collaborator}</p>
+                              <button onclick=${() => {console.log("remove collaborator")}}>✕</button>
+                            </li>
+                          `
+                        })
+                      }
+                    </ul>
+
+                    <!-- create new branch input -->
+                    <div class="w-100">
+                      <form class="flex flex-row h2 items-center" onsubmit=${(e) => {e.preventDefault(); console.log("add new collaborator!") }}>
+                        <input class="h2 w-80 mr2 bn br2 pa2" type="text" placeholder="e.g. @shiffman">
+                        <input class="h2 w-20 bn br2 bg-light-purple f7" type="submit" value="add collaborator">
+                      </form>
+                    </div>
+                  </fieldset>
+                </form>
+                <!-- cancel or save buttons -->
+                <section class="w-100 mt3 flex flex-row justify-between mb4">
+                    <!-- TODO: add confirm() --> 
+                    <div><button class="bg-light-red bn br2 h3 pa2" onclick=${() => {console.log("delete")} }>🗑 delete entire project</button></div>
+                    <div>
+                      <button class="bg-light-silver bn br2 h3 mr2 pa2" onclick=${this.closeModal}>Cancel</button>
+                      <input class="bg-light-green bn br2 h3 pa2" type="submit" form="projectDetailsForm" value="save" />
+                    </div>
+                </section>
               </section>
-            </section>
+            </div>
           </div>
         </div>
-      </div>
 
-      `
-      } else{
-        return html`
-          <div></div>
         `
-      }
+        } else{
+          return html`
+            <div></div>
+          `
+        }
   }
 
   update () {
