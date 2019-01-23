@@ -30,6 +30,36 @@ function view (state, emit) {
     `
   }
 
+  function addNewFeature(){
+    const {collection} = state.params;
+    function triggerAdd(e){
+      console.log("add new!")
+      let createFunction = `${collection}_create`;
+      let feat;
+      let payload;
+
+      if(collection == "projects"){
+        feat = "New Project!";
+        payload = {"projectData":{"title": feat}};
+      } else if (collection == "recipes"){
+        feat = "New Recipe!";
+        payload = {"recipeData":{"title": feat}};
+      } else if (collection == "links") {
+        feat = "New Recipe!";
+        payload = {"linkData":{"title": feat}};
+      }
+
+      emit(state.events[createFunction], payload);
+    }
+
+    return html`
+    <div onclick=${triggerAdd} class="bn bg-light-gray br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+      <button class="w2 h2 br2 mr4 bg-white f4 bn ma0 pb1">+</button>
+      <p class="f5">Add New</p>
+    </div>
+    `
+  }
+
   // show the selected feature(s) 
   function showUserSelection(){
     let {collection, user} = state.params;
@@ -55,14 +85,22 @@ function view (state, emit) {
 
     } else {
       // otherwise if no id property exists in params, show me the list
-      return state[collection].map( item => {
-        return html`
-          <div onclick=${selectItem} data-id=${item._id} data-branch=${item.selectedBranch} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
-            <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
-            <p class="f5">${item.title}</p>
-          </div>
-        `
-      })
+
+      return html`
+      <div>
+      ${addNewFeature()}
+      ${
+          state[collection].map( item => {
+          return html`
+            <div onclick=${selectItem} data-id=${item._id} data-branch=${item.selectedBranch} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+              <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
+              <p class="f5">${item.title}</p>
+            </div>
+          `
+        })
+      }
+      </div>
+      `
     }
 
   }

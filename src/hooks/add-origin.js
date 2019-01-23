@@ -7,10 +7,15 @@ module.exports = function (options = {}) {
 
     const {Model} = context.app.service(context.path);
     
-    const originId = {"origin": context.result._id}
-    const result = await context.app.service(context.path).patch(context.result._id, originId, null);
+    // const originId = {"origin": }
+    let result = await Model.findById(context.result._id);
 
-    context.result = result;
+    result.origin = String(context.result._id);
+
+    let temp = await result.save()
+
+    console.log(temp);
+    context.result = temp;
 
     return context;
   };

@@ -23,11 +23,7 @@ module.exports = {
 
     ],
     create: [
-      authenticate('jwt'), 
-      addOwner(), 
-      addDefaultBranch(), 
-      addUniqueName(), 
-      setRandomColor()
+      authenticate('jwt'), addOwner(), addDefaultBranch(), addUniqueName(), setRandomColor()
     ],
     update: [
       authenticate('jwt'), checkPermissions()
@@ -44,7 +40,7 @@ module.exports = {
     all: [],
     find: [populateFeature("FIND")],
     get: [populateFeature("GET")],
-    create: [addOrigin()],
+    create: [authenticate('jwt'), addOrigin()],
     update: [],
     patch: [],
     remove: []

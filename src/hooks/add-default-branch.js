@@ -15,7 +15,7 @@ module.exports = function (options = {}) {
       }]
     }
 
-    context.data = Object.assign(defaultBranch, context.data);
+    context.data.branches = defaultBranch.branches
     console.log(context.data)
 
     // TODO: add AFTER hook to add in the branchName of the generated Unique name

@@ -10,8 +10,10 @@ module.exports = function (options = {}) {
       // otherwise throw an error thats suggests the user to:
       // a: copy -- for projects and playlists
       // b: add branch (?)
-
+      console.log("✅✅✅✅✅✅✅")
+      console.log(context)
       const user = context.params.user;
+      console.log("✅✅✅✅✅✅✅")
 
       const feature = await Model.findOne(params.query);
 

@@ -38,7 +38,6 @@ class Project extends Component {
     this.emit(this.state.events.editProjectModal_open);
   }
 
-
   projectHeader(feature){
     return html`
     <section class="mb4">

@@ -6,7 +6,7 @@ function store (state, emitter) {
   
   state.editProjectModal = {
     display: false,
-    project:{}
+    project:{},
   }
 
   state.events.editProjectModal_open = "editProjectModal:open"

@@ -28,7 +28,8 @@ function store (state, emitter) {
 
     this.create = function(_payload){
 
-      feathersClient.service('links').create(_payload).then(feature => {
+      const {linkData} = _payload;
+      feathersClient.service('links').create(linkData).then(feature => {
         state.links.push(feature);
         emitter.emit(state.events.RENDER);
       }).catch(err => {
