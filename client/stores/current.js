@@ -65,6 +65,7 @@ function store (state, emitter) {
         
         feathersClient.service(collection).get(id).then(feature => {
           state.current[collection].selected = feature;
+          state.current[collection].id = feature._id;
           state.current[collection].branch = feature.selectedBranch;
           // emitter.emit("pushState", `/${user}/${collection}/${id}/${feature.selectedBranch}`);
           // emitter.emit(state.events.RENDER);
@@ -81,6 +82,7 @@ function store (state, emitter) {
         feathersClient.service(collection).get(id).then(feature => {
 
           state.current[collection].selected = feature;
+          state.current[collection].id = feature._id;
           // TODO: do error checking ot see if branch exists, if not, go to selectedBranch
           let checkBranchExists = feature.branches.some( item => item.branchName == branch);
           

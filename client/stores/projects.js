@@ -32,6 +32,7 @@ function store (state, emitter) {
   emitter.on(state.events.projects_setSelectedBranch, projects.setSelectedBranch);
   emitter.on(state.events.projects_updateDetails, projects.updateDetails);
 
+  
   feathersClient.service("projects").on('patched', message => {
     emitter.emit(state.events.projects_find, {})
   });
