@@ -1,6 +1,7 @@
 var html = require('choo/html')
 var LoginForm = require('../components/LoginForm')
 var NavBar = require('../components/navbar')
+const navbar = new NavBar();
 
 module.exports = view
 
@@ -8,7 +9,7 @@ function view (state, emit) {
   return html`
   <body class="w-100 h-100 code lh-copy bg-white ma0 flex flex-column items-center">
     <!-- NavBar Top -->
-    ${state.cache(NavBar, "NavBar", state, emit).render()}
+    ${navbar.render(state, emit)}
     <main class="w-100 h-100 flex flex-column items-center mw8 justify-center">
     <!-- login -->
     <section class="mw6 w-100 h-100 pa2 flex flex-column justify-center items-center mt4">

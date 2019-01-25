@@ -3,6 +3,7 @@ var html = require('choo/html')
 var TITLE = 'client - main'
 
 const NavBar = require('../components/navbar');
+const navbar = new NavBar();
 const Pagination = require('../components/pagination');
 
 module.exports = view
@@ -16,6 +17,7 @@ function view (state, emit) {
       return state.projects.map( project => {
         return html`
           <div class="fl w-third-ns pa2">
+          <a class="link black" href="/${project.owner}/projects/${project._id}/${project.selectedBranch}">
           <div class="w5 h5 bg-near-white shadow-5 flex flex-column mt2 mb2">
             <div class="w-100 h-50" style="background-color:${project.colors[project.selectedColor]}"></div>
             <div class="w-100 f7">
@@ -25,6 +27,7 @@ function view (state, emit) {
               </ul>
             </div>
           </div>
+          </a>
           </div>
         `
       })
@@ -35,18 +38,30 @@ function view (state, emit) {
     }
   }
 
+  function checkUser(){
+    if(state.user.authenticated == true){
+      return `/${state.user.username}/projects`
+    } else{
+      return `/login`
+    }
+  }
+
   return html`
     <body class="w-100 h-100 code lh-copy bg-white ma0 flex flex-column items-center">
         <!-- NavBar Top -->
-        ${state.cache(NavBar, "NavBar", state, emit).render()}
+        ${navbar.render(state, emit)}
         <!-- MAIN -->
         <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
-          <h2>Welcome to the 🌈 Magic Tracks ✨ </h2>
-          <h3>A friendly pick-and-mix tutorial maker</h3>
-          <h4>Get started by <a class="link underline">making a project</a> or <a class="link underline">browsing</a> what your friends are brewing up across the world.</h4>
+          <h2 class="f2">Welcome to the 🌈 Magic Tracks ✨ </h2>
+          <h3 class="f3">A friendly pick-and-mix tutorial maker</h3>
+          <h4 class="f4">Get started by <a class="link underline black" href=${checkUser()}">making a project</a> or <a class="link underline">browsing</a> what your friends are brewing up across the world 🌍.</h4>
           
           <section class="pt4 pb4 w-100 h-100">
             ${renderProjects()}
+          </section>
+
+          <section class="pt4 pb4 w-100">
+            <p>Need some help getting started? Check out our "how-to" video on the <a class="link underline black" href="/about">about page</a>.</p>
           </section>
         </main>
     </body>   
