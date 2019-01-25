@@ -3,7 +3,7 @@ var html = require('choo/html')
 var TITLE = 'client - main'
 
 const NavBar = require('../components/navbar');
-const navbar = new NavBar();
+
 const Pagination = require('../components/pagination');
 
 module.exports = view
@@ -49,7 +49,7 @@ function view (state, emit) {
   return html`
     <body class="w-100 h-100 code lh-copy bg-white ma0 flex flex-column items-center">
         <!-- NavBar Top -->
-        ${navbar.render(state, emit)}
+        ${state.cache(NavBar, "NavBar", state, emit).render()}
         <!-- MAIN -->
         <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
           <h2 class="f2">Welcome to the 🌈 Magic Tracks ✨ </h2>

@@ -26,6 +26,7 @@ function store (state, emitter) {
 
   state.events.current_navigated = "current:navigated";
 
+
   emitter.on('navigate', current.navigated);
   emitter.on('DOMContentLoaded', current.navigated);
 
@@ -96,6 +97,7 @@ function store (state, emitter) {
         });
 
       }
+
 
     } // end navigated()
 

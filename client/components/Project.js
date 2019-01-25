@@ -160,9 +160,6 @@ class Project extends Component {
         return item.branchName == this.branch
       })
 
-      console.log("🌈🌈🌈🌈", this.project.branches)
-      console.log("🌈🌈🌈🌈", this.branch)
-
       this.emit(this.state.events.addRecipeModal_selectProjectId, this.project._id);
       this.emit(this.state.events.addRecipeModal_selectProjectBranchName, this.branch);
       this.emit(this.state.events.editProjectModal_setProject);
