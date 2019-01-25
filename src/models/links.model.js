@@ -18,9 +18,9 @@ module.exports = function (app) {
       default: [],
       required: false
     }],
-    terms:[{
+    terms: [{
       type: String,
-      default:[],
+      default: [],
       required: false
     }],
     image: {
@@ -45,7 +45,33 @@ module.exports = function (app) {
     }
   })
 
+  const branchSchema = new Schema({
+    branchName: {
+      type: String,
+      required: false
+    },
+    branchOwner: {
+      type: String,
+      required: false
+    },
+    title: {
+      type: String,
+      required: false
+    },
+    description: {
+      type: String,
+      required: false
+    },
+    images: [{
+      type: String,
+      default: [],
+      required: false
+    }]
+    // TODO: include link to parent?
+  });
+
   const links = new Schema({
+    branches: [branchSchema],
     title: {
       type: String,
       required: false
@@ -54,6 +80,10 @@ module.exports = function (app) {
       type: String,
       required: true,
       unique: true // TODO: change to TRUE
+    },
+    uniqueName: {
+      type:String,
+      default: ""
     },
     featureType: {
       type: String,
@@ -86,12 +116,29 @@ module.exports = function (app) {
       type: String,
       required: false
     },
-    references: [{
-      type: Schema.Types.ObjectId,
-      ref: 'linkrefs',
-      default: [],
+    creator: {
+      type: String,
       required: false
-    }]
+    },
+    // TODO: should this be urls to the JSON endpoint for the link/project/playlist?? 
+    suggested: [{
+      type: String,
+      default: [],
+    }],
+    selectedColor: {
+      type: Number,
+      default: 0
+    },
+    origin:{
+      type: Schema.Types.ObjectId,
+      required: false,
+      ref: 'links'
+    },
+    colors: {
+      type: Array,
+      default: ["#FF725C", "#FFD700", "#FF80CC", "#9EEBCF", "#CDECFF", "#A463F2"],
+      required: true
+    }
   }, {
     timestamps: true
   });
