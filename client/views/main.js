@@ -15,7 +15,8 @@ function view (state, emit) {
 
       return state.projects.map( project => {
         return html`
-          <div class="w5 h5 bg-near-white shadow-5 flex flex-column mr2 mt2 mb2">
+          <div class="fl w-third-ns pa2">
+          <div class="w5 h5 bg-near-white shadow-5 flex flex-column mt2 mb2">
             <div class="w-100 h-50" style="background-color:${project.colors[project.selectedColor]}"></div>
             <div class="w-100 f7">
               <ul class="pl0 pt1 pb1 pl2 pr2 list">
@@ -23,6 +24,7 @@ function view (state, emit) {
                 <li>by @${project.owner}</li>
               </ul>
             </div>
+          </div>
           </div>
         `
       })
@@ -39,7 +41,13 @@ function view (state, emit) {
         ${state.cache(NavBar, "NavBar", state, emit).render()}
         <!-- MAIN -->
         <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
+          <h2>Welcome to the 🌈 Magic Tracks ✨ </h2>
+          <h3>A friendly pick-and-mix tutorial maker</h3>
+          <h4>Get started by <a class="link underline">making a project</a> or <a class="link underline">browsing</a> what your friends are brewing up across the world.</h4>
           
+          <section class="pt4 pb4 w-100 h-100">
+            ${renderProjects()}
+          </section>
         </main>
     </body>   
   `
