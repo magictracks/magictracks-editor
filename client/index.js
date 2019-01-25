@@ -20,9 +20,11 @@ app.use(require('./stores/addRecipeModal'))
 app.use(require('./stores/editProjectModal'))
 app.use(require('./stores/editRecipeModal'))
 app.use(require('./stores/editLinkModal'))
+app.use(require('./stores/current'))
 app.use(require('./stores/links'))
 app.use(require('./stores/search'))
 app.use(require('./stores/user'))
+
 
 // Views
 app.route('/', require('./views/main'))
@@ -40,44 +42,6 @@ app.route('/:user/:collection/:id/:branch', require('./views/user'))
 
 // app.route('/dev-ref', require('./views/dev-ref'))
 // app.route('/*', require('./views/404'))
-
-app.use((state, emitter) => {                  // 1.
-  
-  emitter.on('navigate', () => {               // 2.
-    console.log("on navigate...")
-    console.log(`Navigated to ${state.route}`) // 3.
-    //console.log(`URL Params to ${JSON.stringify(state.params)}`) // 3.
-
-    // if navigating to a user profile...
-    if(state.params.hasOwnProperty('user') && state.params.hasOwnProperty('collection')){
-      
-      let query = {"query":{
-        "$or": [
-          {"owner": state.params.user}, {"collaborators": [state.params.user]}
-        ]
-        }
-      }
-
-      feathersClient.service(state.params.collection).find(query).then(features => {
-        state[state.params.collection] = features.data;
-        emitter.emit(state.events.RENDER);
-      }).catch(err => {
-        return err;
-      })
-    }
-
-    // // TEMP: route the edit to default on playlists
-    // if(state.route == "edit"){
-    //   emitter.emit("replaceState", "/edit/playlists")
-    // }
-    // // TEMP: route the browse to default on playlists
-    // if(state.route == "browse"){
-    //   emitter.emit("replaceState", "/browse/playlists")
-    // }
-
-  });
-})
-
 
 
 module.exports = app.mount('body')
