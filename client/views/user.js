@@ -5,16 +5,20 @@ const NavBar = require('../components/navbar');
 const Pagination = require('../components/pagination');
 
 const UserNav = require('../components/userNav');
+const CreateNewBtn = require('../components/createNewBtn');
+const createNewBtn = new CreateNewBtn();
+
+
 const addRecipeButton = require('../components/addRecipeButton');
 const addLinkButton = require('../components/addLinkButton');
-const addRecipeModal = require('../components/addRecipeModal');
-const addLinkModal = require('../components/addLinkModal');
+
 
 const Project = require('../components/Project');
 const Recipe = require('../components/Recipe');
 
 const EditProjectModal = require('../components/EditProjectModal');
-
+const addRecipeModal = require('../components/addRecipeModal');
+const addLinkModal = require('../components/addLinkModal');
 
 // TODO: allow edits if authenticated, otherwise, remove buttons for editing
 // if(state.user.authenticated){
@@ -26,56 +30,50 @@ module.exports = view
 function view(state, emit) {
 
 
-  function renderLink() {
-    return html `
-    <div>specific link</div>
-    `
-  }
+  // function addNewFeature() {
+  //   const {
+  //     collection
+  //   } = state.params;
 
-  function addNewFeature() {
-    const {
-      collection
-    } = state.params;
+  //   function triggerAdd(e) {
+  //     console.log("add new!")
+  //     let createFunction = `${collection}_create`;
+  //     let feat;
+  //     let payload;
 
-    function triggerAdd(e) {
-      console.log("add new!")
-      let createFunction = `${collection}_create`;
-      let feat;
-      let payload;
+  //     if (collection == "projects") {
+  //       feat = "New Project!";
+  //       payload = {
+  //         "projectData": {
+  //           "title": feat
+  //         }
+  //       };
+  //     } else if (collection == "recipes") {
+  //       feat = "New Recipe!";
+  //       payload = {
+  //         "recipeData": {
+  //           "title": feat
+  //         }
+  //       };
+  //     } else if (collection == "links") {
+  //       feat = "New Recipe!";
+  //       payload = {
+  //         "linkData": {
+  //           "title": feat
+  //         }
+  //       };
+  //     }
 
-      if (collection == "projects") {
-        feat = "New Project!";
-        payload = {
-          "projectData": {
-            "title": feat
-          }
-        };
-      } else if (collection == "recipes") {
-        feat = "New Recipe!";
-        payload = {
-          "recipeData": {
-            "title": feat
-          }
-        };
-      } else if (collection == "links") {
-        feat = "New Recipe!";
-        payload = {
-          "linkData": {
-            "title": feat
-          }
-        };
-      }
+  //     emit(state.events[createFunction], payload);
+  //   }
 
-      emit(state.events[createFunction], payload);
-    }
-
-    return html `
-    <div onclick=${triggerAdd} class="bn bg-light-gray br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
-      <button class="w2 h2 br2 mr4 bg-white f4 bn ma0 pb1">+</button>
-      <p class="f5">Add New</p>
-    </div>
-    `
-  }
+  //   return html `
+  //   <div onclick=${triggerAdd} class="bn bg-light-gray br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+  //     <button class="w2 h2 br2 mr4 bg-white f4 bn ma0 pb1">+</button>
+  //     <p class="f5">Add New</p>
+  //   </div>
+  //   `
+  // }
 
   // show the selected feature(s) 
   function showUserSelection() {
@@ -99,14 +97,16 @@ function view(state, emit) {
         // let p = new Project("Project", state, emit)
         // return p.render();
         return html`
-          <div>projects</div>
+          <div>projects
+          </div>
         `
       } else if (collection === "recipes") {
         // return renderRecipe();
         // let r = new Recipe("Recipe", state, emit)
         // return r.render();
         return html`
-          <div>recipes</div>
+          <div>recipes
+          </div>
         `
       } else if (collection === "links") {
         // return renderLink();
@@ -121,7 +121,7 @@ function view(state, emit) {
 
       return html `
       <div>
-      ${addNewFeature()}
+      ${createNewBtn.render(state, emit)}
       ${
           state[collection].map( item => {
           return html`
