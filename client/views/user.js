@@ -1,164 +1,114 @@
 var html = require('choo/html')
 
 const NavBar = require('../components/navbar');
-
-const Pagination = require('../components/pagination');
-
 const UserNav = require('../components/userNav');
 const CreateNewBtn = require('../components/createNewBtn');
-const createNewBtn = new CreateNewBtn();
-
 
 const addRecipeButton = require('../components/addRecipeButton');
 const addLinkButton = require('../components/addLinkButton');
 
 
-const Project = require('../components/Project');
+// const Project = require('../components/Project');
+const Project = require('../components/project/index')
+
 const Recipe = require('../components/Recipe');
 
-const EditProjectModal = require('../components/EditProjectModal');
+const EditProjectModal = require('../components/editProjectModal/index');
 const addRecipeModal = require('../components/addRecipeModal');
 const addLinkModal = require('../components/addLinkModal');
 
-// TODO: allow edits if authenticated, otherwise, remove buttons for editing
-// if(state.user.authenticated){
-// } else{
-// }
 
 module.exports = view
 
 function view(state, emit) {
 
+  const {collection, user } = state.params;
 
-  // function addNewFeature() {
-  //   const {
-  //     collection
-  //   } = state.params;
+  // IF a user navigates to just the /user -- forward them to projects
+  if(state.params.hasOwnProperty('user') && !state.params.hasOwnProperty('collection')){
+    console.log("hey!  that's me!")
+    emit('pushState', `/${user}/projects`);
+    return html`<body>fetching data</body>`
+  }
 
-  //   function triggerAdd(e) {
-  //     console.log("add new!")
-  //     let createFunction = `${collection}_create`;
-  //     let feat;
-  //     let payload;
 
-  //     if (collection == "projects") {
-  //       feat = "New Project!";
-  //       payload = {
-  //         "projectData": {
-  //           "title": feat
-  //         }
-  //       };
-  //     } else if (collection == "recipes") {
-  //       feat = "New Recipe!";
-  //       payload = {
-  //         "recipeData": {
-  //           "title": feat
-  //         }
-  //       };
-  //     } else if (collection == "links") {
-  //       feat = "New Recipe!";
-  //       payload = {
-  //         "linkData": {
-  //           "title": feat
-  //         }
-  //       };
-  //     }
+  function selectItem(e) {
+    const {id, branch} = e.currentTarget.dataset;
+    emit("pushState", `/${user}/${collection}/${id}/${branch}`)
+    // emit(state.events.RENDER)
+  }
 
-  //     emit(state.events[createFunction], payload);
-  //   }
+  function collectionItem(item){
+    return html`
+      <div onclick=${selectItem} data-id=${item._id} data-branch=${item.selectedBranch} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+        <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
+        <p class="f5">${item.title}</p>
+      </div>
+    `
+  }
 
-  //   return html `
-  //   <div onclick=${triggerAdd} class="bn bg-light-gray br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
-  //     <button class="w2 h2 br2 mr4 bg-white f4 bn ma0 pb1">+</button>
-  //     <p class="f5">Add New</p>
-  //   </div>
-  //   `
-  // }
+  function collectionItems(state, emit){
+    return html`
+      <div class="w-100">
+        <!-- UserNav --> 
+        ${state.cache(UserNav, "UserNav", state, emit).render()}
+        
+        <!-- create new X -->
+        ${state.cache(CreateNewBtn, "CreateNewBtn", state, emit).render()}
+        
+        <!-- collection list --> 
+        ${ state[collection].map( item => {
+            return collectionItem(item);
+          })
+        }
+      </div>
+    `
+  }
 
-  // show the selected feature(s) 
-  function showUserSelection() {
-    let {
-      collection,
-      user
-    } = state.params;
 
-    function selectItem(e) {
-      const {
-        id,
-        branch
-      } = e.currentTarget.dataset;
-      emit("pushState", `/${user}/${collection}/${id}/${branch}`)
-    }
+  function renderSelection(){
 
-    if (state.params.hasOwnProperty("id")) {
-      // if an id property exists in params, just show me that one item
-      if (collection === "projects") {
-        // return renderProject();
-        // let p = new Project("Project", state, emit)
-        // return p.render();
-        return html`
-          <div>projects
-          </div>
-        `
-      } else if (collection === "recipes") {
-        // return renderRecipe();
-        // let r = new Recipe("Recipe", state, emit)
-        // return r.render();
-        return html`
-          <div>recipes
-          </div>
-        `
-      } else if (collection === "links") {
-        // return renderLink();
-        return html`
-          <div>links</div>
-        `
-
-      }
+    if(state.params.hasOwnProperty("id")){
+      // if(collection == "projects"){ 
+      //   return html`
+      //     <div class="w-100">
+      //       <!-- -->
+      //       ${state.current.projects.selected.title || "yo"}
+      //     </div>`
+      // };
+      if(collection == "recipes"){ return html`<div><p>${state.current.recipes.selected.title}</p></div>`};
+      if(collection == "links"){ return html`<div><p>${state.current.links.selected.title}</p></div>`};
+      if(collection == "projects"){ 
+        // const p = new Project(state, emit);
+        return new Project(state, emit)
+      };
+      // if(collection == "recipes"){ return html`<div><p>${state.current.recipes.selected.title}</p></div>`};
+      // if(collection == "links"){ return html`<div><p>${state.current.links.selected.title}</p></div>`};
 
     } else {
-      // otherwise if no id property exists in params, show me the list
-
-      return html `
-      <div>
-      ${createNewBtn.render(state, emit)}
-      ${
-          state[collection].map( item => {
-          return html`
-            <div onclick=${selectItem} data-id=${item._id} data-branch=${item.selectedBranch} class="ba br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
-              <div class="w2 h2 br2 mr4" style="background-color:${item.colors[item.selectedColor]}"></div>
-              <p class="f5">${item.title}</p>
-            </div>
-          `
-        })
-      }
-      </div>
-      `
+      return collectionItems(state, emit)
     }
-
   }
 
   return html `
   <body class="w-100 h-100 code lh-copy bg-white ma0 flex flex-column items-center">
-    <!-- NavBar Top -->
+
     ${state.cache(NavBar, "NavBar", state, emit).render()}
 
-    <!-- MAIN -->
     <main class="w-100 h-100 flex flex-column items-center mw8 pa4">
-      ${UserNav("UserNav", state, emit)}
-
       <section class="mt2 w-100 flex flex-column items-start">
-      ${showUserSelection()}
+        ${renderSelection()}
       </section>
-    
-      
     </main>
     
-    <!-- addLinkModal, addRecipeModal, and EditProjectModal -->
+    
+    ${new EditProjectModal(state, emit)}
   </body>   
   `
 }
 
+
+// /<!-- addLinkModal, addRecipeModal, and EditProjectModal -->
 // ${addLinkModal("AddLinkModal", state, emit)}
 // ${addRecipeModal("AddRecipeModal", state, emit)}
 // ${state.cache(EditProjectModal,"EditProjectModal", state, emit).render()}

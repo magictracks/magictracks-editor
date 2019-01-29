@@ -2,8 +2,10 @@ var Component = require('choo/component')
 var html = require('choo/html')
 
 class CreateNewBtn extends Component {
-  constructor () {
-    super()
+  constructor (id, state, emit) {
+    super(id)
+    this.state = state;
+    this.emit = emit;
     // this.local = state.components[id] = {}
     this.triggerAdd = this.triggerAdd.bind(this);
   }
@@ -31,9 +33,9 @@ class CreateNewBtn extends Component {
     }
   }
 
-  createElement (state, emit) {
+  createElement () {
     return html`
-      <div onclick=${this.triggerAdd(state, emit)} class="bn bg-light-gray br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
+      <div onclick=${this.triggerAdd(this.state, this.emit)} class="bn bg-light-gray br2 w-100 pt4 pb4 pr3 pl3 flex flex-row items-center h3 mb1">
         <button class="w2 h2 br2 mr4 bg-white f4 bn ma0 pb1">+</button>
         <p class="f5">Add New</p>
       </div>

@@ -37,6 +37,11 @@ function store (state, emitter) {
       console.log(`Navigated to ${state.route}`)
       console.log("state.params:", state.params)
 
+      if(state.params.hasOwnProperty('user') && !state.params.hasOwnProperty('collection')){
+        console.log("hey!  that's me!")
+        emitter.emit('pushState', `/${user}/projects`);
+      }
+
       // if navigating to a user profile...
       // if user/collection/
       if(state.params.hasOwnProperty('user') && state.params.hasOwnProperty('collection')){
@@ -52,7 +57,7 @@ function store (state, emitter) {
 
         feathersClient.service(collection).find(query).then(features => {
           state[collection] = features.data;
-          // emitter.emit(state.events.RENDER);
+          emitter.emit(state.events.RENDER);
         }).catch(err => {
           return err;
         });
@@ -68,7 +73,7 @@ function store (state, emitter) {
           state.current[collection].id = feature._id;
           state.current[collection].branch = feature.selectedBranch;
           // emitter.emit("pushState", `/${user}/${collection}/${id}/${feature.selectedBranch}`);
-          // emitter.emit(state.events.RENDER);
+          emitter.emit(state.events.RENDER);
         }).catch(err => {
           return err;
         });
@@ -93,13 +98,12 @@ function store (state, emitter) {
           }
           
           // emitter.emit("pushState", `/${user}/${collection}/${id}/${feature.selectedBranch}`);
-          // emitter.emit(state.events.RENDER);
+          emitter.emit(state.events.RENDER);
         }).catch(err => {
           return err;
         });
 
       }
-
 
     } // end navigated()
 
@@ -108,12 +112,3 @@ function store (state, emitter) {
 
   // emitter.on('DOMContentLoaded', function () {})
 }
-
- // // TEMP: route the edit to default on playlists
-    // if(state.route == "edit"){
-    //   emitter.emit("replaceState", "/edit/playlists")
-    // }
-    // // TEMP: route the browse to default on playlists
-    // if(state.route == "browse"){
-    //   emitter.emit("replaceState", "/browse/playlists")
-    // }
