@@ -28,19 +28,19 @@ class RecipeHeader extends Component {
   
   openSuggestModal(state, emit){
       return e => {
-              console.log("TODO: opening suggest modal", e.currentTarget);            
-              // emit(state.events.editProjectModal_open);
+            console.log("TODO: opening suggest modal", e.currentTarget);            
+            // emit(state.events.editProjectModal_open);
           }
       }
 
   editBtn(state, emit){
       if(state.user.authenticated == true){
           return html`
-              <small class="underline" onclick=${this.openEditModal(state, emit) }>edit</small>
+              <small class="f7 ml2 underline" onclick=${this.openEditModal(state, emit) }>edit</small>
           `
       } else {
           return html`
-              <small class="underline" onclick=${this.openSuggestModal(state, emit) }>suggest</small>
+              <small class="ml2 f7 underline" onclick=${this.openSuggestModal(state, emit) }>suggest</small>
           `
       }
       
@@ -49,12 +49,13 @@ class RecipeHeader extends Component {
   createElement (feature) {
     return html`
         <section class="mb4">
-        <p class="w-100 flex flex-row justify-start items-center"><small class="f7">recipe</small> · ${this.editBtn(this.state, this.emit)}</p>
-        <h2>${feature.title}
+        <div class="w-100 br1 br--top pl2 pr2 pt2 pb2 ba" style="border-color:${feature.colors[feature.selectedColor]}">
+          <p class="w-100 ma0 f7 flex flex-row justify-start items-center"><small class="f7 mr2">recipe</small> · <span class="f7 underline mr2 ml2" onclick=${this.download(this.state, this.emit)}>download/share</span> · ${this.editBtn(this.state, this.emit)}</p>
+        </div>
+        <h2 class="pl2 pr2">${feature.title}
         <small class="f7"> (${feature.selectedBranch})</small>
         </h2>
-        <p class="f7">${'#'} High-Fives · ${'#'} Forks · ${'#'} Followers · <span onclick=${this.download(this.state, this.emit)}>Download/Share</span> </p>
-        <p>${feature.description}</p>
+        <p class="pl2 pr2">${feature.description}</p>
         <ul class="list pl0"></ul>
         </section>
     `

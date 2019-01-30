@@ -6,17 +6,17 @@ function store (state, emitter) {
   
   state.editProjectModal = {
     display: false,
-    project:{},
+    feature:{},
   }
 
   state.events.editProjectModal_open = "editProjectModal:open"
   state.events.editProjectModal_close = "editProjectModal:close"
-  state.events.editProjectModal_setProject = "editProjectModal:setProject"
+  state.events.editProjectModal_setFeature = "editProjectModal:setFeature"
 
   // emitter.on('DOMContentLoaded', function () {})
   emitter.on(state.events.editProjectModal_open , editProjectModal.open)
   emitter.on(state.events.editProjectModal_close , editProjectModal.close)
-  emitter.on(state.events.editProjectModal_setProject , editProjectModal.setProject)
+  emitter.on(state.events.editProjectModal_setFeature , editProjectModal.setFeature)
 
   // emitter.on('DOMContentLoaded', function(){
   //   emitter.on(state.events.projects_find, editProjectModal.setProject)
@@ -34,10 +34,10 @@ function store (state, emitter) {
       emitter.emit(state.events.RENDER);
     }
 
-    this.setProject = function(){
+    this.setFeature = function(){
       const{ collection, id, branch} = state.params
       
-      state.editProjectModal.project = state.projects.find( item => {
+      state.editProjectModal.feature = state.projects.find( item => {
         return item._id == String(id)
       });
 

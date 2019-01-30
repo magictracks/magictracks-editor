@@ -12,12 +12,12 @@ function store (state, emitter) {
       id:null,
       branch:'default'
     },
-    recipe:{
+    recipes:{
       selected:{},
       id:null,
       branch:'default'
     },
-    link:{
+    links:{
       selected:{},
       id:null,
       branch:'default'

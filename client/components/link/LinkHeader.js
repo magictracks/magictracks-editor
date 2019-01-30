@@ -15,7 +15,7 @@ class LinkHeader extends Component {
   openEditModal(state, emit){
       return e => {
             console.log("opening edit modal", e.currentTarget);            
-            // emit(state.events.editLinkModal_open);
+            emit(state.events.editLinkModal_open);
           }
     }
   
@@ -41,7 +41,7 @@ class LinkHeader extends Component {
 
   createElement (feature) {
     return html`
-    <div class="w-100 br1 br--top flex flex-row justify-end pa1 f7" style="background-color:${feature.colors[feature.selectedColor]}">
+    <div class="w-100 br1 br--top flex flex-row justify-end pl2 pr2 pt1 pb1 f7" style="background-color:${feature.colors[feature.selectedColor]}">
         ${this.editBtn(this.state, this.emit)}
     </div>
     `

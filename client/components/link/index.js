@@ -26,10 +26,10 @@ function Link(state, emit, _selected, _idx){
                     <div class="w2 h2 mr4" style="background-color:${selected.colors[selected.selectedColor]}"></div>
                     <div class="w-100 flex flex-row pa2 items-start f7"> 
                         <div class="w-40 flex flex-column">
-                            <p class="mt0">${selected.title}</p>
+                            <p class="ma0">${selected.title}</p>
                             <small>${selected.url}</small>
                         </div>
-                        <div class="w-40"><p class="mt0">${selected.description}</p></div>
+                        <div class="w-60"><p class="mt0">${selected.description}</p></div>
                     </div>
                 </section>
             </div>

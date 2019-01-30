@@ -11,11 +11,14 @@ const addLinkButton = require('../components/addLinkButton');
 // const Project = require('../components/Project');
 const Project = require('../components/project/index')
 
-const Recipe = require('../components/Recipe');
+const Recipe = require('../components/recipe/index');
 
 const EditProjectModal = require('../components/editProjectModal/index');
-const addRecipeModal = require('../components/addRecipeModal');
-const addLinkModal = require('../components/addLinkModal');
+const EditRecipeModal = require('../components/editRecipeModal/index');
+const EditLinkModal = require('../components/editLinkModal/index');
+
+// const addRecipeModal = require('../components/addRecipeModal');
+// const addLinkModal = require('../components/addLinkModal');
 
 
 module.exports = view
@@ -69,21 +72,16 @@ function view(state, emit) {
   function renderSelection(){
 
     if(state.params.hasOwnProperty("id")){
-      // if(collection == "projects"){ 
-      //   return html`
-      //     <div class="w-100">
-      //       <!-- -->
-      //       ${state.current.projects.selected.title || "yo"}
-      //     </div>`
-      // };
-      if(collection == "recipes"){ return html`<div><p>${state.current.recipes.selected.title}</p></div>`};
+      
       if(collection == "links"){ return html`<div><p>${state.current.links.selected.title}</p></div>`};
+      
       if(collection == "projects"){ 
-        // const p = new Project(state, emit);
         return new Project(state, emit)
       };
       // if(collection == "recipes"){ return html`<div><p>${state.current.recipes.selected.title}</p></div>`};
-      // if(collection == "links"){ return html`<div><p>${state.current.links.selected.title}</p></div>`};
+      if(collection == "recipes"){ 
+        return new Recipe(state, emit)
+      };
 
     } else {
       return collectionItems(state, emit)
@@ -101,7 +99,8 @@ function view(state, emit) {
       </section>
     </main>
     
-    
+    ${new EditLinkModal(state, emit)}
+    ${new EditRecipeModal(state, emit)}
     ${new EditProjectModal(state, emit)}
   </body>   
   `
