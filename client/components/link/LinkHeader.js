@@ -1,5 +1,6 @@
 var Component = require('choo/component')
 var html = require('choo/html')
+const RemoveLinkButton = require('./RemoveLinkButton');
 
 class LinkHeader extends Component {
   constructor (id, state, emit) {
@@ -44,10 +45,12 @@ class LinkHeader extends Component {
       
   }
 
-  createElement (feature) {
+  createElement (feature, parentId) {
+
     return html`
-    <div class="w-100 br1 br--top flex flex-row justify-end pl2 pr2 pt1 pb1 f7" style="background-color:${feature.colors[feature.selectedColor]}">
-        ${this.editBtn(this.state, this.emit, feature)}
+    <div class="w-100 br1 br--top items-center flex flex-row justify-between pl2 pr2 pt1 pb1 f7" style="background-color:${feature.colors[feature.selectedColor]}">
+    ${this.editBtn(this.state, this.emit, feature)}
+    ${new RemoveLinkButton(this.state, this.emit, parentId, feature._id)}    
     </div>
     `
   }

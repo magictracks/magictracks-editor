@@ -69,13 +69,10 @@ function store (state, emitter) {
           return val.recipe._id == recipeId
         });
         
-        console.log("currentpos 🌮",currentPos)
-
         moveVal(recipeList, currentPos, newRecipePosition );  
 
         updateCmd['$set'] = {"branches.$.recipes": recipeList};
 
-        console.log(updateCmd, query);
         // emitter.emit(state.events.RENDER)
         return feathersClient.service("projects").patch(null, updateCmd, query)
       }).then(patchedFeature => {

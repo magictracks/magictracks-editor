@@ -40,6 +40,9 @@ function Recipe(state, emit, _selected, _branch, _idx, _parentId){
         if(Object.keys(selected).length > 0 && selected.branches.length > 0 ){
             branchData = selected.branches.find(item => item.branchName == branch);
     
+            // TODO: error checking and handling!
+            if(branchData == undefined) branchData = selected.branches[0];
+
             let recipeUniqueName = `RecipeHeader_${selected.uniqueName}`
             let linkListUniqueName = `LinkList_${selected.uniqueName}`
     

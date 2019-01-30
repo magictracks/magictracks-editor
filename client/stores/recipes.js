@@ -13,6 +13,7 @@ function store (state, emitter) {
   state.events.recipes_create = "recipes:create";
   state.events.recipes_addBranchAndPush = "recipes:addBranchAndPush";
   state.events.recipes_reorderLinks = "recipes:reorderLinks";
+  state.events.recipes_removeLink = "recipes:removeLink";
   
   feathersClient.service("recipes").find()
     .then(feature => {
@@ -26,10 +27,44 @@ function store (state, emitter) {
   emitter.on(state.events.recipes_createAndPush, recipes.createAndPush);
   emitter.on(state.events.recipes_create, recipes.create);
   emitter.on(state.events.recipes_addBranchAndPush, recipes.addBranchAndPush);
+  emitter.on(state.events.recipes_removeLink, recipes.removeLink);
   emitter.on(state.events.recipes_reorderLinks, recipes.reorderLinks);
 
+  // feathersClient.service("recipes").on('patched', message => {
+  //   emitter.emit(state.events.recipes_find, {})
+  // });
 
   function Recipes(){
+
+    this.removeLink = function(_payload){
+      const {recipeId, linkId} = _payload;
+
+      const query = {
+        "query": {
+          "branches._id": String(recipeId)
+        }
+      }
+
+      console.log("remove link payload", query)
+      
+      const patchData = {
+        "$pull":{
+          "branches.$.links": {
+            "link": String(linkId)
+          }
+        }
+      }
+
+      feathersClient.service("recipes").patch(null, patchData, query).then(feature => {
+        console.log("patched feature success!", feature[0]);
+        
+        emitter.emit('navigate');
+
+      }).catch(err => {
+        return err;
+      })
+
+    }
 
     this.reorderLinks = function(_payload){
       
@@ -71,11 +106,11 @@ function store (state, emitter) {
         // emitter.emit(state.events.RENDER)
         return feathersClient.service("recipes").patch(null, updateCmd, query)
       }).then(patchedFeature => {
-        console.log("success!")
-        console.log("patched feature!", patchedFeature[0]);
-        state.current.recipes.selected = patchedFeature[0];
+
+        
         
         // TODO: figure out better way to update view
+        state.current.recipes.selected = patchedFeature[0];
         emitter.emit(state.events.playlists_find, {})
         emitter.emit(state.events.RENDER);
       }).catch(err => {
@@ -177,6 +212,8 @@ function store (state, emitter) {
       })
 
     } // end addBranch
+
+    
 
   } // end Recipe
 

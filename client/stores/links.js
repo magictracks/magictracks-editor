@@ -65,7 +65,7 @@ function store (state, emitter) {
 
         return feathersClient.service("recipes").patch(null, recipePatch, idQuery)
       }).then(patchedFeature => {
-
+        emitter.emit('navigate');
         emitter.emit(state.events.projects_find, {});
 
       })
@@ -88,6 +88,7 @@ function store (state, emitter) {
           }).then(patchedFeature => {
             
             console.log("🐞🐞🐞🐞I'm the patched feature!", patchedFeature)
+            emitter.emit('navigate');
             emitter.emit(state.events.projects_find, {});
 
           }).catch(innerErr => {
