@@ -26,34 +26,30 @@ function Recipe(state, emit, _selected, _branch, _idx){
         } 
     }
 
-    if(Object.keys(selected).length > 0 ){
-        branchData = selected.branches.find(item => item.branchName == branch);
-
-        let recipeUniqueName = `RecipeHeader_${selected.uniqueName}`
-        let linkListUniqueName = `LinkList_${selected.uniqueName}`
-        console.log(linkListUniqueName)
-
-        return html`
-        <section class="mb4 pl2 pr2">
-            <fieldset class="ba br2 b--black">
-                ${showLegend(selected)}
-                ${state.cache(RecipeHeader, recipeUniqueName, state, emit).render(selected)}
-
-                <section>
-                ${state.cache(LinkList, linkListUniqueName, state, emit).render(branchData.links)}  
-                </section>
-            </fieldset>
-        </section>
-        `
-    } else {
-        return html`<div>fetching data</div>`
-    }  
+    if(typeof selected == "object"){
+        if(Object.keys(selected).length > 0 && selected.branches.length > 0 ){
+            branchData = selected.branches.find(item => item.branchName == branch);
     
-
-
+            let recipeUniqueName = `RecipeHeader_${selected.uniqueName}`
+            let linkListUniqueName = `LinkList_${selected.uniqueName}`
     
     
-
+            return html`
+            <section class="mb4 pl2 pr2">
+                <fieldset class="ba br2 b--black">
+                    ${showLegend(selected)}
+                    ${state.cache(RecipeHeader, recipeUniqueName, state, emit).render(selected)}
+    
+                    <section>
+                    ${state.cache(LinkList, linkListUniqueName, state, emit).render(branchData.links, branchData._id)}  
+                    </section>
+                </fieldset>
+            </section>
+            `
+        } else {
+            return html`<div>fetching data</div>`
+        }  
+    }
     
 }
 

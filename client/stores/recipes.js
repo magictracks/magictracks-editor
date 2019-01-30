@@ -12,6 +12,7 @@ function store (state, emitter) {
   state.events.recipes_createAndPush = "recipes:createAndPush";
   state.events.recipes_create = "recipes:create";
   state.events.recipes_addBranchAndPush = "recipes:addBranchAndPush";
+  state.events.recipes_reorderLinks = "recipes:reorderLinks";
   
   feathersClient.service("recipes").find()
     .then(feature => {
@@ -25,9 +26,64 @@ function store (state, emitter) {
   emitter.on(state.events.recipes_createAndPush, recipes.createAndPush);
   emitter.on(state.events.recipes_create, recipes.create);
   emitter.on(state.events.recipes_addBranchAndPush, recipes.addBranchAndPush);
+  emitter.on(state.events.recipes_reorderLinks, recipes.reorderLinks);
 
 
   function Recipes(){
+
+    this.reorderLinks = function(_payload){
+      
+      function moveVal(arr, from, to) {
+        arr.splice(to, 0, arr.splice(from, 1)[0]);
+      };
+
+      const {parentBranchId, parentCollection, linkId, newLinkPosition} = _payload;
+
+      const query = {
+        "query":{
+          "branches._id": String(parentBranchId)
+        }
+      }
+  
+
+
+      feathersClient.service("recipes").get(null, query).then( response => {
+        let linkList = [];
+        let updateCmd = {"$set":{}};
+        let currentPos;
+
+        response = response.data[0];
+        // linkList = response.links.map( _link => String(_link._id) );
+        let selectedBranch = response.branches.find(branch => String(branch._id) == String(parentBranchId) )
+        linkList = selectedBranch.links;
+
+        currentPos = linkList.findIndex(val => {
+          return val.link._id == linkId
+        });
+        
+        console.log("currentpos 🌮",currentPos)
+
+        moveVal(linkList, currentPos, newLinkPosition );  
+
+        updateCmd['$set'] = {"branches.$.links": linkList};
+
+        console.log(updateCmd, query);
+        // emitter.emit(state.events.RENDER)
+        return feathersClient.service("recipes").patch(null, updateCmd, query)
+      }).then(patchedFeature => {
+        console.log("success!")
+        console.log("patched feature!", patchedFeature[0]);
+        state.current.recipes.selected = patchedFeature[0];
+        // window.location.reload();
+        emitter.emit(state.events.playlists_find, {})
+        emitter.emit(state.events.RENDER);
+      }).catch(err => {
+        return err;
+      })
+
+    }
+
+
     this.find = function(_query){
       feathersClient.service("recipes").find(_query)
       .then(feature => {

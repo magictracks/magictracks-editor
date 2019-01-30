@@ -6,7 +6,6 @@ function store (state, emitter) {
   
   state.editRecipeModal = {
     display: false,
-    feature:{},
   }
 
   state.events.editRecipeModal_open = "editRecipeModal:open"
@@ -16,7 +15,7 @@ function store (state, emitter) {
   // emitter.on('DOMContentLoaded', function () {})
   emitter.on(state.events.editRecipeModal_open , editRecipeModal.open)
   emitter.on(state.events.editRecipeModal_close , editRecipeModal.close)
-  emitter.on(state.events.editRecipeModal_setFeature , editRecipeModal.setFeature)
+  // emitter.on(state.events.editRecipeModal_setFeature , editRecipeModal.setFeature)
 
   // emitter.on('DOMContentLoaded', function(){
   //   emitter.on(state.events.projects_find, editRecipeModal.setProject)
@@ -34,15 +33,15 @@ function store (state, emitter) {
       emitter.emit(state.events.RENDER);
     }
 
-    this.setFeature = function(){
-      const{ collection, id, branch} = state.params
+    // this.setFeature = function(){
+    //   const{ collection, id, branch} = state.params
       
-      state.editRecipeModal.feature = state.recipes.find( item => {
-        return item._id == String(id)
-      });
+    //   state.editRecipeModal.feature = state.recipes.find( item => {
+    //     return item._id == String(id)
+    //   });
 
-      emitter.emit(state.events.RENDER);
-    }
+    //   emitter.emit(state.events.RENDER);
+    // }
 
   }
 }

@@ -36,4 +36,9 @@ function EditRecipeModal(state, emit){
 }
 
 
+/**
+ * ${new BranchControlMenu(state, emit, selected)}
+                ${new RecipeDetailsMenu(state, emit, selected)}
+ */
+
   

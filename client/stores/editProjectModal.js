@@ -6,17 +6,17 @@ function store (state, emitter) {
   
   state.editProjectModal = {
     display: false,
-    feature:{},
+
   }
 
   state.events.editProjectModal_open = "editProjectModal:open"
   state.events.editProjectModal_close = "editProjectModal:close"
-  state.events.editProjectModal_setFeature = "editProjectModal:setFeature"
+  // state.events.editProjectModal_setFeature = "editProjectModal:setFeature"
 
   // emitter.on('DOMContentLoaded', function () {})
   emitter.on(state.events.editProjectModal_open , editProjectModal.open)
   emitter.on(state.events.editProjectModal_close , editProjectModal.close)
-  emitter.on(state.events.editProjectModal_setFeature , editProjectModal.setFeature)
+  // emitter.on(state.events.editProjectModal_setFeature , editProjectModal.setFeature)
 
   // emitter.on('DOMContentLoaded', function(){
   //   emitter.on(state.events.projects_find, editProjectModal.setProject)
@@ -34,15 +34,15 @@ function store (state, emitter) {
       emitter.emit(state.events.RENDER);
     }
 
-    this.setFeature = function(){
-      const{ collection, id, branch} = state.params
+    // this.setFeature = function(){
+    //   const{ collection, id, branch} = state.params
       
-      state.editProjectModal.feature = state.projects.find( item => {
-        return item._id == String(id)
-      });
+    //   state.editProjectModal.feature = state.projects.find( item => {
+    //     return item._id == String(id)
+    //   });
 
-      emitter.emit(state.events.RENDER);
-    }
+    //   emitter.emit(state.events.RENDER);
+    // }
 
   }
 }
