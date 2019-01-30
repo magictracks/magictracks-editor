@@ -6,7 +6,7 @@ function titleInput(state, emit, selected){
     return html`
     <fieldset class="w-100 mb2 br2 ba">
         <legend class="br-pill pl2 pr2 ba">title</legend>
-        <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="">
+        <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="${selected.title}">
     </fieldset>
     `
 }
@@ -14,7 +14,7 @@ function descriptionInput(state, emit, selected){
     return html`
     <fieldset class="w-100 mb2 br2 ba">
             <legend class="br-pill pl2 pr2 ba">description</legend>
-            <textarea class="h4 w-100 mr2 bn br2 pa2" type="text" name="description">${""}</textarea>
+            <textarea class="h4 w-100 mr2 bn br2 pa2" type="text" name="description">${selected.description}</textarea>
     </fieldset>
     `
 }
@@ -58,12 +58,15 @@ function formSubmissionBtnGroup(state, emit, selected){
 } 
 
 function RecipeDetailsMenu(state, emit, selected){
-    return html`
-    <form id="recipeDetailsForm" class="w-100 mt2" onsubmit="">
-        ${titleInput(state, emit, selected)}
-        ${descriptionInput(state, emit, selected)}
-        ${collaboratorsInput(state, emit, selected)}
-        ${formSubmissionBtnGroup(state, emit, selected)}
-    </form>
-    `
+    if(typeof selected == "object" && Object.keys(selected).length > 0){
+        return html`
+        <form id="recipeDetailsForm" class="w-100 mt2" onsubmit="">
+            ${titleInput(state, emit, selected)}
+            ${descriptionInput(state, emit, selected)}
+            ${collaboratorsInput(state, emit, selected)}
+            ${formSubmissionBtnGroup(state, emit, selected)}
+        </form>
+        `
+    }
+    
 }

@@ -48,12 +48,13 @@ function dangerZone(state, emit, selected){
         document.querySelector("#dangerZone").classList.toggle("dn");
     }
     return html`
-    <div>
-        <p onclick=${toggleDangerZone}>⚠️ Danger Zone ▼ </p>
-        <div id="dangerZone" class="dn">
-            ${deleteBranchBtn(state, emit, selected)}
+        <div>
+            <p onclick=${toggleDangerZone}>⚠️ Danger Zone ▼ </p>
+            <div id="dangerZone" class="dn">
+                ${branchNameChanger(state, emit, selected)}
+                ${deleteBranchBtn(state, emit, selected)}
+            </div>
         </div>
-    </div>
     `
 }
 
@@ -69,8 +70,7 @@ function BranchControlMenu(state, emit, selected){
                 <!-- create new branch input -->
                 ${newBranchBtn(state, emit, selected)}
             </div>
-            <!-- change name -->
-            ${branchNameChanger(state, emit, selected)}
+            
             <!-- danger zone -->
             ${dangerZone(state, emit, selected)}
             
