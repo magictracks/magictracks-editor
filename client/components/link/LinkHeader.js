@@ -14,7 +14,12 @@ class LinkHeader extends Component {
 
   openEditModal(state, emit){
       return e => {
-            console.log("opening edit modal", e.currentTarget);            
+            console.log("opening edit modal", e.currentTarget);   
+            const payload = {
+                id: e.currentTarget.dataset.id,
+                collection: e.currentTarget.dataset.collection,
+              }
+            emit(state.events.current_setSelected, payload)         
             emit(state.events.editLinkModal_open);
           }
     }
@@ -26,14 +31,14 @@ class LinkHeader extends Component {
           }
       }
 
-  editBtn(state, emit){
+  editBtn(state, emit, feature){
       if(state.user.authenticated == true){
           return html`
-              <small class="underline" onclick=${this.openEditModal(state, emit) }>edit</small>
+              <small class="underline" data-collection="${feature.featureType}" data-id=${feature._id} onclick=${this.openEditModal(state, emit) }>edit</small>
           `
       } else {
           return html`
-              <small class="underline" onclick=${this.openSuggestModal(state, emit) }>suggest</small>
+              <small class="underline" data-collection="${feature.featureType}" data-id=${feature._id} onclick=${this.openSuggestModal(state, emit) }>suggest</small>
           `
       }
       
@@ -42,7 +47,7 @@ class LinkHeader extends Component {
   createElement (feature) {
     return html`
     <div class="w-100 br1 br--top flex flex-row justify-end pl2 pr2 pt1 pb1 f7" style="background-color:${feature.colors[feature.selectedColor]}">
-        ${this.editBtn(this.state, this.emit)}
+        ${this.editBtn(this.state, this.emit, feature)}
     </div>
     `
   }

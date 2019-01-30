@@ -25,13 +25,26 @@ function store (state, emitter) {
   }
 
   state.events.current_navigated = "current:navigated";
+  state.events.current_setSelected = "current:setSelected";
 
-
+  emitter.on(state.events.current_setSelected, current.setSelected);
   emitter.on('navigate', current.navigated);
   emitter.on('DOMContentLoaded', current.navigated);
 
 
   function Current(){
+
+    this.setSelected = function(_payload){
+      const {collection, id} = _payload;
+      console.log("🌈🌈🌈", _payload)
+
+      feathersClient.service(collection).get(id).then(feature => {
+        state.current[collection].selected = feature;
+        emitter.emit(state.events.RENDER);
+      }).catch(err => {
+        return err;
+      });
+    }
     
     this.navigated = function(){
       console.log(`Navigated to ${state.route}`)

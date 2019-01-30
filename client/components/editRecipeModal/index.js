@@ -1,6 +1,8 @@
 var html = require('choo/html')
 
 const CloseModalBtn = require('./closeModalBtn');
+const BranchControlMenu = require('./BranchControlMenu');
+const RecipeDetailsMenu = require('./RecipeDetailsMenu');
 
 module.exports = EditRecipeModal;
 
@@ -25,6 +27,7 @@ function EditRecipeModal(state, emit){
                 </div>
                 <!-- main project modal area -->
                 <section>
+                
                 </section>
             </div>
         </div>
