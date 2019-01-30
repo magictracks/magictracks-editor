@@ -2,7 +2,7 @@ var html = require('choo/html')
 
 const RecipeList = require('./RecipeList');
 const ProjectHeader = require('./projectHeader');
-
+const AddRecipeButton = require('./AddRecipeButton');
 
 
 module.exports = Project;
@@ -23,6 +23,8 @@ function Project(state, emit){
                 ${state.cache(ProjectHeader, "ProjectHeader", state, emit).render(selected)}
 
                 ${state.cache(RecipeList, "RecipeList", state, emit).render(selectedBranch.recipes)}  
+
+                ${new AddRecipeButton(state, emit, selected._id, branch)}
             </section>
         `
     } else{

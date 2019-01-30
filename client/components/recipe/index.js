@@ -2,6 +2,7 @@ var html = require('choo/html')
 
 const RecipeHeader = require('./recipeHeader');
 const LinkList = require('./LinkList');
+const AddLinkButton = require('./AddLinkButton');
 
 
 module.exports = Recipe;
@@ -42,6 +43,9 @@ function Recipe(state, emit, _selected, _branch, _idx){
     
                     <section>
                     ${state.cache(LinkList, linkListUniqueName, state, emit).render(branchData.links, branchData._id)}  
+                    </section>
+                    <section>
+                    ${new AddLinkButton(state, emit, selected._id, branch)}
                     </section>
                 </fieldset>
             </section>

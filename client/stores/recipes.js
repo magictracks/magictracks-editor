@@ -74,7 +74,8 @@ function store (state, emitter) {
         console.log("success!")
         console.log("patched feature!", patchedFeature[0]);
         state.current.recipes.selected = patchedFeature[0];
-        // window.location.reload();
+        
+        // TODO: figure out better way to update view
         emitter.emit(state.events.playlists_find, {})
         emitter.emit(state.events.RENDER);
       }).catch(err => {

@@ -56,7 +56,7 @@ function AddLinkModal(id, state, emit){
         <div class="w-100 h-100 flex flex-column justify-center items-center">
           <div class="mw7 w-100 h-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
             <div class="w-100 flex flex-row justify-between">
-              <h2>New Link Modal</h2>
+              <h2>Add a new link!</h2>
               <button class="bn f2 bg-light-gray" onclick=${closeLinkModal}>✕</button>
             </div>
             <section>

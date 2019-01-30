@@ -4,21 +4,15 @@ const NavBar = require('../components/navbar');
 const UserNav = require('../components/userNav');
 const CreateNewBtn = require('../components/createNewBtn');
 
-const addRecipeButton = require('../components/addRecipeButton');
-const addLinkButton = require('../components/addLinkButton');
-
-
-// const Project = require('../components/Project');
 const Project = require('../components/project/index')
-
 const Recipe = require('../components/recipe/index');
 
 const EditProjectModal = require('../components/editProjectModal/index');
 const EditRecipeModal = require('../components/editRecipeModal/index');
 const EditLinkModal = require('../components/editLinkModal/index');
 
-// const addRecipeModal = require('../components/addRecipeModal');
-// const addLinkModal = require('../components/addLinkModal');
+const AddRecipeModal = require('../components/AddRecipeModal');
+const AddLinkModal = require('../components/AddLinkModal');
 
 
 module.exports = view
@@ -102,12 +96,9 @@ function view(state, emit) {
     ${new EditLinkModal(state, emit)}
     ${new EditRecipeModal(state, emit)}
     ${new EditProjectModal(state, emit)}
+
+    ${new AddLinkModal("AddLinkModal", state, emit)}
+    ${new AddRecipeModal("AddRecipeModal", state, emit)}
   </body>   
   `
 }
-
-
-// /<!-- addLinkModal, addRecipeModal, and EditProjectModal -->
-// ${addLinkModal("AddLinkModal", state, emit)}
-// ${addRecipeModal("AddRecipeModal", state, emit)}
-// ${state.cache(EditProjectModal,"EditProjectModal", state, emit).render()}
