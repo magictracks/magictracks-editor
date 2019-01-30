@@ -51,7 +51,7 @@ function Recipe(state, emit, _selected, _branch, _idx, _parentId){
             <section class="mb2 mt2" data-parentdb="${parentDetails.collection}" data-parentid="${parentDetails._id}" data-id="${selected._id}">
                 <fieldset class="ba br2 b--black">
                     ${showLegend(selected)}
-                    ${state.cache(RecipeHeader, recipeUniqueName, state, emit).render(selected)}
+                    ${state.cache(RecipeHeader, recipeUniqueName, state, emit).render(selected, _parentId)}
     
                     <section>
                     ${state.cache(LinkList, linkListUniqueName, state, emit).render(branchData.links, branchData._id)}  

@@ -1,5 +1,6 @@
 var Component = require('choo/component')
 var html = require('choo/html')
+const RemoveRecipeButton = require('./RemoveRecipeButton');
 
 class RecipeHeader extends Component {
   constructor (id, state, emit) {
@@ -51,11 +52,14 @@ class RecipeHeader extends Component {
       
   }
 
-  createElement (feature) {
+  createElement (feature, _parentId) {
     return html`
         <section class="mb4">
         <div class="w-100 br1 br--top pl2 pr2 pt2 pb2 ba" style="border-color:${feature.colors[feature.selectedColor]}">
-          <p class="w-100 ma0 f7 flex flex-row justify-start items-center"><small class="f7 mr2">recipe</small> · <span class="f7 underline mr2 ml2" onclick=${this.download(this.state, this.emit)}>download/share</span> · ${this.editBtn(this.state, this.emit, feature)}</p>
+          <p class="w-100 ma0 f7 flex flex-row justify-between items-center">
+            <div><small class="f7 mr2">recipe</small> · <span class="f7 underline mr2 ml2" onclick=${this.download(this.state, this.emit)}>download/share</span> · ${this.editBtn(this.state, this.emit, feature)}</div>
+            <div>${new RemoveRecipeButton(this.state, this.emit, _parentId, feature._id)}</div>
+          </p>
         </div>
         <h2 class="pl2 pr2">
           ${feature.title}

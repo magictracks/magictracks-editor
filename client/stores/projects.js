@@ -17,6 +17,7 @@ function store (state, emitter) {
   state.events.projects_pushRecipe = "projects:pushRecipe";
   state.events.projects_updateDetails = "projects:updateDetails";
   state.events.projects_reorderRecipes = "projects:reorderRecipes";
+  state.events.projects_removeRecipe = "projects:removeRecipe";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -33,12 +34,44 @@ function store (state, emitter) {
   emitter.on(state.events.projects_setSelectedBranch, projects.setSelectedBranch);
   emitter.on(state.events.projects_updateDetails, projects.updateDetails);
   emitter.on(state.events.projects_reorderRecipes, projects.reorderRecipes);
+  emitter.on(state.events.projects_removeRecipe, projects.removeRecipe);
   
   feathersClient.service("projects").on('patched', message => {
     emitter.emit(state.events.projects_find, {})
   });
 
   function Projects(){
+
+    this.removeRecipe = function(_payload){
+      const {projectId, recipeId} = _payload;
+
+      const query = {
+        "query": {
+          "branches._id": String(projectId)
+        }
+      }
+
+      console.log("remove recipe payload", query)
+      
+      const patchData = {
+        "$pull":{
+          "branches.$.recipes": {
+            "recipe": String(recipeId)
+          }
+        }
+      }
+
+      feathersClient.service("projects").patch(null, patchData, query).then(feature => {
+        console.log("patched feature success!", feature[0]);
+        
+        emitter.emit('navigate');
+
+      }).catch(err => {
+        return err;
+      })
+
+    }
+
 
     this.reorderRecipes = function(_payload){
       
