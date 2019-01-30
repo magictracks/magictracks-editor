@@ -10,6 +10,7 @@ function store (state, emitter) {
 
   state.events.projects_get = "projects:get";
   state.events.projects_find = "projects:find";
+  state.events.projects_deleteProject = "projects:deleteProject";
   state.events.projects_create = "projects:create";
   state.events.projects_createBranch = "projects:createBranch";
   state.events.projects_changeBranchName = "projects:changeBranchName";
@@ -27,6 +28,7 @@ function store (state, emitter) {
 
   // find projects
   emitter.on(state.events.projects_find, projects.find);
+  emitter.on(state.events.projects_deleteProject, projects.deleteProject);
   emitter.on(state.events.projects_create, projects.create);
   emitter.on(state.events.projects_pushRecipe, projects.pushRecipe);
   emitter.on(state.events.projects_createBranch, projects.createBranch);
@@ -41,6 +43,20 @@ function store (state, emitter) {
   });
 
   function Projects(){
+
+    this.deleteProject = function(_payload){
+      const{projectId} = _payload;
+      const {collection, user} = state.params;
+
+      feathersClient.service('projects').remove(String(projectId), null).then(response => {
+        console.log("deleted project!");
+
+        emitter.emit("pushState", `/${user}/${collection}`);
+      }).catch(err => {
+        return err;
+      })
+
+    }
 
     this.removeRecipe = function(_payload){
       const {projectId, recipeId} = _payload;

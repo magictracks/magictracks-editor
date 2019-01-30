@@ -6,7 +6,7 @@ function titleInput(state, emit, selected){
     return html`
     <fieldset class="w-100 mb2 br2 ba">
         <legend class="br-pill pl2 pr2 ba">title</legend>
-        <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="">
+        <input class="h2 w-100 mr2 bn br2 pa2" type="text" name="title" value="${selected.title}">
     </fieldset>
     `
 }
@@ -14,7 +14,7 @@ function descriptionInput(state, emit, selected){
     return html`
     <fieldset class="w-100 mb2 br2 ba">
             <legend class="br-pill pl2 pr2 ba">description</legend>
-            <textarea class="h4 w-100 mr2 bn br2 pa2" type="text" name="description">${""}</textarea>
+            <textarea class="h4 w-100 mr2 bn br2 pa2" type="text" name="description">${selected.description}</textarea>
     </fieldset>
     `
 }
@@ -44,11 +44,31 @@ function collaboratorsInput(state, emit, selected){
     </fieldset>
     `
 }
+
+function deleteProjectBtn(state, emit, selected){
+
+    function deleteProject(state, emit, selected){
+        return e => {
+            e.preventDefault();
+            const payload = {
+                projectId: selected._id
+            }
+            console.log("delete this project",payload);
+            emit(state.events.projects_deleteProject, payload);
+            emit(state.events.editProjectModal_close);
+        }
+    }
+
+    return html`
+    <button class="bg-light-red bn br2 h3 pa2" onclick=${deleteProject(state, emit, selected)}>🗑 delete entire project</button>
+    `
+}
+
 function formSubmissionBtnGroup(state, emit, selected){
     return html`
     <section class="w-100 mt3 flex flex-row justify-between mb4">
         <!-- TODO: add confirm() --> 
-        <div><button class="bg-light-red bn br2 h3 pa2" onclick=${() => {console.log("delete")} }>🗑 delete entire project</button></div>
+        <div>${deleteProjectBtn(state, emit, selected)}</div>
         <div>
             <button class="bg-light-silver bn br2 h3 mr2 pa2" onclick="">Cancel</button>
             <input class="bg-light-green bn br2 h3 pa2" type="submit" form="projectDetailsForm" value="save" />
