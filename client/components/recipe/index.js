@@ -7,8 +7,9 @@ const AddLinkButton = require('./AddLinkButton');
 
 module.exports = Recipe;
 
-function Recipe(state, emit, _selected, _branch, _idx){
+function Recipe(state, emit, _selected, _branch, _idx, _parentId){
     let selected, branch, branchData;
+    let parentDetails = {collection:'', _id:''}
 
     if(_selected && _branch){
         selected = _selected;
@@ -18,6 +19,14 @@ function Recipe(state, emit, _selected, _branch, _idx){
         selected = state.current.recipes.selected;
         branch = state.current.recipes.branch
     }
+
+    if(_parentId){
+        parentDetails = {
+            collection: 'projects?branches._id',
+            _id: _parentId
+        }
+    }
+
 
     function showLegend(selected){
         if(_idx != undefined){
@@ -36,7 +45,7 @@ function Recipe(state, emit, _selected, _branch, _idx){
     
     
             return html`
-            <section class="mb4 pl2 pr2">
+            <section class="mb2 mt2" data-parentdb="${parentDetails.collection}" data-parentid="${parentDetails._id}" data-id="${selected._id}">
                 <fieldset class="ba br2 b--black">
                     ${showLegend(selected)}
                     ${state.cache(RecipeHeader, recipeUniqueName, state, emit).render(selected)}

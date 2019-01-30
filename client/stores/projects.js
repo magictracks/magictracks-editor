@@ -16,6 +16,7 @@ function store (state, emitter) {
   state.events.projects_setSelectedBranch = "projects:setSelectedBranch";
   state.events.projects_pushRecipe = "projects:pushRecipe";
   state.events.projects_updateDetails = "projects:updateDetails";
+  state.events.projects_reorderRecipes = "projects:reorderRecipes";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -31,13 +32,67 @@ function store (state, emitter) {
   emitter.on(state.events.projects_changeBranchName, projects.changeBranchName);
   emitter.on(state.events.projects_setSelectedBranch, projects.setSelectedBranch);
   emitter.on(state.events.projects_updateDetails, projects.updateDetails);
-
+  emitter.on(state.events.projects_reorderRecipes, projects.reorderRecipes);
   
   feathersClient.service("projects").on('patched', message => {
     emitter.emit(state.events.projects_find, {})
   });
 
   function Projects(){
+
+    this.reorderRecipes = function(_payload){
+      
+      function moveVal(arr, from, to) {
+        arr.splice(to, 0, arr.splice(from, 1)[0]);
+      };
+
+      const {parentBranchId, parentCollection, recipeId, newRecipePosition} = _payload;
+
+      const query = {
+        "query":{
+          "branches._id": String(parentBranchId)
+        }
+      }
+  
+      feathersClient.service("projects").get(null, query).then( response => {
+        let recipeList = [];
+        let updateCmd = {"$set":{}};
+        let currentPos;
+
+        response = response.data[0];
+
+        let selectedBranch = response.branches.find(branch => String(branch._id) == String(parentBranchId) )
+        recipeList = selectedBranch.recipes;
+
+        currentPos = recipeList.findIndex(val => {
+          console.log(val.recipe._id, recipeId)
+          return val.recipe._id == recipeId
+        });
+        
+        console.log("currentpos 🌮",currentPos)
+
+        moveVal(recipeList, currentPos, newRecipePosition );  
+
+        updateCmd['$set'] = {"branches.$.recipes": recipeList};
+
+        console.log(updateCmd, query);
+        // emitter.emit(state.events.RENDER)
+        return feathersClient.service("projects").patch(null, updateCmd, query)
+      }).then(patchedFeature => {
+        console.log("success!")
+        console.log("patched feature!", patchedFeature[0]);
+        state.current.projects.selected = patchedFeature[0];
+
+        emitter.emit(state.events.current_setSelected, {collection:"projects", id: patchedFeature[0]._id});
+        
+        // TODO: figure out better way to update view
+        emitter.emit(state.events.playlists_find, {})
+        emitter.emit(state.events.RENDER);
+      }).catch(err => {
+        return err;
+      })
+
+    }
 
     this.create = function(_payload){
       

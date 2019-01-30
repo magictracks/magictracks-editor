@@ -15,14 +15,11 @@ function Project(state, emit){
     if(typeof selected.branches == 'object'){
         selectedBranch = selected.branches.find( _branch => _branch.branchName == branch );
 
-        console.log(selectedBranch.recipes);
-
-
         return html`
             <section>
                 ${state.cache(ProjectHeader, "ProjectHeader", state, emit).render(selected)}
 
-                ${state.cache(RecipeList, "RecipeList", state, emit).render(selectedBranch.recipes)}  
+                ${state.cache(RecipeList, "RecipeList", state, emit).render(selectedBranch.recipes, selectedBranch._id)}  
 
                 ${new AddRecipeButton(state, emit, selected._id, branch)}
             </section>
