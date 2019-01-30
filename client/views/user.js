@@ -11,8 +11,8 @@ const EditProjectModal = require('../components/editProjectModal/index');
 const EditRecipeModal = require('../components/editRecipeModal/index');
 const EditLinkModal = require('../components/editLinkModal/index');
 
-const AddRecipeModal = require('../components/AddRecipeModal');
-const AddLinkModal = require('../components/AddLinkModal');
+const AddRecipeModal = require('../components/addRecipeModal/index');
+const AddLinkModal = require('../components/addLinkModal/index');
 
 
 module.exports = view
