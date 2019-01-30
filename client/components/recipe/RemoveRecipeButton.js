@@ -24,7 +24,7 @@ function RemoveRecipeButton(state, emit, _projectId, _recipeId){
 
     }
 
-    if(state.user.authenticated == true){
+    if(state.user.authenticated == true && state.params.collection != 'recipes'){
       return html`
       <small class="pointer bn black hover-bg-orange"
       data-projectid="${_projectId}"
