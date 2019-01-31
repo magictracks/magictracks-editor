@@ -104,8 +104,10 @@ function store (state, emitter) {
     // LOGOUT
     this.logout = function(){
       feathersClient.logout();
+      state.user.username = null;
+      state.user.authenticated = false;
       // TODO: clear the state of data, etc
-      emitter.emit('pushState',  "/");
+      emitter.emit('pushState',  "/login");
     };
 
   } // end Auth()

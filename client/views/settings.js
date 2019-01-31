@@ -6,6 +6,11 @@ module.exports = view
 
 
 function view (state, emit) {
+  
+  function logout(e){
+    emit(state.events.user_logout);
+  }
+
 
   function showSettings(){
     if(state.user.authenticated){
@@ -22,6 +27,7 @@ function view (state, emit) {
               </fieldset>
               <input type="submit" value="save changes">
           </form>
+          <button onclick=${logout}>logout</button>
         </section>
       `
     }else{

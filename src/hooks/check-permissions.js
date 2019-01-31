@@ -11,11 +11,19 @@ module.exports = function (options = {}) {
       // a: copy -- for projects and playlists
       // b: add branch (?)
       console.log("✅✅✅✅✅✅✅")
-      console.log(context)
+      console.log(context.arguments[0])
       const user = context.params.user;
       console.log("✅✅✅✅✅✅✅")
 
-      const feature = await Model.findOne(params.query);
+      let query = {'_id': {}}
+      if(params.query.hasOwnProperty('_id') ){
+        query._id = params.query._id
+      } else{
+        query._id = context.arguments[0];
+      }
+
+      const feature = await Model.findOne(query);
+      console.log(feature)
 
       if(user.username == feature.owner || feature.collaborators.includes(user.username) ){
         console.log("you're allowed to make edits!")

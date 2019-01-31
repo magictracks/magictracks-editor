@@ -53,7 +53,7 @@ class RecipeHeader extends Component {
   }
 
   createElement (feature, _parentId) {
-    console.log("recipeHeader:", feature)
+
     return html`
         <section class="mb4">
         <div class="w-100 br1 br--top pl2 pr2 pt2 pb2 ba" style="border-color:${feature.colors[feature.selectedColor]}">
