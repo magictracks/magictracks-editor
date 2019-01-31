@@ -145,7 +145,8 @@ function store (state, emitter) {
       const{projectData} = _payload;
       feathersClient.service("projects").create(projectData).then(newFeature => {
         console.log(newFeature)
-        emitter.emit(state.events.projects_find, {})
+        // emitter.emit(state.events.projects_find, {})
+        emitter.emit('navigate')
       }).catch(err => {
         return err;
       });
@@ -162,6 +163,7 @@ function store (state, emitter) {
       }
       
       feathersClient.service("projects").patch(id, patchData, null).then(patchedFeature => {
+
         emitter.emit(state.events.current_setSelected, {'collection':'projects', 'id':patchedFeature._id})
         return patchedFeature
       }).catch(err => {
