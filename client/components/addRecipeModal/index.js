@@ -2,19 +2,11 @@ const html = require('choo/html');
 
 const ModalHeader = require("./ModalHeader");
 const RecipeSelectModule = require("./RecipeSelectModule");
-const BranchActionModule = require("./BranchActionModule");
 const ModalFooter = require("./ModalFooter");
 
 module.exports = AddRecipeModal;
 
 function AddRecipeModal(id, state, emit){
-
-    function closeAddRecipeModal(state, emit){
-        return e => {
-            console.log('close recipe modal');
-            emit(state.events.addRecipeModal_close)
-        }
-    }
   
     function checkDisplay(){
       if(state.addRecipeModal.display == true){

@@ -267,8 +267,11 @@ function store (state, emitter) {
       }
 
       feathersClient.service("projects").patch(null, projectPatch, idQuery).then(feature => {
-        // emitter.emit(state.events.current_setSelected, {collection: 'projects', id:feature._id})
-        emitter.emit(state.events.projects_find, {});
+        emitter.emit(state.events.current_setSelected, {'collection': 'projects', 'id': feature[0]._id})
+
+        console.log("Great success!! 🌇🌇🌇🌇")
+
+        // emitter.emit(state.events.projects_find, {});
       }).catch(err => {
         console.log("🔥🔥🔥🔥", err)
         return err
