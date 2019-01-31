@@ -78,8 +78,26 @@ function formSubmissionBtnGroup(state, emit, selected){
 } 
 
 function ProjectDetailsMenu(state, emit, selected){
+
+    function saveProjectDetails(state, emit, selected){
+        return e => {
+            e.preventDefault()
+            let form = new FormData(e.currentTarget);
+        
+            let payload = {
+              title: form.get("title"),
+              description: form.get("description")
+            }
+        
+            emit(state.events.projects_updateDetails, payload)
+            emit(state.events.editProjectModal_close)
+        }
+       
+    
+      }
+
     return html`
-    <form id="projectDetailsForm" class="w-100 mt2" onsubmit="">
+    <form id="projectDetailsForm" class="w-100 mt2" onsubmit=${saveProjectDetails(state, emit, selected)}>
         ${titleInput(state, emit, selected)}
         ${descriptionInput(state, emit, selected)}
         ${collaboratorsInput(state, emit, selected)}

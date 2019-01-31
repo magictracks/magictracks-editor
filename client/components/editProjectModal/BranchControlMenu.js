@@ -1,5 +1,7 @@
 var html = require('choo/html')
 
+const BranchSelector = require('./BranchSelector');
+
 module.exports = BranchControlMenu;
 
 function newBranchBtn(state, emit, selected){
@@ -11,19 +13,7 @@ function newBranchBtn(state, emit, selected){
     `
 }
 
-function branchSelector(state, emit, selected){
-    return html`
-        <select class="w-80 mb2 h2 ba br2 br--left bn ma0 pl2 pr2">
-            ${
-            selected.branches.map( item => {
-                return html`
-                <option class="w-100 h2 bn br2 ma0" value="${item.branchName}">${item.branchName}</option>
-                `
-            })
-            }
-        </select>
-    `
-}
+
 
 function branchNameChanger(state, emit, selected){
     return html`
@@ -66,7 +56,7 @@ function BranchControlMenu(state, emit, selected){
             
             <div class="w-100 flex flex-row">
                 <!-- branch selector -->
-                ${branchSelector(state, emit, selected)}
+                ${BranchSelector(state, emit, selected)}
                 <!-- create new branch input -->
                 ${newBranchBtn(state, emit, selected)}
             </div>

@@ -162,6 +162,7 @@ function store (state, emitter) {
       }
       
       feathersClient.service("projects").patch(id, patchData, null).then(patchedFeature => {
+        emitter.emit(state.events.current_setSelected, {'collection':'projects', 'id':patchedFeature._id})
         return patchedFeature
       }).catch(err => {
         return err;
