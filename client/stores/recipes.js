@@ -12,8 +12,10 @@ function store (state, emitter) {
   state.events.recipes_createAndPush = "recipes:createAndPush";
   state.events.recipes_create = "recipes:create";
   state.events.recipes_addBranchAndPush = "recipes:addBranchAndPush";
+  state.events.recipes_addBranch = "recipes:addBranch";
   state.events.recipes_reorderLinks = "recipes:reorderLinks";
   state.events.recipes_removeLink = "recipes:removeLink";
+  state.events.recipes_setSelectedBranch = "recipes:setSelectedBranch";
   
   feathersClient.service("recipes").find()
     .then(feature => {
@@ -27,14 +29,46 @@ function store (state, emitter) {
   emitter.on(state.events.recipes_createAndPush, recipes.createAndPush);
   emitter.on(state.events.recipes_create, recipes.create);
   emitter.on(state.events.recipes_addBranchAndPush, recipes.addBranchAndPush);
+  emitter.on(state.events.recipes_addBranch, recipes.addBranch);
   emitter.on(state.events.recipes_removeLink, recipes.removeLink);
   emitter.on(state.events.recipes_reorderLinks, recipes.reorderLinks);
+  emitter.on(state.events.recipes_setSelectedBranch, recipes.setSelectedBranch);
 
   // feathersClient.service("recipes").on('patched', message => {
   //   emitter.emit(state.events.recipes_find, {})
   // });
 
   function Recipes(){
+
+    this.setSelectedBranch = function(_payload){
+      const {id, user, collection, branch} = state.params;
+      const recipeid = state.current.recipes.selected._id;
+      const {updatedBranchName} = _payload;
+      
+      let patchData = {
+        selectedBranch: updatedBranchName
+      }
+
+      console.log("I'm the patched data", patchData)
+
+      feathersClient.service("recipes").patch(recipeid, patchData, null).then(patchedFeature => {
+        
+        console.log(patchedFeature);
+
+        // TODO: is there a better way to update?
+        // state.recipes.forEach(item => {
+        //   if(item._id == patchedFeature._id){
+        //     item.selectedBranch = patchedFeature.selectedBranch
+        //   }
+        // });
+
+        // emitter.emit('navigate')
+        emitter.emit("pushState", `/${user}/${collection}/${id}/${branch}`)
+        emitter.emit(state.events.RENDER);
+      }).catch(err => {
+        return err;
+      })
+    }
 
     this.removeLink = function(_payload){
       const {recipeId, linkId} = _payload;
@@ -184,6 +218,32 @@ function store (state, emitter) {
       });
 
     } // end createAndPush
+
+    this.addBranch = function(_payload){
+      const {recipeId} = _payload;
+      
+      // TODO: handle name generation on server
+       let recipePatch = {
+        "$push":{
+        "branches":{
+          "description":`new branch created ${new Date()}`
+          }
+        }
+      }
+
+      feathersClient.service("recipes").patch(recipeId, recipePatch,null).then(feature => {
+
+        // const {projectId, projectBranchName, recipeId, recipeBranchName} = _payload;
+        // TODO: get the latest made branch in a better way
+        // _payload.recipeBranchName = feature.branches[feature.branches.length - 1].branchName
+        emitter.emit('navigate');
+        // emitter.emit(state.events.projects_pushRecipe, _payload);
+      }).catch(err => {
+        return err;
+      })
+
+
+    }
 
     this.addBranchAndPush = function(_payload){
       console.log("adding new branch and push");
