@@ -16,7 +16,7 @@ function Project(state, emit){
         selectedBranch = selected.branches.find( _branch => _branch.branchName == branch );
 
         return html`
-            <section>
+            <section class="w-100">
                 ${state.cache(ProjectHeader, "ProjectHeader", state, emit).render(selected)}
 
                 ${state.cache(RecipeList, "RecipeList", state, emit).render(selectedBranch.recipes, selectedBranch._id)}  

@@ -50,6 +50,12 @@ function store (state, emitter) {
       console.log(`Navigated to ${state.route}`)
       console.log("state.params:", state.params)
 
+      if(!state.params.hasOwnProperty('user')){
+        console.log("hey!  that's me!")
+        emitter.emit(state.events.projects_find, {})
+        emitter.emit(state.events.recipes_find, {})
+      }
+
       if(state.params.hasOwnProperty('user') && !state.params.hasOwnProperty('collection')){
         console.log("hey!  that's me!")
         emitter.emit('pushState', `/${user}/projects`);

@@ -32,6 +32,8 @@ function RemoveLinkButton(state, emit, _recipeId, _linkId){
       onclick=${removeFromRecipe}>╳</small>
     `
     }
+
+
     
 }
 

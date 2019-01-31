@@ -33,15 +33,15 @@ class LinkHeader extends Component {
       }
 
   editBtn(state, emit, feature){
-      if(state.user.authenticated == true){
-          return html`
-              <small class="underline" data-collection="${feature.featureType}" data-id=${feature._id} onclick=${this.openEditModal(state, emit) }>edit</small>
-          `
-      } else {
-          return html`
-              <small class="underline" data-collection="${feature.featureType}" data-id=${feature._id} onclick=${this.openSuggestModal(state, emit) }>suggest</small>
-          `
-      }
+    if(state.user.authenticated == true){
+        return html`
+            <small class="ml2 underline" onclick=${this.openEditModal(state, emit) }>edit</small>
+        `
+    } else {
+        return html`
+            <small class="ml2 underline" onclick=${this.openSuggestModal(state, emit) }>suggest</small>
+        `
+    }
       
   }
 

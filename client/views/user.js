@@ -14,6 +14,8 @@ const EditLinkModal = require('../components/editLinkModal/index');
 const AddRecipeModal = require('../components/addRecipeModal/index');
 const AddLinkModal = require('../components/addLinkModal/index');
 
+const ExportModal = require('../components/exportModal/index');
+
 
 module.exports = view
 
@@ -99,6 +101,7 @@ function view(state, emit) {
 
     ${new AddLinkModal("AddLinkModal", state, emit)}
     ${new AddRecipeModal("AddRecipeModal", state, emit)}
+    ${new ExportModal(state, emit)}
   </body>   
   `
 }

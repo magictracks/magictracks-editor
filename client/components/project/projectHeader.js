@@ -16,6 +16,7 @@ class ProjectHeader extends Component {
   download(state, emit){
       return e => {
         console.log("download/share!")
+        emit(state.events.exportModal_open);
       }
   }
 
@@ -34,7 +35,10 @@ class ProjectHeader extends Component {
         }
 
   editBtn(state, emit){
-        if(state.user.authenticated == true){
+        if(state.user.authenticated == true ){
+            //  && 
+            // state.user.username == state.current.projects.selected.owner ||
+            // state.current.projects.selected.collaborators.includes(state.user.username)
             return html`
                 <small class="ml2 underline" onclick=${this.openEditModal(state, emit) }>edit</small>
             `
@@ -48,7 +52,7 @@ class ProjectHeader extends Component {
 
   createElement (feature) {
     return html`
-        <section class="mb4 pl2 pr2">
+        <section class="w-100 mb4 pl2 pr2">
     
             <div class="w-100 br1 br--top pl2 pr2 pt2 pb2 ba" style="border-color:${feature.colors[feature.selectedColor]}">
             <p class="w-100 ma0 f7 flex flex-row justify-start items-center"><small class="f7 mr2">project</small> · <span class="f7 underline mr2 ml2" onclick=${this.download(this.state, this.emit)}>download/share</span> · ${this.editBtn(this.state, this.emit)}</p>

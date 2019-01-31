@@ -14,6 +14,9 @@ function AddRecipeButton(state, emit, _projectId, _branchName){
     emit(state.events.addRecipeModal_selectProjectId, _projectId) // TOOD: remove is we get the project id from the current.js store
     emit(state.events.addRecipeModal_selectProjectBranchName, _branchName) // TOOD: remove is we get the project id from the current.js store
 
+    // GET Only recipes owned by user
+    emit(state.events.recipes_find, {"query": {"owner":state.user.username}})
+
     emit(state.events.addRecipeModal_open)
   }
 

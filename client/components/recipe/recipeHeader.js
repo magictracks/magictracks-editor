@@ -17,6 +17,7 @@ class RecipeHeader extends Component {
   download(state, emit){
       return e => {
         console.log("download/share!")
+        emit(state.events.exportModal_open);
       }
   }
 
@@ -34,21 +35,27 @@ class RecipeHeader extends Component {
   
   openSuggestModal(state, emit){
       return e => {
-            console.log("TODO: opening suggest modal", e.currentTarget);            
+            console.log("TODO: opening suggest modal", e.currentTarget);     
+            console.log("opening edit modal", e.currentTarget);
+            const payload = {
+              id: e.currentTarget.dataset.id,
+              collection: e.currentTarget.dataset.collection,
+            }
+            emit(state.events.current_setSelected, payload)       
             // emit(state.events.editProjectModal_open);
           }
       }
 
   editBtn(state, emit, feature){
-      if(state.user.authenticated == true){
-          return html`
-              <small class="f7 ml2 underline" data-collection="${feature.featureType}" data-id=${feature._id} onclick=${this.openEditModal(state, emit) }>edit</small>
-          `
-      } else {
-          return html`
-              <small class="ml2 f7 underline" onclick=${this.openSuggestModal(state, emit) }>suggest</small>
-          `
-      }
+    if(state.user.authenticated == true){
+        return html`
+            <small class="ml2 underline" data-id="${feature._id}" data-collection='recipes' onclick=${this.openEditModal(state, emit) }>edit</small>
+        `
+    } else {
+        return html`
+            <small class="ml2 underline" data-id="${feature._id}" data-collection='recipes' onclick=${this.openSuggestModal(state, emit) }>suggest</small>
+        `
+    }
       
   }
 

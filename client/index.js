@@ -24,6 +24,7 @@ app.use(require('./stores/current'))
 app.use(require('./stores/links'))
 app.use(require('./stores/search'))
 app.use(require('./stores/user'))
+app.use(require('./stores/exportModal'))
 
 
 // Views

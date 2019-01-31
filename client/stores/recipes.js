@@ -155,8 +155,7 @@ function store (state, emitter) {
 
 
     this.find = function(_query){
-      feathersClient.service("recipes").find(_query)
-      .then(feature => {
+      feathersClient.service("recipes").find(_query).then(feature => {
         state.recipes = feature.data;
         emitter.emit(state.events.RENDER);
       });
@@ -172,7 +171,7 @@ function store (state, emitter) {
         console.log(feature);
         state.recipes.push(feature);
         // emitter.emit(state.events.RENDER);
-        emitter.emit(state.events.recipes_find, {});
+        emitter.emit(state.events.recipes_find, {"query": {"owner": state.user.username }} );
       }).catch(err => {
         console.log(err);
         return err
