@@ -8,10 +8,10 @@ function AddRecipeButton(state, emit, _projectId, _branchName){
   
   function openAddRecipeModal(e){
     console.log('open recipe modal');
-    const {projectid, projectbranch} = e.currentTarget.dataset
+    // const {projectid, projectbranch} = e.currentTarget.dataset
   
-    // emit(state.events.addRecipeModal_selectProjectId, projectid)
-    // emit(state.events.addRecipeModal_selectProjectBranchName, projectbranch)
+    emit(state.events.addRecipeModal_selectProjectId, _projectId)
+    emit(state.events.addRecipeModal_selectProjectBranchName, _branchName)
     emit(state.events.addRecipeModal_open)
   }
 
