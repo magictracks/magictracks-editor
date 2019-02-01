@@ -39,7 +39,7 @@ function store (state, emitter) {
   emitter.on(state.events.projects_removeRecipe, projects.removeRecipe);
   
   feathersClient.service("projects").on('patched', message => {
-    emitter.emit(state.events.projects_find, {})
+    emitter.emit('navigate')
   });
 
   function Projects(){
@@ -76,6 +76,9 @@ function store (state, emitter) {
           }
         }
       }
+
+      console.log("remove recipe payload", patchData)
+
 
       feathersClient.service("projects").patch(null, patchData, query).then(feature => {
         console.log("patched feature success!", feature[0]);
@@ -154,7 +157,7 @@ function store (state, emitter) {
     }
 
     this.updateDetails = function(_payload){
-      const {id} = state.params
+      const {_id} = state.current.projects.selected;
       const {title, description} = _payload
 
       let patchData = {
@@ -162,7 +165,7 @@ function store (state, emitter) {
         description
       }
       
-      feathersClient.service("projects").patch(id, patchData, null).then(patchedFeature => {
+      feathersClient.service("projects").patch(_id, patchData, null).then(patchedFeature => {
 
         emitter.emit(state.events.current_setSelected, {'collection':'projects', 'id':patchedFeature._id})
         return patchedFeature

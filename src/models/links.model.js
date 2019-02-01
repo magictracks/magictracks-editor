@@ -79,7 +79,7 @@ module.exports = function (app) {
     url: {
       type: String,
       required: true,
-      unique: true // TODO: change to TRUE
+      unique: false // TODO: change to TRUE - actually I don't think we want to have to deal with only unique links...
     },
     uniqueName: {
       type:String,

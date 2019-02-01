@@ -16,6 +16,7 @@ function store (state, emitter) {
   state.events.recipes_reorderLinks = "recipes:reorderLinks";
   state.events.recipes_removeLink = "recipes:removeLink";
   state.events.recipes_setSelectedBranch = "recipes:setSelectedBranch";
+  state.events.recipes_updateDetails = "recipes:updateDetails";
   
   feathersClient.service("recipes").find()
     .then(feature => {
@@ -32,13 +33,35 @@ function store (state, emitter) {
   emitter.on(state.events.recipes_addBranch, recipes.addBranch);
   emitter.on(state.events.recipes_removeLink, recipes.removeLink);
   emitter.on(state.events.recipes_reorderLinks, recipes.reorderLinks);
+  emitter.on(state.events.recipes_updateDetails, recipes.updateDetails);
   emitter.on(state.events.recipes_setSelectedBranch, recipes.setSelectedBranch);
 
-  // feathersClient.service("recipes").on('patched', message => {
-  //   emitter.emit(state.events.recipes_find, {})
-  // });
+  feathersClient.service("recipes").on('patched', message => {
+    // emitter.emit(state.events.recipes_find, {})
+    emitter.emit('navigate');
+  });
 
   function Recipes(){
+
+    this.updateDetails = function(_payload){
+
+        const {_id} = state.current.recipes.selected;
+        const {title, description} = _payload
+  
+        let patchData = {
+          title,
+          description
+        }
+        
+        feathersClient.service("recipes").patch(_id, patchData, null).then(patchedFeature => {
+  
+          emitter.emit(state.events.current_setSelected, {'collection':'recipes', 'id':patchedFeature._id})
+          return patchedFeature
+        }).catch(err => {
+          return err;
+        })
+
+    }
 
     this.setSelectedBranch = function(_payload){
       const {id, user, collection, branch} = state.params;

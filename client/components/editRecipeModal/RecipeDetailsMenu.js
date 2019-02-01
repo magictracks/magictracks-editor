@@ -58,9 +58,26 @@ function formSubmissionBtnGroup(state, emit, selected){
 } 
 
 function RecipeDetailsMenu(state, emit, selected){
+    
+    function saveDetails(state, emit, selected){
+        return e => {
+            e.preventDefault()
+            let form = new FormData(e.currentTarget);
+        
+            let payload = {
+              title: form.get("title"),
+              description: form.get("description")
+            }
+        
+            emit(state.events.recipes_updateDetails, payload)
+            emit(state.events.editRecipeModal_close)
+        }
+       
+      }
+
     if(typeof selected == "object" && Object.keys(selected).length > 0){
         return html`
-        <form id="recipeDetailsForm" class="w-100 mt2" onsubmit="">
+        <form id="recipeDetailsForm" class="w-100 mt2" onsubmit=${saveDetails(state, emit, selected)}>
             ${titleInput(state, emit, selected)}
             ${descriptionInput(state, emit, selected)}
             ${collaboratorsInput(state, emit, selected)}

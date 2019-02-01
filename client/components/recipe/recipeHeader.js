@@ -11,15 +11,27 @@ class RecipeHeader extends Component {
     this.openEditModal = this.openEditModal.bind(this)
     this.openSuggestModal = this.openSuggestModal.bind(this)
     this.editBtn = this.editBtn.bind(this);
-    this.download = this.download.bind(this);
+    this.export = this.export.bind(this);
+    this.exportBtn = this.exportBtn.bind(this);
   }
 
-  download(state, emit){
+  export(state, emit){
       return e => {
         console.log("download/share!")
+        const{id, collection} = e.currentTarget.dataset;
+        // emit('pushState', `?collection=${collection}&_id=${id}`)
+        emit(state.events.current_setSelected, {id, collection})
         emit(state.events.exportModal_open);
       }
   }
+
+  exportBtn(state, emit, feature){
+    return html`
+      <small class="underline mr2 ml2" data-id="${feature._id}" data-collection="recipes"  onclick=${this.export(state, emit)}>download/share</small>
+    `
+  }
+
+
 
   openEditModal(state, emit){
       return e => {
@@ -28,6 +40,7 @@ class RecipeHeader extends Component {
               id: e.currentTarget.dataset.id,
               collection: e.currentTarget.dataset.collection,
             }
+            
             emit(state.events.current_setSelected, payload)
             emit(state.events.editRecipeModal_open);
           }
@@ -65,7 +78,7 @@ class RecipeHeader extends Component {
         <section class="mb4">
         <div class="w-100 br1 br--top pl2 pr2 pt2 pb2 ba" style="border-color:${feature.colors[feature.selectedColor]}">
           <p class="w-100 ma0 f7 flex flex-row justify-between items-center">
-            <div><small class="f7 mr2">recipe</small> · <span class="f7 underline mr2 ml2" onclick=${this.download(this.state, this.emit)}>download/share</span> · ${this.editBtn(this.state, this.emit, feature)}</div>
+            <div><small class="f7 mr2">recipe</small> · ${this.exportBtn(this.state, this.emit, feature)} · ${this.editBtn(this.state, this.emit, feature)}</div>
             <div>${new RemoveRecipeButton(this.state, this.emit, _parentId, feature._id)}</div>
           </p>
         </div>

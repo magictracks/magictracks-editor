@@ -26,7 +26,7 @@ function EditProjectModal(state, emit){
                     <div class="mw7 w-100 h-auto overflow-auto ba br2 bg-light-gray pt2 pb4 pl4 pr4">
                         <div class="w-100 flex flex-row justify-between">
                             <h2>Edit Project</h2>
-                            ${state.cache(CloseModalBtn, "CloseModalBtn", state, emit).render()}
+                            ${state.cache(CloseModalBtn, "CloseProjectModalBtn", state, emit).render()}
                         </div>
                         <!-- main project modal area -->
                         <section>

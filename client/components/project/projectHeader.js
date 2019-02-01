@@ -10,15 +10,28 @@ class ProjectHeader extends Component {
     this.openEditModal = this.openEditModal.bind(this)
     this.openSuggestModal = this.openSuggestModal.bind(this)
     this.editBtn = this.editBtn.bind(this);
-    this.download = this.download.bind(this);
+    this.export = this.export.bind(this);
+    this.exportBtn = this.exportBtn.bind(this);
   }
 
-  download(state, emit){
-      return e => {
-        console.log("download/share!")
-        emit(state.events.exportModal_open);
-      }
-  }
+  export(state, emit){
+    return e => {
+      console.log("download/share!")
+      const{id, collection} = e.currentTarget.dataset;
+      // emit('pushState', `?collection=${collection}&_id=${id}`)
+      emit(state.events.current_setSelected, {id, collection})
+      emit(state.events.exportModal_open);
+    }
+}
+
+    exportBtn(state, emit){
+        const currentProjectId = state.current.projects.selected._id;
+
+        return html`
+            <small class="underline mr2 ml2" data-id="${currentProjectId}" data-collection="projects" onclick=${this.export(state, emit)}>download/share</small>
+        `
+    }
+
 
   openEditModal(state, emit){
       return e => {
@@ -55,7 +68,7 @@ class ProjectHeader extends Component {
         <section class="w-100 mb4 pl2 pr2">
     
             <div class="w-100 br1 br--top pl2 pr2 pt2 pb2 ba" style="border-color:${feature.colors[feature.selectedColor]}">
-            <p class="w-100 ma0 f7 flex flex-row justify-start items-center"><small class="f7 mr2">project</small> · <span class="f7 underline mr2 ml2" onclick=${this.download(this.state, this.emit)}>download/share</span> · ${this.editBtn(this.state, this.emit)}</p>
+            <p class="w-100 ma0 f7 flex flex-row justify-start items-center"><small class="f7 mr2">project</small> · ${this.exportBtn(this.state, this.emit)} · ${this.editBtn(this.state, this.emit)}</p>
             </div>
         <h2 class="pl2 pr2">
           ${feature.title}
