@@ -1,6 +1,6 @@
 var html = require('choo/html')
 
-const LinkHeader = require('./linkHeader');
+const LinkHeader = require('./LinkHeader');
 
 
 module.exports = Link;
