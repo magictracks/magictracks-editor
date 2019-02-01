@@ -27,9 +27,9 @@ function pushNewBranchBtn(state, emit) {
       console.log("adding auto named new branch and adding to selected project")
 
       let payload = {
-        projectId: state.addRecipeModal.selectProjectId,
-        projectBranchName: state.addRecipeModal.selectProjectBranchName,
-        recipeId: state.addRecipeModal.selectRecipe
+        projectId: state.current.projects.selected._id,
+        projectBranchName: state.params.branch,
+        recipeId: state.current.recipes.selected._id
       }
 
       emit(state.events.recipes_addBranchAndPush, payload)
@@ -61,7 +61,7 @@ function pushSelectedRecipeBtn(state, emit) {
 
       let payload = {
         projectId: state.current.projects.selected._id,
-        projectBranchName: state.current.projects.selected.branch,
+        projectBranchName: state.params.branch,
         recipeId: state.addRecipeModal.selectRecipe,
         recipeBranchName: state.addRecipeModal.selectRecipeBranch,
       }
