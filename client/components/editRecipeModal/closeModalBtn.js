@@ -12,6 +12,7 @@ class CloseModalBtn extends Component {
   
   closeModal(state, emit){
       return e => {
+        e.preventDefault();
         console.log('close edit project modal');
         emit(state.events.editRecipeModal_close)
       }

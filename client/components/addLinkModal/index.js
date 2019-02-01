@@ -12,6 +12,7 @@ function AddLinkModal(id, state, emit){
       }
 
       function closeLinkModal(e){
+        e.preventDefault();
         console.log("close link modal")
         emit(state.events.addLinkModal_close)
       }

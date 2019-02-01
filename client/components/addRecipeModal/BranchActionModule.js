@@ -18,6 +18,7 @@ function BranchActionModule(state, emit) {
   }
 }
 
+
 function pushNewBranchBtn(state, emit) {
 
   function pushNewBranch(state, emit) {
@@ -59,8 +60,8 @@ function pushSelectedRecipeBtn(state, emit) {
       console.log("push selected Recipe branch to selected project");
 
       let payload = {
-        projectId: state.addRecipeModal.selectProjectId,
-        projectBranchName: state.addRecipeModal.selectProjectBranchName,
+        projectId: state.current.projects.selected._id,
+        projectBranchName: state.current.projects.selected.branch,
         recipeId: state.addRecipeModal.selectRecipe,
         recipeBranchName: state.addRecipeModal.selectRecipeBranch,
       }

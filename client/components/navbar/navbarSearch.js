@@ -12,6 +12,7 @@ class NavbarSearch extends Component {
 
   handleChange(state, emit){
     return e => {
+      e.preventDefault();
       console.log(e.currentTarget.value);
 
       // e.currentTarget.childNodes.forEach( item => { 

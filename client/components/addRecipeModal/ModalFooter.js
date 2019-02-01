@@ -5,6 +5,7 @@ module.exports = ModalFooter;
 
 function closeAddRecipeModal(state, emit){
     return e => {
+        e.preventDefault();
         console.log('close recipe modal');
         emit(state.events.addRecipeModal_close)
     }

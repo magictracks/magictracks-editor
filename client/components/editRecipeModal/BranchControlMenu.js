@@ -16,8 +16,8 @@ function newBranchBtn(state, emit, selected){
 
     // create new branch input
     return html`
-    <form class="w-20 flex flex-row h2 items-center" onsubmit=${createBranch(state, emit, selected)}>
-        <input class="h2 w-100 bn br2 br--right bg-silver f7" type="submit" value="new branch">
+    <form id="newRecipeBranchBtnForm" class="w-20 flex flex-row h2 items-center" onsubmit=${createBranch(state, emit, selected)}>
+        <input class="h2 w-100 bn br2 br--right bg-silver f7" form="newRecipeBranchBtnForm" type="submit" value="new branch">
     </form>
     `
 }
@@ -28,9 +28,9 @@ function branchNameChanger(state, emit, selected){
     return html`
     <div class="mt2 mb2">
       <p class="ma0 mr4">Change Branch Name:</p>
-      <form data-branchid="" onsubmit="">
+      <form id="recipeBranchNameChanger" data-branchid="" onsubmit="">
         <input class="bn br2 br--left bg-moon-grey pa2 h2" name="branchName" type="text" value="">
-        <input class="bn br2 br--right ma0 h2 bg-silver" type="submit" value="change name">
+        <input class="bn br2 br--right ma0 h2 bg-silver" form="recipeBranchNameChanger" type="submit" value="change name">
       </form>
     </div>
     `
@@ -44,6 +44,7 @@ function deleteBranchBtn(state, emit, selected){
 
 function dangerZone(state, emit, selected){
     function toggleDangerZone(e){
+        e.preventDefault();
         document.querySelector("#dangerZone").classList.toggle("dn");
     }
     return html`

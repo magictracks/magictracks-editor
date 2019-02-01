@@ -12,6 +12,7 @@ class CloseModalBtn extends Component {
   
   closeModal(state, emit){
       return e => {
+        e.preventDefault();
         console.log('close export modal');
         emit(state.events.exportModal_close)
       }

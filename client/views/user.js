@@ -32,6 +32,7 @@ function view(state, emit) {
 
 
   function selectItem(e) {
+    e.preventDefault();
     const {id, branch} = e.currentTarget.dataset;
     emit("pushState", `/${user}/${collection}/${id}/${branch}`)
     // emit(state.events.RENDER)

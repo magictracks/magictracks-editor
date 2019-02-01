@@ -19,6 +19,7 @@ function store (state, emitter) {
   state.events.projects_updateDetails = "projects:updateDetails";
   state.events.projects_reorderRecipes = "projects:reorderRecipes";
   state.events.projects_removeRecipe = "projects:removeRecipe";
+  state.events.projects_addCollaborator = "projects:addCollaborator";
   
   feathersClient.service("projects").find()
     .then(feature => {
@@ -37,12 +38,31 @@ function store (state, emitter) {
   emitter.on(state.events.projects_updateDetails, projects.updateDetails);
   emitter.on(state.events.projects_reorderRecipes, projects.reorderRecipes);
   emitter.on(state.events.projects_removeRecipe, projects.removeRecipe);
+  emitter.on(state.events.projects_addCollaborator, projects.addCollaborator);
   
   feathersClient.service("projects").on('patched', message => {
     emitter.emit('navigate')
   });
 
   function Projects(){
+    
+    this.addCollaborator = function(_payload){
+      const {collaborator} = _payload;
+      const {_id} = state.current.projects.selected;
+
+      const patchData = {
+        "$push":{
+          "collaborators": collaborator
+        }
+      }
+
+      feathersClient.service('projects').patch(_id, patchData, null).then(patchedData => {
+        console.log("success!")
+        return patchedData;
+      }).catch(err => {
+        return err
+      })
+    }
 
     this.deleteProject = function(_payload){
       const{projectId} = _payload;

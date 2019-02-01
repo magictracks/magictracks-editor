@@ -36,9 +36,9 @@ function collaboratorsInput(state, emit, selected){
         </ul>
         <!-- add collaborator form -->
         <div class="w-100">
-            <form class="flex flex-row h2 items-center" onsubmit=${(e) => {e.preventDefault(); console.log("add new collaborator!") }}>
+            <form id="recipeCollaboratorForm" class="flex flex-row h2 items-center" onsubmit=${(e) => {e.preventDefault(); console.log("add new collaborator!") }}>
             <input class="h2 w-80 mr2 bn br2 pa2" type="text" placeholder="e.g. @shiffman">
-            <input class="h2 w-20 bn br2 bg-light-purple f7" type="submit" value="add collaborator">
+            <input class="h2 w-20 bn br2 bg-light-purple f7" form="recipeCollaboratorForm" type="submit" value="add collaborator">
             </form>
         </div>
     </fieldset>

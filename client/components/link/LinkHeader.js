@@ -15,6 +15,7 @@ class LinkHeader extends Component {
 
   openEditModal(state, emit){
       return e => {
+            e.preventDefault();
             console.log("opening edit modal", e.currentTarget);   
             const payload = {
                 id: e.currentTarget.dataset.id,
@@ -27,6 +28,7 @@ class LinkHeader extends Component {
   
   openSuggestModal(state, emit){
       return e => {
+        e.preventDefault();
               console.log("TODO: opening suggest modal", e.currentTarget);            
               // emit(state.events.editProjectModal_open);
           }

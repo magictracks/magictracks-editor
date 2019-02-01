@@ -8,6 +8,7 @@ function RemoveLinkButton(state, emit, _recipeId, _linkId){
     
   function removeFromRecipe(e){
       // console.log("remove from recipe!", e.currentTarget.dataset)
+      e.preventDefault();
       const{recipeid, linkid} = e.currentTarget.dataset
 
       const payload = {
